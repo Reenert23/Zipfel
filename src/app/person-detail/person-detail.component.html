@@ -1,0 +1,5 @@
+<div *ngIf="person">
+  <h2>{{ person.firstName }} {{ person.lastName }}</h2>
+  <p>Birthdate: {{ person.birthDate | date: 'yyyy/dd/MM' }}</p>
+  <p>Department: {{ person.department }}</p>
+</div>
