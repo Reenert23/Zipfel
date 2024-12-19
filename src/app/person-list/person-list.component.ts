@@ -70,7 +70,7 @@ export class PersonListComponent implements OnInit {
   onAddPerson(): void {
     if (this.form.valid) {
       const newPerson: Person = this.form.value;
-      newPerson.birthDate = formatDate(newPerson.birthDate, 'yyyy-MM-dd', 'en-US');
+      //newPerson.birthDate = formatDate(newPerson.birthDate, 'yyyy-MM-dd', 'en-US');
 
       // this.personService.addPerson(newPerson).subscribe(addedPerson => {
       //   this.dataSource.data = [...this.dataSource.data, addedPerson];

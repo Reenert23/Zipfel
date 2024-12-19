@@ -1,0 +1,87 @@
+.container {
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+button.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+.winner-selection button {
+  margin: 5px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.points-input {
+  margin: 10px 0;
+}
+
+.button-group {
+  margin-bottom: 15px;
+}
+
+.button-group button {
+  margin: 5px;
+}
+
+.grid-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.image-placeholder .image-card {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: #f0f0f0;
+  margin-right: 20px;
+}
+
+.keypad .key-row {
+  display: flex;
+  justify-content: center;
+}
+
+.key-button {
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+h3 {
+  margin-top: 20px;
+}

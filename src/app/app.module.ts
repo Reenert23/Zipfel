@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PersonListComponent } from './person-list/person-list.component';
 import { PersonDetailComponent } from './person-detail/person-detail.component';
 import { PersonFormComponent } from './person-form/person-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { GameListComponent } from './game-list/game-list.component';
+import { CdkTableModule } from '@angular/cdk/table';
 
 
 @NgModule({
@@ -27,12 +29,15 @@ import { MatIconModule } from '@angular/material/icon';
     AppComponent,
     PersonListComponent,
     PersonDetailComponent,
-    PersonFormComponent
+    PersonFormComponent,
+    GameListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CdkTableModule,
     BrowserAnimationsModule,
+    FormsModule,
     ReactiveFormsModule,
     MatTableModule,
     HttpClientModule,
@@ -45,7 +50,8 @@ import { MatIconModule } from '@angular/material/icon';
         MatToolbarModule,
     MatCardModule,
     MatGridListModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
