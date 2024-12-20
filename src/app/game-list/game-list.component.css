@@ -25,6 +25,13 @@
   right: 16px; /* Abstand vom rechten Rand */
 }
 
+.left-button {
+  position: absolute;
+ top: 15px;
+  left: 16px;
+  font-size: xx-large;
+}
+
 .title {
   margin: 0; /* Entfernt unnötige Abstände */
 }

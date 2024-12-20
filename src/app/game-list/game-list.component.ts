@@ -134,16 +134,20 @@ export class GameListComponent {
     this.pointsInput = 0;  // Setzt die Zahl zurück
   }
 
-  // Spiel hinzufügen
+  deleteLastGame() {
+    console.log(this.games);
+    this.games.pop();
+    this.dataSource = new MatTableDataSource<Game>(this.games);
+    this.totalPoints = this.getTotalPoints();
+    console.log(this.games);
+  }
+
   addGame() {
     if (this.selectedWinners.length !== this.maxWinners || this.pointsInput <= 0) {
       alert(`Bitte genau ${this.maxWinners} Gewinner auswählen und Punkte eingeben.`);
       return;
     }
-
-    // Punkte berechnen
     const currentPoints: PlayerPoints = {};
-
 
     this.persons.forEach(person => {
       const name = person.name;
@@ -168,8 +172,6 @@ export class GameListComponent {
         }
       }
     });
-
-
 
     // Neues Spiel hinzufügen
     const newGame = new Game(this.games.length + 1, { ...currentPoints });
