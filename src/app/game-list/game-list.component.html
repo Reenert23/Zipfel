@@ -1,17 +1,19 @@
 <div class="container">
-  <h1 class="title">ZIPFEL</h1>
+  <div class="header">
+    <h1 class="title">ZIPFEL</h1>
+    <button mat-raised-button color="primary" class="round-button" (click)="openNameDialog()">+</button>
+  </div>
 
   <!-- Gewinner auswählen -->
-  <div class="winner-selection">
-    <button mat-raised-button color="primary"
-      *ngFor="let person of persons"
-      (click)="toggleWinner(person.name)"
-      [class.selected]="selectedWinners.includes(person.name)">
-      {{ person.name }}
-    </button>
-  </div>
+<div class="winner-selection">
+  <button mat-raised-button color="primary" *ngFor="let person of persons; let i = index"
+    [style.gridArea]="getGridArea(i)" (click)="toggleWinner(person.name)"
+    [class.selected]="selectedWinners.includes(person.name)">
+    {{ person.name }}
+  </button>
+</div>
   <div class="button-group">
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')">Solo</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [class.selected]="maxWinners == 1">Solo</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Geier')">Geier</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Wenz')">Wenz</button>
   </div>
@@ -20,12 +22,9 @@
   <!-- Punkte-Eingabe -->
   <mat-form-field appearance="outline" class="points-input">
     <mat-label>Punkte eingeben:</mat-label>
-    <input matInput id="points" type="number" [(ngModel)]="pointsInput" />
+    <input matInput id="points" type="number" inputmode="numeric" [(ngModel)]="pointsInput" />
   </mat-form-field>
 
-
-  <!-- Spiel hinzufügen -->
-  <button mat-raised-button class="key-button" (click)="addGame()">+</button>
 
   <div class="grid-container">
     <div class="image-placeholder">
@@ -50,7 +49,9 @@
         <button mat-raised-button class="key-button" (click)="addToInput(9)">9</button>
       </div>
       <div class="key-row">
-        <button mat-raised-button class="key-button">0</button>
+        <button mat-raised-button class="key-button ok-button" (click)="clearInput()">C</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(0)">0</button>
+        <button mat-raised-button class="key-button ok-button" (click)="addGame()">OK</button>
       </div>
     </div>
   </div>

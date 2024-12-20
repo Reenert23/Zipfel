@@ -11,15 +11,44 @@
   margin-bottom: 20px;
 }
 
+.header {
+  display: flex;
+  flex-direction: column; /* Elemente werden vertikal angeordnet */
+  align-items: center; /* Überschrift in der Mitte */
+  position: relative; /* Ermöglicht die absolute Positionierung des Buttons */
+  padding: 16px;
+}
+
+.round-button {
+  position: absolute;
+ top: 15px;
+  right: 16px; /* Abstand vom rechten Rand */
+}
+
+.title {
+  margin: 0; /* Entfernt unnötige Abstände */
+}
+
+button {
+  margin-left: auto; /* Sorgt dafür, dass der Button an den rechten Rand geschoben wird */
+}
+
 button.selected {
   background-color: #4caf50;
   color: white;
 }
 
+.winner-selection {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
 .winner-selection button {
-  margin: 5px;
+  width: 100%;
   padding: 10px;
-  font-size: 16px;
+  text-align: center;
 }
 
 .points-input {
@@ -27,6 +56,7 @@ button.selected {
 }
 
 .button-group {
+  margin-top: 15px;
   margin-bottom: 15px;
 }
 
@@ -58,6 +88,10 @@ button.selected {
   width: 60px;
   height: 60px;
   margin: 5px;
+}
+
+.ok-button {
+  background-color: whitesmoke !important;
 }
 
 .image-card img {

@@ -22,6 +22,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { GameListComponent } from './game-list/game-list.component';
 import { CdkTableModule } from '@angular/cdk/table';
+import { NameDialogComponent } from './name-dialog/name-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -30,7 +32,8 @@ import { CdkTableModule } from '@angular/cdk/table';
     PersonListComponent,
     PersonDetailComponent,
     PersonFormComponent,
-    GameListComponent
+    GameListComponent,
+    NameDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,7 @@ import { CdkTableModule } from '@angular/cdk/table';
     MatCardModule,
     MatGridListModule,
     MatIconModule,
-    MatTableModule
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

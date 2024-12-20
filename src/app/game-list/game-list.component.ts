@@ -3,6 +3,8 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Game } from '../models/Game';
 import { Person } from '../person.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { NameDialogComponent } from '../name-dialog/name-dialog.component';
 
 @Component({
   selector: 'app-game-list',
@@ -13,10 +15,10 @@ export class GameListComponent {
 
      // Spieler
   persons: Person[] = [
-    new Person(1, 'Vogl'),
-    new Person(2, 'Paul'),
-    new Person(3, 'Manu'),
-    new Person(4, 'Wolle')
+    new Person(1, 'Kaddler 1'),
+    new Person(2, 'Kaddler 2'),
+    new Person(3, 'Kaddler 3'),
+    new Person(4, 'Kaddler 4')
   ];
 
   displayedColumns: string[] = ['game', ...this.persons.map(person => person.name)];
@@ -35,11 +37,44 @@ export class GameListComponent {
   // Temporäre Auswahl der Gewinner
   selectedWinners: string[] = [];
   inputString: string = "";
-  pointsInput: number = 20;
+  pointsInput: number = 0;
   maxWinners: number = 2; // Standardmäßig 2 Gewinner
   dataSource: MatTableDataSource<Game> = new MatTableDataSource()
+  playerNames: string[] = [];
+  isSetupComplete = false;
 
-  constructor(private cdr: ChangeDetectorRef){}
+  constructor(private cdr: ChangeDetectorRef, public dialog: MatDialog){}
+
+  openNameDialog(): void {
+    const dialogRef = this.dialog.open(NameDialogComponent, {
+      width: '400px',
+      data: { playerNames: this.playerNames }
+    });
+
+    dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
+      if (result && result.length === 4) {
+        this.updatePlayers(result);
+        this.games = [];
+        this.dataSource = new MatTableDataSource();
+        this.isSetupComplete = true;
+      }
+    });
+  }
+
+  updatePlayers(playerNames: string[]): void {
+    // 1. Spieler aktualisieren
+    this.persons = playerNames.map((name, index) => new Person(index + 1, name));
+
+    // 2. Tabellenspalten anpassen
+    this.displayedColumns = ['game', ...this.persons.map(person => person.name)];
+
+    // 3. Punkte-Objekt initialisieren
+    this.totalPoints = {};
+    for (const name of playerNames) {
+      this.totalPoints[name] = 0;
+    }
+  }
+
 
   // Funktion zum Setzen der maximalen Anzahl der Gewinner
   setMaxWinners(winnerType: string) {
@@ -84,14 +119,19 @@ export class GameListComponent {
   }
 
   addToInput(value: number) {
-    if(this.inputString != null){
-      this.inputString += this.pointsInput.toString() + value.toString();
-      this.pointsInput += Number(this.inputString);
-    }
-    else{
-      this.pointsInput = 0;
+    if (this.inputString === "") {
+      this.inputString = value.toString(); // Erste Eingabe
+    } else {
+      this.inputString += value.toString(); // Concatenation der Eingaben
     }
 
+    // Konvertiere den gesamten String in eine Zahl
+    this.pointsInput = parseInt(this.inputString, 10);
+  }
+
+  clearInput() {
+    this.inputString = ""; // Leert den String
+    this.pointsInput = 0;  // Setzt die Zahl zurück
   }
 
   // Spiel hinzufügen
@@ -107,12 +147,29 @@ export class GameListComponent {
 
     this.persons.forEach(person => {
       const name = person.name;
-      if (this.selectedWinners.includes(name)) {
-        currentPoints[name] = this.pointsInput; // Gewinner bekommen Punkte
+
+      if (this.maxWinners === 1) {
+        // Nur ein Gewinner: Der erste in der Liste der Gewinner erhält die Punkte
+        if (this.selectedWinners.includes(name)) {
+          if (this.selectedWinners.indexOf(name) === 0) {
+            currentPoints[name] = this.pointsInput;
+          } else {
+            currentPoints[name] = 0;
+          }
+        } else {
+          currentPoints[name] = -Math.floor(this.pointsInput / 3); // Verlierer verlieren 1/3 der Punkte
+        }
       } else {
-        currentPoints[name] = -this.pointsInput; // Verlierer verlieren Punkte
+        // Mehrere Gewinner: normale Punkteverteilung
+        if (this.selectedWinners.includes(name)) {
+          currentPoints[name] = this.pointsInput; // Gewinner  +Punkte
+        } else {
+          currentPoints[name] = -this.pointsInput; // Verlierer -Punkte
+        }
       }
     });
+
+
 
     // Neues Spiel hinzufügen
     const newGame = new Game(this.games.length + 1, { ...currentPoints });
@@ -128,6 +185,19 @@ export class GameListComponent {
 
     // Reset für nächste Runde
     this.selectedWinners = [];
-    this.pointsInput = 20;
+    this.clearInput();
   }
+
+  getGridArea(index: number): string {
+    // Manuelle Zuordnung für Uhrzeigersinn
+    const gridAreas = [
+      '1 / 1', // Spalte 1, Zeile 1
+      '1 / 2', // Spalte 2, Zeile 1
+      '2 / 2', // Spalte 2, Zeile 2
+      '2 / 1', // Spalte 1, Zeile 2
+    ];
+
+    return gridAreas[index % gridAreas.length]; // Für mehr als 4 Spieler wiederholt sich das Muster.
+  }
+
 }
