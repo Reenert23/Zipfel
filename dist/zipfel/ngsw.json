@@ -1,0 +1,65 @@
+{
+  "configVersion": 1,
+  "timestamp": 1734784471785,
+  "index": "/Zipfel/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/Zipfel/favicon.ico",
+        "/Zipfel/index.html",
+        "/Zipfel/main.69f2b224eeb8dea0.js",
+        "/Zipfel/polyfills.ca41bc7a7c191b91.js",
+        "/Zipfel/runtime.8ed91eebfa9eb970.js",
+        "/Zipfel/styles.6b58e91a16cf0cad.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/Zipfel/assets/images/wurst.jpeg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/Zipfel/assets/images/wurst.jpeg": "cb67da5da4c460764b79fbf34a99ecad0c18dfdc",
+    "/Zipfel/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "/Zipfel/index.html": "2e11211e75a09c4e92e46faa00c697a81f1d8082",
+    "/Zipfel/main.69f2b224eeb8dea0.js": "fb24dc8ff0219d2fc63e38983efe9d3170554254",
+    "/Zipfel/polyfills.ca41bc7a7c191b91.js": "e234f88dddfb35c71a3da6fa0a5d12d7b28a2fa9",
+    "/Zipfel/runtime.8ed91eebfa9eb970.js": "8ea0e241eb5b70dccbfb7fdabd7acdc901a179d6",
+    "/Zipfel/styles.6b58e91a16cf0cad.css": "d1221426385e0951fa3eac87a2fbe8e64cee1edf"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
