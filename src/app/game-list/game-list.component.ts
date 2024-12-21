@@ -5,6 +5,7 @@ import { Person } from '../person.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { NameDialogComponent } from '../name-dialog/name-dialog.component';
+import { RamschDialogComponent } from '../ramsch-dialog/ramsch-dialog.component';
 
 @Component({
   selector: 'app-game-list',
@@ -42,6 +43,9 @@ export class GameListComponent {
   dataSource: MatTableDataSource<Game> = new MatTableDataSource()
   playerNames: string[] = [];
   isSetupComplete = false;
+  clickCount: number = 0;
+  isLooser: boolean = false;
+  winnerType: string = '';
 
   constructor(private cdr: ChangeDetectorRef, public dialog: MatDialog){}
 
@@ -57,6 +61,29 @@ export class GameListComponent {
         this.games = [];
         this.dataSource = new MatTableDataSource();
         this.isSetupComplete = true;
+      }
+    });
+  }
+
+  openRamschDialog(): void {
+    const dialogRef = this.dialog.open(RamschDialogComponent, {
+      width: '400px',
+      data: { persons: this.persons }
+    });
+
+    const currentPoints: PlayerPoints = {};
+
+    dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
+      console.log(result);
+      if (result && result.length === 4) {
+        this.persons.forEach((person, index) => {
+          currentPoints[person.name] = parseInt(result[index]);
+        });
+        console.log(currentPoints);
+        const newGame = new Game(this.games.length + 1, { ...currentPoints });
+        this.games.push(newGame);
+        this.dataSource = new MatTableDataSource<Game>(this.games);
+        this.totalPoints = this.getTotalPoints();
       }
     });
   }
@@ -78,14 +105,23 @@ export class GameListComponent {
 
   // Funktion zum Setzen der maximalen Anzahl der Gewinner
   setMaxWinners(winnerType: string) {
+    this.winnerType = winnerType;
     switch (winnerType) {
       case 'Solo':
+        this.clickCount++;
         this.maxWinners = 1;
+        this.isLooser = this.clickCount % 2 === 0;
         break;
-      case 'Geier':
+      case 'Ruf':
+        this.clickCount = 0;
         this.maxWinners = 2;
         break;
-      case 'Wenz':
+      case 'Geier':
+        this.clickCount = 0;
+        this.maxWinners = 2;
+        break;
+      case 'Ramsch':
+        this.clickCount = 0;
         this.maxWinners = 3;
         break;
       default:
@@ -135,11 +171,10 @@ export class GameListComponent {
   }
 
   deleteLastGame() {
-    console.log(this.games);
+    alert("Der letzte Eintrag wird gelöscht!")
     this.games.pop();
     this.dataSource = new MatTableDataSource<Game>(this.games);
     this.totalPoints = this.getTotalPoints();
-    console.log(this.games);
   }
 
   addGame() {
@@ -163,6 +198,11 @@ export class GameListComponent {
         } else {
           currentPoints[name] = -Math.floor(this.pointsInput / 3); // Verlierer verlieren 1/3 der Punkte
         }
+
+        // Bedingung hinzufügen, falls isLooser === true
+        if (this.isLooser) {
+          currentPoints[name] *= -1; // Multipliziere die Punkte mit -1
+        }
       } else {
         // Mehrere Gewinner: normale Punkteverteilung
         if (this.selectedWinners.includes(name)) {
@@ -171,6 +211,7 @@ export class GameListComponent {
           currentPoints[name] = -this.pointsInput; // Verlierer -Punkte
         }
       }
+
     });
 
     // Neues Spiel hinzufügen
@@ -187,6 +228,8 @@ export class GameListComponent {
 
     // Reset für nächste Runde
     this.selectedWinners = [];
+    this.maxWinners = 2;
+    this.clickCount = 0;
     this.clearInput();
   }
 

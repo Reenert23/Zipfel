@@ -24,6 +24,7 @@ import { GameListComponent } from './game-list/game-list.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { NameDialogComponent } from './name-dialog/name-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { RamschDialogComponent } from './ramsch-dialog/ramsch-dialog.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     PersonDetailComponent,
     PersonFormComponent,
     GameListComponent,
-    NameDialogComponent
+    NameDialogComponent,
+    RamschDialogComponent
   ],
   imports: [
     BrowserModule,
