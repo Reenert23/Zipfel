@@ -1,10 +1,14 @@
-export interface PlayerPoints {
-  [key: string]: number; // Key = Spielername, Value = aktuelle Punktzahl
+
+export interface GameScore {
+  playerId: number;
+  points: number;
 }
 
-export class Game {
-  constructor(
-    public id: number,               // Spiel-ID
-    public points: PlayerPoints      // Punkte aller Spieler im Spiel
-  ) {}
+export interface Game {
+  id?: number;              // vom Backend generiert
+  gameType: string;
+  soloCaller: number | null;
+  scores: GameScore[];
+  roundId?: number;         // optional, falls du die Beziehung brauchst
 }
+

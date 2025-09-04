@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Spieler anlegen</h2>
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Vorname *</mat-label>
+    <input matInput formControlName="firstName" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Nachname</mat-label>
+    <input matInput formControlName="lastName" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Spitzname</mat-label>
+    <input matInput formControlName="nickname" />
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" [disabled]="saving || form.invalid" (click)="save()">
+    Speichern
+  </button>
+</div>

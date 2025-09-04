@@ -4,9 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PersonListComponent } from './person-list/person-list.component';
-import { PersonDetailComponent } from './person-detail/person-detail.component';
-import { PersonFormComponent } from './person-form/person-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,17 +22,23 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { NameDialogComponent } from './name-dialog/name-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RamschDialogComponent } from './ramsch-dialog/ramsch-dialog.component';
+import { RoundListComponent } from './round-list/round-list.component';
+import { MatSidenavModule } from '@angular/material/sidenav'; // Sidenav-Modul
+import {MatListModule} from '@angular/material/list';
+import { AddPlayerComponent } from './dialogs/add-player/add-player.component';
+import { SelectPlayersComponent } from './dialogs/select-players/select-players.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PersonListComponent,
-    PersonDetailComponent,
-    PersonFormComponent,
     GameListComponent,
     NameDialogComponent,
-    RamschDialogComponent
+    RamschDialogComponent,
+    RoundListComponent,
+    AddPlayerComponent,
+    SelectPlayersComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,8 @@ import { RamschDialogComponent } from './ramsch-dialog/ramsch-dialog.component';
     HttpClientModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatSidenavModule,
+    MatListModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,

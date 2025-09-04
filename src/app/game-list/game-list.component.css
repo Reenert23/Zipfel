@@ -3,6 +3,7 @@
   max-width: 400px;
   margin: auto;
   text-align: center;
+  background-color: #b0c4de;
 }
 
 .title {
@@ -137,18 +138,92 @@ h3 {
   margin-top: 20px;
 }
 
+.geber {
+  background-color: rgba(255, 255, 0, 0.707);
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
 .solo-row {
-  background-color: lightblue; /* Beispiel für Solo */
+  background-color: #e6f2f9; /* Sehr blassere Version von lightblue */
 }
 
 .ruf-row {
-  background-color: lightgreen; /* Beispiel für Ruf */
+  background-color: #e6f2e6; /* Sehr blassere Version von lightgreen */
 }
 
 .geier-row {
-  background-color: lightcoral; /* Beispiel für Geier */
+  background-color: #f9e6e6; /* Sehr blassere Version von lightyellow */
 }
 
 .ramsch-row {
-  background-color: lightyellow; /* Beispiel für Ramsch */
+  background-color: #f9f2e6; /* Sehr blassere Version von lightcoral */
 }
+
+.mat-sticky {
+  position: sticky;
+  top: 0; /* Höhe des Headers */
+  z-index: 2;
+  background: white; /* Hintergrundfarbe, um Überlagerungen zu vermeiden */
+  border-bottom: 1px solid #ddd;
+}
+
+.tableContainer {
+  margin-top: 20px;
+  max-height: 400px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+.green-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%; /* Macht das Element zu einem Kreis */
+  margin-left: 5px;   /* Abstand zu den Punkten */
+}
+
+.red-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%; /* Macht das Element zu einem Kreis */
+  margin-left: 5px;   /* Abstand zu den Punkten */
+}
+
+/* Erste Spalte Spiel */
+.mat-column-game {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Spieler-Header (Name darf umbrechen) */
+.player-header {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+/* Spieler-Zellen (Punkte mittig, kein Umbruch nötig) */
+.mat-cell:not(.mat-column-game),
+.mat-footer-cell:not(.mat-column-game) {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+
+
+

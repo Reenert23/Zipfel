@@ -1,0 +1,5 @@
+.player-list {
+  max-height: 300px; /* oder was für dich passt */
+  overflow-y: auto;
+  display: block; /* wichtig, damit max-height greift */
+}

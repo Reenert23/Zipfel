@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PersonFormComponent } from './person-form.component';
+import { SelectPlayersComponent } from './select-players.component';
 
-describe('PersonFormComponent', () => {
-  let component: PersonFormComponent;
-  let fixture: ComponentFixture<PersonFormComponent>;
+describe('SelectPlayersComponent', () => {
+  let component: SelectPlayersComponent;
+  let fixture: ComponentFixture<SelectPlayersComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PersonFormComponent ]
+      declarations: [ SelectPlayersComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PersonFormComponent);
+    fixture = TestBed.createComponent(SelectPlayersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

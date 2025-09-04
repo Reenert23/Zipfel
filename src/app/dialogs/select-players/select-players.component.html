@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Spieler auswählen</h2>
+
+<div mat-dialog-content>
+  <button mat-stroked-button color="primary" (click)="addNewPlayer()">+ Neuer Spieler</button>
+
+  <div *ngIf="loading" style="margin-top: 12px;">Lade Spieler…</div>
+
+  <mat-selection-list [multiple]="true" class="player-list">
+    <mat-list-option
+      *ngFor="let p of players"
+      [selected]="isSelected(p)"
+      (click)="toggle(p)"
+    >
+      <span *ngIf="getOrderNumber(p) as order">
+        {{ order }}.
+      </span>
+      {{ p.firstName }} <span *ngIf="p.nickname">({{ p.nickname }})</span>
+    </mat-list-option>
+  </mat-selection-list>
+
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" [disabled]="!canConfirm()" (click)="confirm()">
+    Übernehmen
+  </button>
+</div>

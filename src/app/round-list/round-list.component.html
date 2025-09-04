@@ -1,0 +1,58 @@
+<!-- <div>
+  <h2>Rounds</h2>
+  <button (click)="goToGames()">zurück</button>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Players</th>
+        <th>Games Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let round of rounds">
+        <td>{{ round.id }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let player of round.players">{{ player.firstName }}</li>
+          </ul>
+        </td>
+        <td>{{ round.games?.length || 0 }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
+<div class="round-list">
+  <button (click)="goToGames()">zurück</button>
+  <button (click)="neueRundeStarten()">neue Runde</button>
+  <div *ngFor="let round of rounds; let i = index">
+    <div class="round-box" (click)="goToRound(round)">
+      <div class="round-header">
+        <h3>{{ 'Runde ' + (i + 1) }}</h3>
+        <span>{{ 'Datum: ' + 'TODO_DATUM' }}</span>
+      </div>
+
+      <div class="player-names">
+        <div *ngFor="let player of round.players" class="player-name-box">
+          {{ player.firstName }}
+        </div>
+      </div>
+
+      <div class="player-points">
+        <div *ngFor="let player of round.players" class="player-points-box">
+          <span>{{ getTotalPointsForPlayer(round, player) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+

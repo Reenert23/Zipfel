@@ -1,11 +1,16 @@
-import { PlayerPoints } from './../models/Game';
+import { GameService } from './../services/game.service';
+import { Game, GameScore } from './../models/Game';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Game } from '../models/Game';
-import { Person } from '../person.model';
+import { Player } from '../models/Player';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { NameDialogComponent } from '../name-dialog/name-dialog.component';
 import { RamschDialogComponent } from '../ramsch-dialog/ramsch-dialog.component';
+import { RoundService } from '../services/round.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Round } from '../models/Round';
+import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
+
 
 @Component({
   selector: 'app-game-list',
@@ -15,29 +20,32 @@ import { RamschDialogComponent } from '../ramsch-dialog/ramsch-dialog.component'
 export class GameListComponent {
 
      // Spieler
-  persons: Person[] = [
-    new Person(1, 'Kaddler 1'),
-    new Person(2, 'Kaddler 2'),
-    new Person(3, 'Kaddler 3'),
-    new Person(4, 'Kaddler 4')
-  ];
+     players: Player[] = [
+      { id: 1, firstName: 'Kaddler 1', lastName: '', nickname: '' },
+      { id: 2, firstName: 'Kaddler 2', lastName: '', nickname: '' },
+      { id: 3, firstName: 'Kaddler 3', lastName: '', nickname: '' },
+      { id: 4, firstName: 'Kaddler 4', lastName: '', nickname: '' }
+    ];
 
-  displayedColumns: string[] = ['game', ...this.persons.map(person => person.name)];
+  displayedColumns: string[] = ['game', ...this.players.map(player => player.firstName)];
 
   // Punkte aller Spieler kumulativ
-  totalPoints: PlayerPoints = {
-    Vogl: 0,
-    Paul: 0,
-    Manu: 0,
-    Wolle: 0
-  };
+  totalPoints: { [playerId: number]: number } = {};
+
 
   // Liste der Spiele
   games: Game[] = [];
 
+  newRound: Round = {
+    players: this.players, // Da players ein Pflichtfeld ist, muss es initialisiert werden.
+    games: [],    // Optional: Kann auch weggelassen werden, wenn nicht erforderlich.
+    lockedPlayers: false
+  };
+
   // Temporäre Auswahl der Gewinner
   selectedWinners: string[] = [];
   inputString: string = "";
+  lastAddedGameId: number = 0;
   pointsInput: number = 0;
   maxWinners: number = 2; // Standardmäßig 2 Gewinner
   dataSource: MatTableDataSource<Game> = new MatTableDataSource()
@@ -45,9 +53,50 @@ export class GameListComponent {
   isSetupComplete = false;
   clickCount: number = 0;
   isLooser: boolean = false;
+  soloCaller: number = -1;
   winnerType: string = '';
+  gameType: string = '';
+  geber: boolean = true;
+  round?: Round;
+  geberStartIndex = 0;
 
-  constructor(private cdr: ChangeDetectorRef, public dialog: MatDialog){}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    public dialog: MatDialog,
+    private gameService: GameService,
+    private roundService: RoundService, // Service injizieren
+    private router: Router, // Router injizieren
+    private route: ActivatedRoute
+    ){}
+
+    ngOnInit(): void {
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+
+      if (id) {
+        // ✅ Fall 1: Runde von RoundList ausgewählt
+        this.roundService.getRoundById(id).subscribe((runde) => {
+          this.newRound = {
+            ...runde,
+            lockedPlayers: (runde.games && runde.games.length > 0)
+          };
+          this.games = runde.games || [];
+          this.players = runde.players || [];
+          this.totalPoints = this.getTotalPoints();
+
+          // Tabelle aktualisieren
+          this.dataSource.data = this.games;
+          this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
+        });
+      } else {
+        this.newRound = {
+          players: this.players,
+          games: [],
+          lockedPlayers: false
+        };
+        this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
+        this.dataSource.data = this.games;
+      }
+    }
 
   openNameDialog(): void {
     const dialogRef = this.dialog.open(NameDialogComponent, {
@@ -58,61 +107,108 @@ export class GameListComponent {
     dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
       if (result && result.length === 4) {
         this.updatePlayers(result);
+        this.newRound.players = this.players;
         this.games = [];
         this.dataSource = new MatTableDataSource();
         this.isSetupComplete = true;
       }
     });
+
   }
 
   openRamschDialog(): void {
     const dialogRef = this.dialog.open(RamschDialogComponent, {
       width: '400px',
-      data: { persons: this.persons }
+      data: { players: this.players }
     });
 
-    const currentPoints: PlayerPoints = {};
-
     dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
-      console.log(result);
-      if (result && result.length === 4) {
-        this.persons.forEach((person, index) => {
-          currentPoints[person.name] = parseInt(result[index]);
-        });
-        console.log(currentPoints);
-        const newGame = new Game(this.games.length + 1, { ...currentPoints });
-        this.games.push(newGame);
-        this.dataSource = new MatTableDataSource<Game>(this.games);
-        this.totalPoints = this.getTotalPoints();
+      if (result && result.length === this.players.length) {
+        const scores: GameScore[] = this.players.map((player, index) => ({
+          playerId: player.id,
+          points: parseInt(result[index], 10) || 0
+        }));
+
+        const newGame: Game = {
+          gameType: "Ramsch",
+          soloCaller: null,
+          scores: scores,
+          roundId: this.newRound.id
+        };
+
+        if (this.newRound.id !== undefined) {
+          this.roundService.addGameToRound(this.newRound.id, newGame).subscribe({
+            next: (updatedRound) => {
+              this.games = updatedRound.games || [];
+              this.newRound = updatedRound;
+
+              if (updatedRound.games && updatedRound.games.length > 0) {
+                const lastElement = updatedRound.games[updatedRound.games.length - 1];
+                this.lastAddedGameId = lastElement?.id ?? 0;
+              }
+
+              this.newRound.lockedPlayers = true;
+              this.dataSource = new MatTableDataSource<Game>(this.games);
+              this.totalPoints = this.getTotalPoints();
+              this.cdr.detectChanges();
+            },
+            error: (error) => {
+              console.error('Error adding Ramsch game:', error);
+            }
+          });
+        }
       }
     });
   }
 
+  getGameNumber(game: Game): number {
+    return this.games.findIndex(g => g === game) + 1;
+  }
+
+  getGameIndex(game: Game): number {
+    return this.games.indexOf(game); // basiert auf Reihenfolge im Array
+  }
+
+  // true, wenn player der Geber für dieses Spiel ist
+  isGeber(game: Game, player: Player): boolean {
+    const gi = this.getGameIndex(game);
+    if (gi < 0) return false;
+    const dealerIndex = (this.geberStartIndex + gi) % this.players.length;
+    return this.players[dealerIndex]?.id === player.id;
+  }
+
+
   updatePlayers(playerNames: string[]): void {
     // 1. Spieler aktualisieren
-    this.persons = playerNames.map((name, index) => new Person(index + 1, name));
+    this.players = playerNames.map((name, index) => ({
+      id: index + 1,
+      firstName: name,
+      lastName: '',
+      nickname: ''
+    }));
 
     // 2. Tabellenspalten anpassen
-    this.displayedColumns = ['game', ...this.persons.map(person => person.name)];
+    this.displayedColumns = ['game', ...this.players.map(player => player.firstName)];
 
     // 3. Punkte-Objekt initialisieren
     this.totalPoints = {};
-    for (const name of playerNames) {
-      this.totalPoints[name] = 0;
+    for (const player of this.players) {
+      this.totalPoints[player.id] = 0;
     }
   }
-
 
   // Funktion zum Setzen der maximalen Anzahl der Gewinner
   setMaxWinners(winnerType: string) {
     this.winnerType = winnerType;
     switch (winnerType) {
       case 'Solo':
+        this.gameType = winnerType;
         this.clickCount++;
         this.maxWinners = 1;
         this.isLooser = this.clickCount % 2 === 0;
         break;
       case 'Ruf':
+        this.gameType = winnerType;
         this.clickCount = 0;
         this.maxWinners = 2;
         break;
@@ -121,6 +217,7 @@ export class GameListComponent {
         this.maxWinners = 2;
         break;
       case 'Ramsch':
+        this.gameType = winnerType;
         this.clickCount = 0;
         this.maxWinners = 3;
         break;
@@ -141,18 +238,17 @@ export class GameListComponent {
   }
 
     // Gesamtpunkte für die letzte Zeile berechnen
-  getTotalPoints() {
-    const points: { [key: string]: number } = {};
+    getTotalPoints() {
+      const totals: { [playerId: number]: number } = {};
 
-    // Für jedes Spiel, füge die Punkte für jeden Spieler hinzu
-    this.games.forEach(game => {
-      this.persons.forEach(person => {
-        points[person.name] = (points[person.name] || 0) + (game.points[person.name] || 0);
+      this.games.forEach(game => {
+        game.scores.forEach(score => {
+          totals[score.playerId] = (totals[score.playerId] || 0) + score.points;
+        });
       });
-    });
 
-    return points;
-  }
+      return totals;
+    }
 
   addToInput(value: number) {
     if (this.inputString === "") {
@@ -171,67 +267,153 @@ export class GameListComponent {
   }
 
   deleteLastGame() {
-    alert("Der letzte Eintrag wird gelöscht!")
-    this.games.pop();
-    this.dataSource = new MatTableDataSource<Game>(this.games);
-    this.totalPoints = this.getTotalPoints();
+    if (this.games.length === 0) {
+      alert("Keine Spiele zum Löschen vorhanden!");
+      return;
+    }
+
+    const lastGame = this.games[this.games.length - 1];
+    if (!lastGame.id) {
+      alert("Letztes Spiel hat keine ID!");
+      return;
+    }
+
+    this.gameService.deleteGame(lastGame.id).subscribe({
+      next: () => {
+        // Lokal synchron halten
+        this.games.pop();
+        this.dataSource = new MatTableDataSource<Game>(this.games);
+        this.totalPoints = this.getTotalPoints();
+        console.log(`Spiel mit ID ${lastGame.id} gelöscht`);
+      },
+      error: (err) => {
+        console.error("Fehler beim Löschen des Spiels:", err);
+      }
+    });
   }
 
+
   addGame() {
+    if (this.games.length === 0) {
+      // Erstelle die Runde und warte auf das Ergebnis
+      this.roundService.createRound(this.newRound).subscribe((result) => {
+        console.log("Runde gestartet: ", result);
+        this.newRound = result; // Setze das Ergebnis auf newRound, sodass die ID jetzt verfügbar ist
+
+        // Nachdem die Runde erfolgreich erstellt wurde, füge das neue Spiel hinzu
+        this.addGameToRound(); // Eine Funktion, die den Spielhinzufügungsprozess behandelt
+      });
+    } else {
+      // Wenn die Runde bereits existiert (d.h., Spiele sind schon vorhanden)
+      this.addGameToRound(); // Spiel wird direkt hinzugefügt
+    }
+  }
+
+  getPointsForPlayer(game: Game, playerId: number): number {
+    return game.scores.find(s => s.playerId === playerId)?.points || 0;
+  }
+
+  getPointsForSoloCircle(game: Game, playerId: number): number {
+    return game.scores.find(s => s.playerId === playerId)?.points || 0;
+  }
+
+
+
+  addGameToRound() {
     if (this.selectedWinners.length !== this.maxWinners || this.pointsInput <= 0) {
       alert(`Bitte genau ${this.maxWinners} Gewinner auswählen und Punkte eingeben.`);
       return;
     }
-    const currentPoints: PlayerPoints = {};
 
-    this.persons.forEach(person => {
-      const name = person.name;
-
+    const scores: GameScore[] = this.players.map(player => {
+      let points = 0;
       if (this.maxWinners === 1) {
-        // Nur ein Gewinner: Der erste in der Liste der Gewinner erhält die Punkte
-        if (this.selectedWinners.includes(name)) {
-          if (this.selectedWinners.indexOf(name) === 0) {
-            currentPoints[name] = this.pointsInput;
-          } else {
-            currentPoints[name] = 0;
-          }
+        this.gameType = "Solo";
+        if (this.selectedWinners.includes(player.firstName)) {
+          this.soloCaller = player.id;
+          points = this.pointsInput;
         } else {
-          currentPoints[name] = -Math.floor(this.pointsInput / 3); // Verlierer verlieren 1/3 der Punkte
+          points = -Math.floor(this.pointsInput / (this.players.length - 1));
         }
-
-        // Bedingung hinzufügen, falls isLooser === true
         if (this.isLooser) {
-          currentPoints[name] *= -1; // Multipliziere die Punkte mit -1
+          points *= -1;
         }
       } else {
-        // Mehrere Gewinner: normale Punkteverteilung
-        if (this.selectedWinners.includes(name)) {
-          currentPoints[name] = this.pointsInput; // Gewinner  +Punkte
-        } else {
-          currentPoints[name] = -this.pointsInput; // Verlierer -Punkte
-        }
+        this.gameType = "Ruf";
+        points = this.selectedWinners.includes(player.firstName)
+          ? this.pointsInput
+          : -this.pointsInput;
       }
-
+      return { playerId: player.id, points };
     });
 
-    // Neues Spiel hinzufügen
-    const newGame = new Game(this.games.length + 1, { ...currentPoints });
-    this.games.push(newGame);
-    this.dataSource = new MatTableDataSource<Game>(this.games);
+    const newGame: Game = {
+      gameType: this.gameType,
+      soloCaller: this.soloCaller,
+      scores: scores,
+      roundId: this.newRound.id
+    };
 
-    // Manuelles Triggern der Änderungserkennung
-    this.cdr.detectChanges();
-    console.log(JSON.stringify(this.games));
+    if (this.newRound.id !== undefined) {
+      this.roundService.addGameToRound(this.newRound.id, newGame).subscribe({
+        next: (updatedRound) => {
+          console.log("Game added to round:", updatedRound);
 
-    // Update kumulative Punkte
-    this.totalPoints = this.getTotalPoints();
+          // 👉 Hier statt push: Backend-Antwort übernehmen
+          this.games = updatedRound.games || [];
+          this.newRound = updatedRound; // Runde mit aktualisierten Games setzen
 
-    // Reset für nächste Runde
+          // Letzte ID merken
+          if (updatedRound.games && updatedRound.games.length > 0) {
+            const lastElement = updatedRound.games[updatedRound.games.length - 1];
+            this.lastAddedGameId = lastElement?.id ?? 0;
+          }
+
+          // Tabelle refresh
+          this.newRound.lockedPlayers = true;
+          this.dataSource = new MatTableDataSource<Game>(this.games);
+          this.totalPoints = this.getTotalPoints();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error adding game to round:', error);
+        }
+      });
+    }
+
+    // Reset Auswahl
     this.selectedWinners = [];
     this.maxWinners = 2;
     this.clickCount = 0;
+    this.gameType = '';
+    this.soloCaller = -1;
     this.clearInput();
   }
+
+
+
+
+  saveAsRound(): void {
+    if (this.games.length === 0) {
+      alert('Es gibt keine Spiele, die als Round gespeichert werden können.');
+      return;
+    }
+    this.newRound.players = this.players;
+    this.newRound.games = this.games;
+
+    this.roundService.createRound(this.newRound).subscribe(() => {
+      console.log(this.newRound);
+      alert('Round erfolgreich gespeichert!');
+      this.games = []; // Spieleliste zurücksetzen
+      this.dataSource = new MatTableDataSource();
+    });
+  }
+
+  // Zur Round-Liste navigieren
+  goToRounds(): void {
+    this.router.navigate(['/rounds']); // Navigiere zur Round-Seite
+  }
+
 
   getGridArea(index: number): string {
     // Manuelle Zuordnung für Uhrzeigersinn
@@ -243,6 +425,41 @@ export class GameListComponent {
     ];
 
     return gridAreas[index % gridAreas.length]; // Für mehr als 4 Spieler wiederholt sich das Muster.
+  }
+
+  openPlayerSelector(): void {
+    console.log(this.newRound.lockedPlayers);
+    if (this.newRound.lockedPlayers) {
+      alert("Spieler können nach Beginn der Runde nicht mehr geändert werden.");
+      return;
+    }
+
+    const dialogRef = this.dialog.open(SelectPlayersComponent, {
+      width: '420px',
+      data: { preselected: this.players, requiredCount: 4 },
+      maxHeight: '80vh',      // sorgt dafür, dass der Inhalt nicht höher als der Viewport wird
+  autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe((chosen: Player[] | undefined) => {
+      if (!chosen || chosen.length !== 4) return;
+
+      // 1) Spieler in Component setzen
+      this.players = chosen;
+
+      // 2) Spalten neu aufbauen
+      this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
+
+      // 3) Runde vorbereiten
+      this.newRound.players = this.players;
+
+      // 4) Tabelle zurücksetzen (neue Runde → keine Games)
+      this.games = [];
+      this.totalPoints = this.getTotalPoints();
+      this.dataSource.data = this.games;
+
+      this.isSetupComplete = true;
+    });
   }
 
 }

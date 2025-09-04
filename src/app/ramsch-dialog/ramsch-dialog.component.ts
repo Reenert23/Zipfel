@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Person } from '../person.model';
+import { Player } from '../models/Player';
 
 @Component({
   selector: 'app-ramsch-dialog',
@@ -8,11 +8,11 @@ import { Person } from '../person.model';
   styleUrls: ['./ramsch-dialog.component.css']
 })
 export class RamschDialogComponent {
-  persons: Person[] = [
-    new Person(1, 'John Doe'),
-    new Person(2, 'Jane Smith'),
-    new Person(3, 'Jake Johnson'),
-    new Person(4, 'Jill Taylor')
+  players: Player[] = [
+    { id: 1, firstName: 'Kaddler 1', lastName: '', nickname: '' },
+    { id: 2, firstName: 'Kaddler 2', lastName: '', nickname: '' },
+    { id: 3, firstName: 'Kaddler 3', lastName: '', nickname: '' },
+    { id: 4, firstName: 'Kaddler 4', lastName: '', nickname: '' }
   ];
   numbers: number[] = [];
 
@@ -20,7 +20,7 @@ export class RamschDialogComponent {
     public dialogRef: MatDialogRef<RamschDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.persons = this.data.persons;
+    this.players = this.data.players;
   }
 
   onCancel(): void {
