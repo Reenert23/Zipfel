@@ -360,15 +360,26 @@
 }
 
 /* Winner/loser color coding for point values, consistent with the rest of the app */
-/* Always a full-width block so the number centers identically in every row,
-   regardless of whether the geber badge or solo-caller dot is also present
-   (those used to add to the box's width and made the numbers drift off-center). */
+/* A fixed-width slot sits on both sides of the number (one real, one an
+   invisible mirror) so the number's own center always lands on the cell's
+   center - whether or not the solo-caller dot is actually shown on the left.
+   The geber badge is a background on this same full-width row, so it never
+   changes the box's width either. */
 .points-cell {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: 4px 0;
-  text-align: center;
+}
+
+.indicator-slot {
+  width: 12px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .points-value {
@@ -405,15 +416,8 @@
   background-color: rgba(248, 113, 113, 0.08);
 }
 
-/* Positioned absolutely (centered above the number) so it never shifts the
-   number itself off-center - it used to sit inline before the number and
-   push it sideways whenever a game had a solo caller. */
 .green-circle,
 .red-circle {
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  transform: translateX(-50%);
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -447,9 +451,14 @@
   text-align: center;
 }
 
-/* Spieler-Zellen (Punkte mittig, kein Umbruch nötig) */
+/* Spieler-Zellen (Punkte mittig, kein Umbruch nötig)
+   Note: this Angular Material version only puts the "mat-mdc-*" classes on
+   cells, not the legacy "mat-cell"/"mat-footer-cell" ones - keeping both
+   selectors here so this survives a future Material upgrade either way. */
 .mat-cell:not(.mat-column-game),
-.mat-footer-cell:not(.mat-column-game) {
+.mat-footer-cell:not(.mat-column-game),
+.mat-mdc-cell:not(.mat-column-game),
+.mat-mdc-footer-cell:not(.mat-column-game) {
   width: 60px;
   min-width: 60px;
   max-width: 60px;

@@ -86,15 +86,20 @@
           'ramsch-row': row.gameType === 'Ramsch'
         }">
           <div class="points-cell" [ngClass]="{ 'geber': isGeber(row, player) }">
-            <span *ngIf="row.gameType === 'Solo' && row.soloCaller === player.id"
-              [ngClass]="{
-                'green-circle': getPointsForSoloCircle(row, player.id) > 0,
-                'red-circle': getPointsForSoloCircle(row, player.id) < 0
-              }">
+            <span class="indicator-slot">
+              <span *ngIf="row.gameType === 'Solo' && row.soloCaller === player.id"
+                [ngClass]="{
+                  'green-circle': getPointsForSoloCircle(row, player.id) > 0,
+                  'red-circle': getPointsForSoloCircle(row, player.id) < 0
+                }">
+              </span>
             </span>
             <span class="points-value"
               [class.positive]="getPointsForPlayer(row, player.id) > 0"
               [class.negative]="getPointsForPlayer(row, player.id) < 0">{{ getPointsForPlayer(row, player.id) }}</span>
+            <!-- Invisible mirror of the indicator slot so the number stays centered
+                 whether or not the real indicator is shown on the left. -->
+            <span class="indicator-slot" aria-hidden="true"></span>
           </div>
         </td>
 
