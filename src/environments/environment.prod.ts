@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://d2kdi3ghz3uib3.cloudfront.net/api'
+  // Update this once the backend is deployed on Render - the default
+  // service URL follows the "name" set in ZipfelBackend/render.yaml.
+  apiUrl: 'https://zipfel-backend.onrender.com/api'
 };

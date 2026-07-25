@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Round } from '../models/Round';
 import { Game } from '../models/Game';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ export class RoundService {
   //private baseUrl = 'http://localhost:8080/api/rounds'; // URL des Backends
   //private baseUrl = 'http://192.168.178.169:8080/api/rounds'; // URL des Backends
   private baseUrl = environment.apiUrl + "/rounds";
+
+  private currentRoundId: number = 0;
 
 
   constructor(private http: HttpClient) {}
@@ -44,6 +46,18 @@ export class RoundService {
   // Runde löschen
   deleteRound(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  setCurrentRoundId(id: number): void {
+    this.currentRoundId = id;
+  }
+
+  getCurrentRoundId(): number {
+    return this.currentRoundId;
+  }
+
+  clearCurrentRoundId(): void {
+    this.currentRoundId = 0;
   }
 }
 

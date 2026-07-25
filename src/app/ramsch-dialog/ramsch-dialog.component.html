@@ -1,34 +1,20 @@
 <h1 mat-dialog-title>Ramsch</h1>
 <div mat-dialog-content>
-  <p>Bitte gib die Punkte ein:</p>
-  <div>
-    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-      <span style="width: 120px; font-weight: bold;">{{ players[0].firstName }}:</span>
-      <mat-form-field appearance="fill" style="flex-grow: 1;">
-        <input matInput [(ngModel)]="numbers[0]" />
-      </mat-form-field>
-    </div>
-    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-      <span style="width: 120px; font-weight: bold;">{{ players[1].firstName }}:</span>
-      <mat-form-field appearance="fill" style="flex-grow: 1;">
-        <input matInput [(ngModel)]="numbers[1]" />
-      </mat-form-field>
-    </div>
-    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-      <span style="width: 120px; font-weight: bold;">{{ players[2].firstName }}:</span>
-      <mat-form-field appearance="fill" style="flex-grow: 1;">
-        <input matInput [(ngModel)]="numbers[2]" />
-      </mat-form-field>
-    </div>
-    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-      <span style="width: 120px; font-weight: bold;">{{ players[3].firstName }}:</span>
-      <mat-form-field appearance="fill" style="flex-grow: 1;">
-        <input matInput [(ngModel)]="numbers[3]" />
-      </mat-form-field>
+  <p class="hint">Bitte gib die Punkte ein — die Summe muss 0 ergeben.</p>
+  <div class="ramsch-rows">
+    <div class="ramsch-row" *ngFor="let player of players; let i = index">
+      <span class="player-label">{{ player.firstName }}</span>
+      <input
+        class="points-field"
+        type="number"
+        inputmode="numeric"
+        placeholder="0"
+        [(ngModel)]="numbers[i]"
+      />
     </div>
   </div>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Abbrechen</button>
-  <button mat-button color="primary" (click)="onSave()">Speichern</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Speichern</button>
 </div>

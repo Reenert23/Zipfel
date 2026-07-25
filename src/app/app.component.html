@@ -1,17 +1,30 @@
 <mat-sidenav-container autosize class="example-container">
-  <mat-sidenav #sidenav mode="over" opened>
+  <mat-sidenav #sidenav mode="over" opened class="glass-sidenav">
+    <div class="sidenav-brand">
+      <span class="brand-mark">Z</span>
+      <span class="brand-name">Zipfel</span>
+    </div>
     <mat-nav-list>
-      <a mat-list-item href="/">Home</a>
-      <a mat-list-item (click)="goToRounds()">Runden</a>
-      <a mat-list-item href="/contact">Contact</a>
+      <a mat-list-item href="/">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Home</span>
+      </a>
+      <a mat-list-item (click)="goToRounds()">
+        <mat-icon matListItemIcon>style</mat-icon>
+        <span matListItemTitle>Runden</span>
+      </a>
+      <a mat-list-item href="/contact">
+        <mat-icon matListItemIcon>mail</mat-icon>
+        <span matListItemTitle>Contact</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar class="glass-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>ZIPFEL</span>
+      <span class="brand">ZIPFEL</span>
     </mat-toolbar>
     <div class="container">
       <router-outlet></router-outlet>

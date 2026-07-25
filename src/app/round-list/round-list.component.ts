@@ -70,6 +70,7 @@ export class RoundListComponent implements OnInit {
         console.log('Neue Runde erstellt:', runde);
         this.rounds.push(runde);
         this.displayedColumns = this.getDynamicColumns();
+        this.goToRound(runde);
       },
       error: (err) => {
         console.error('Fehler beim Erstellen der Runde:', err);

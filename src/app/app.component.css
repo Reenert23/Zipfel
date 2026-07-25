@@ -1,3 +1,123 @@
-mat-toolbar{
-  z-index: 2;
+::ng-deep .mat-drawer-container {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* ---------- Toolbar ---------- */
+::ng-deep .glass-toolbar.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+
+  /* A high, mostly-opaque tint so the bar reads the same dark navy on every
+     page, regardless of what's scrolling underneath it (the transparent
+     version picked up light/colored page backgrounds and looked mismatched). */
+  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+/* Thin accent line under the toolbar tying it to the app's accent gradient */
+::ng-deep .glass-toolbar.mat-toolbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(79, 172, 254, 0.7), rgba(168, 85, 247, 0.7));
+  opacity: 0.6;
+}
+
+::ng-deep .glass-toolbar .mat-icon,
+::ng-deep .glass-toolbar button {
+  color: #fff;
+}
+
+.brand {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 1.15em;
+}
+
+/* ---------- Sidenav ---------- */
+::ng-deep .glass-sidenav.mat-drawer {
+  width: 250px;
+  background: linear-gradient(160deg, #17143a 0%, #241f4d 55%, #1b3a63 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+::ng-deep .mat-drawer-backdrop.mat-drawer-shown {
+  background: rgba(8, 6, 24, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 20px 16px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.55), rgba(168, 85, 247, 0.55));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 1.1em;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+::ng-deep .glass-sidenav .mat-mdc-nav-list {
+  padding: 8px 12px;
+
+  /* Material sets these to dark theme colors by default; override so
+     focused/hovered/selected items stay readable on the dark glass panel. */
+  --mdc-list-list-item-label-text-color: rgba(255, 255, 255, 0.85);
+  --mdc-list-list-item-hover-label-text-color: #fff;
+  --mdc-list-list-item-focus-label-text-color: #fff;
+  --mdc-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.65);
+  --mdc-list-list-item-hover-leading-icon-color: #fff;
+  --mdc-list-list-item-hover-state-layer-color: #fff;
+  --mdc-list-list-item-focus-state-layer-color: #fff;
+  --mdc-list-list-item-hover-state-layer-opacity: 0.08;
+  --mdc-list-list-item-focus-state-layer-opacity: 0.12;
+}
+
+::ng-deep .glass-sidenav .mat-mdc-list-item {
+  border-radius: 12px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: background 0.15s ease;
+}
+
+::ng-deep .glass-sidenav .mat-mdc-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+::ng-deep .glass-sidenav .mat-mdc-list-item .mdc-list-item__primary-text {
+  color: inherit;
+}
+
+::ng-deep .glass-sidenav .mat-mdc-list-item .mat-icon {
+  color: rgba(255, 255, 255, 0.65);
 }

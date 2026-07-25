@@ -1,100 +1,217 @@
-.container {
-  padding: 20px;
-  max-width: 400px;
-  margin: auto;
-  text-align: center;
-  background-color: #b0c4de;
+:host {
+  display: block;
 }
 
+:host *,
+:host *::before,
+:host *::after {
+  box-sizing: border-box;
+}
+
+.container {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+
+  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+  font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+}
+
+/* Decorative blurred glow blobs, consistent with the rest of the app */
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container::before {
+  width: 340px;
+  height: 340px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, #4facfe 0%, transparent 70%);
+}
+
+.container::after {
+  width: 380px;
+  height: 380px;
+  bottom: -100px;
+  left: -80px;
+  background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+}
+
+.container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Header ---------- */
 .title {
   font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0;
+  color: #fff;
 }
 
 .header {
   display: flex;
-  flex-direction: column; /* Elemente werden vertikal angeordnet */
-  align-items: center; /* Überschrift in der Mitte */
-  position: relative; /* Ermöglicht die absolute Positionierung des Buttons */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   padding: 16px;
 }
 
-.round-button {
+/* Glass icon buttons for back/delete and add-player */
+::ng-deep .header .mat-mdc-raised-button.round-button,
+::ng-deep .header .mat-mdc-raised-button.left-button {
   position: absolute;
- top: 15px;
-  right: 16px; /* Abstand vom rechten Rand */
+  top: 10px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+  line-height: 1;
+
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.round-button {
+  right: 16px;
 }
 
 .left-button {
-  position: absolute;
- top: 15px;
   left: 16px;
   font-size: xx-large;
 }
 
-.red-button.selected {
-  background-color: red !important;
-  color: white;
-}
-
-.title {
-  margin: 0; /* Entfernt unnötige Abstände */
-}
-
-button {
-  margin-left: auto; /* Sorgt dafür, dass der Button an den rechten Rand geschoben wird */
-}
-
-button.selected {
-  background-color: #3ae640 !important;
-  color: white;
-}
-
+/* ---------- Winner selection grid (2x2, layout unchanged) ---------- */
 .winner-selection {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+  margin: 20px auto;
+  max-width: 340px;
 }
 
 .winner-selection button {
   width: 100%;
-  height: 50px;
+  height: 56px;
   padding: 10px;
   text-align: center;
 }
 
-.points-input {
-  margin: 10px 0;
-  background-color: white;
-  height: 56px;
-  border-radius: 5px;
+::ng-deep .winner-selection .mat-mdc-raised-button {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
+::ng-deep .winner-selection .mat-mdc-raised-button.selected {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.6), rgba(34, 197, 94, 0.6)) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+::ng-deep .winner-selection .mat-mdc-raised-button.red-button.selected {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.6), rgba(239, 68, 68, 0.6)) !important;
+  color: #fff !important;
+}
+
+/* ---------- Game mode buttons (Ruf / Solo / Ramsch) ---------- */
 .button-group {
   margin-top: 15px;
   margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.button-group button {
-  margin: 5px;
-  background-color: #057979;
+::ng-deep .button-group .mat-mdc-raised-button {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  margin: 0 !important;
 }
 
+::ng-deep .button-group .mat-mdc-raised-button.selected {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.6), rgba(34, 197, 94, 0.6)) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+::ng-deep .button-group .mat-mdc-raised-button.selected.red-button {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.6), rgba(239, 68, 68, 0.6)) !important;
+}
+
+/* ---------- Points input ---------- */
+.points-input {
+  margin: 10px auto;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  background: transparent;
+}
+
+::ng-deep .points-input .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+::ng-deep .points-input .mdc-notched-outline__leading,
+::ng-deep .points-input .mdc-notched-outline__notch,
+::ng-deep .points-input .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+::ng-deep .points-input input {
+  color: #fff !important;
+  font-size: 1.3em;
+  font-weight: 700;
+  text-align: center;
+  caret-color: #fff;
+}
+
+/* ---------- Keypad (layout unchanged) ---------- */
 .grid-container {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-}
-
-.image-placeholder .image-card {
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-  background-color: #f0f0f0;
-  margin-right: 20px;
 }
 
 .keypad .key-row {
@@ -108,98 +225,207 @@ button.selected {
   margin: 5px;
 }
 
-.ok-button {
-  background-color: whitesmoke !important;
+::ng-deep .key-button.mat-mdc-raised-button {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  font-size: 1.2em;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
-.image-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
+::ng-deep .key-button.mat-mdc-raised-button:active {
+  transform: scale(0.95);
 }
 
-table {
+::ng-deep .key-button.ok-button.mat-mdc-raised-button:first-child,
+::ng-deep .key-row .key-button.ok-button.mat-mdc-raised-button {
+  background: rgba(248, 113, 113, 0.18) !important;
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+::ng-deep .key-row .key-button.ok-button.mat-mdc-raised-button:last-child {
+  background: rgba(74, 222, 128, 0.2) !important;
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+/* ---------- Games table ---------- */
+.tableContainer {
+  margin-top: 24px;
+  max-height: 400px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Thin, unobtrusive scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.tableContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+::ng-deep .tableContainer table.mat-mdc-table {
+  background: transparent;
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
+::ng-deep .tableContainer .mat-mdc-header-row {
+  height: 48px;
 }
 
-th {
-  background-color: #f4f4f4;
+::ng-deep .tableContainer .mat-mdc-row {
+  height: 56px;
+  transition: background 0.15s ease;
 }
 
-h3 {
-  margin-top: 20px;
+::ng-deep .tableContainer .mat-mdc-header-cell,
+::ng-deep .tableContainer th {
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  font-size: 0.8em;
 }
 
-.geber {
-  background-color: rgba(255, 255, 0, 0.707);
-  display: inline-block;
-  padding: 2px 4px;
-  border-radius: 4px;
+::ng-deep .tableContainer .mat-mdc-cell,
+::ng-deep .tableContainer .mat-mdc-footer-cell,
+::ng-deep .tableContainer td {
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.95em;
 }
 
-.solo-row {
-  background-color: #e6f2f9; /* Sehr blassere Version von lightblue */
+::ng-deep .tableContainer .mat-mdc-footer-row {
+  height: 52px;
 }
 
-.ruf-row {
-  background-color: #e6f2e6; /* Sehr blassere Version von lightgreen */
+::ng-deep .tableContainer .mat-mdc-footer-cell {
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: none;
 }
 
-.geier-row {
-  background-color: #f9e6e6; /* Sehr blassere Version von lightyellow */
-}
-
-.ramsch-row {
-  background-color: #f9f2e6; /* Sehr blassere Version von lightcoral */
+::ng-deep .tableContainer .mat-mdc-row:hover .mat-mdc-cell {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .mat-sticky {
   position: sticky;
-  top: 0; /* Höhe des Headers */
+  top: 0;
   z-index: 2;
-  background: white; /* Hintergrundfarbe, um Überlagerungen zu vermeiden */
-  border-bottom: 1px solid #ddd;
+  background: rgba(24, 21, 56, 0.85) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
-.tableContainer {
-  margin-top: 20px;
-  max-height: 400px;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+/* Circular badge for the game number / sum symbol */
+.game-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
 }
 
+.sum-badge {
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.5), rgba(168, 85, 247, 0.5));
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* Winner/loser color coding for point values, consistent with the rest of the app */
+.points-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.points-value {
+  font-weight: 700;
+}
+
+.points-value.positive {
+  color: #4ade80;
+}
+
+.points-value.negative {
+  color: #f87171;
+}
+
+.geber {
+  background: rgba(250, 204, 21, 0.16);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.solo-row {
+  background-color: rgba(96, 165, 250, 0.1);
+}
+
+.ruf-row {
+  background-color: rgba(74, 222, 128, 0.08);
+}
+
+.geier-row {
+  background-color: rgba(250, 204, 21, 0.08);
+}
+
+.ramsch-row {
+  background-color: rgba(248, 113, 113, 0.08);
+}
 
 .green-circle {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: green;
-  border-radius: 50%; /* Macht das Element zu einem Kreis */
-  margin-left: 5px;   /* Abstand zu den Punkten */
+  background-color: #4ade80;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .red-circle {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: red;
-  border-radius: 50%; /* Macht das Element zu einem Kreis */
-  margin-left: 5px;   /* Abstand zu den Punkten */
+  background-color: #f87171;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* Erste Spalte Spiel */
 .mat-column-game {
-  width: 40px;
-  min-width: 40px;
-  max-width: 40px;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  padding: 0 6px !important;
   text-align: center;
   white-space: nowrap;
 }
@@ -224,6 +450,23 @@ h3 {
   white-space: nowrap;
 }
 
+/* Bildplatzhalter (aktuell nicht genutzt, Stil beibehalten) */
+.image-placeholder .image-card {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin-right: 20px;
+}
 
+.image-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
 
-
+h3 {
+  margin-top: 20px;
+  color: #fff;
+}

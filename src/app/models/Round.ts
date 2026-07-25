@@ -6,11 +6,13 @@ export interface Round {
   players: Player[];
   games: Game[];
   lockedPlayers?: boolean;
+  date: string;
 }
 
 export function createEmptyRound(players: Player[] = []): Round {
   return {
     players: [...players], // wichtig: Kopie, nicht Referenz
-    games: []
+    games: [],
+    date: new Date().toISOString()
   };
 }

@@ -19,13 +19,11 @@ import { SelectPlayersComponent } from '../dialogs/select-players/select-players
 })
 export class GameListComponent {
 
-     // Spieler
-     players: Player[] = [
-      { id: 1, firstName: 'Kaddler 1', lastName: '', nickname: '' },
-      { id: 2, firstName: 'Kaddler 2', lastName: '', nickname: '' },
-      { id: 3, firstName: 'Kaddler 3', lastName: '', nickname: '' },
-      { id: 4, firstName: 'Kaddler 4', lastName: '', nickname: '' }
-    ];
+  // Spieler für die Logik (immer gültig)
+  players: Player[] = [];
+
+  // Slots für das UI (können leer sein → Buttons sichtbar)
+  playerSlots: (Player | undefined)[] = [undefined, undefined, undefined, undefined];
 
   displayedColumns: string[] = ['game', ...this.players.map(player => player.firstName)];
 
@@ -39,7 +37,8 @@ export class GameListComponent {
   newRound: Round = {
     players: this.players, // Da players ein Pflichtfeld ist, muss es initialisiert werden.
     games: [],    // Optional: Kann auch weggelassen werden, wenn nicht erforderlich.
-    lockedPlayers: false
+    lockedPlayers: false,
+    date: new Date().toISOString()
   };
 
   // Temporäre Auswahl der Gewinner
@@ -72,15 +71,26 @@ export class GameListComponent {
     ngOnInit(): void {
       const id = Number(this.route.snapshot.paramMap.get('id'));
 
+
+
       if (id) {
-        // ✅ Fall 1: Runde von RoundList ausgewählt
         this.roundService.getRoundById(id).subscribe((runde) => {
           this.newRound = {
             ...runde,
             lockedPlayers: (runde.games && runde.games.length > 0)
           };
+
+          if (runde.players) {
+            this.players = runde.players;
+
+            // ✅ Buttons aktualisieren
+            this.playerSlots = [
+              ...this.players,
+              ...Array(4 - this.players.length).fill(undefined)
+            ];
+          }
+
           this.games = runde.games || [];
-          this.players = runde.players || [];
           this.totalPoints = this.getTotalPoints();
 
           // Tabelle aktualisieren
@@ -91,8 +101,16 @@ export class GameListComponent {
         this.newRound = {
           players: this.players,
           games: [],
-          lockedPlayers: false
+          lockedPlayers: false,
+          date: new Date().toISOString()
         };
+
+        // ✅ Auch hier playerSlots initialisieren
+        this.playerSlots = [
+          ...this.players,
+          ...Array(4 - this.players.length).fill(undefined)
+        ];
+
         this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
         this.dataSource.data = this.games;
       }
@@ -136,27 +154,41 @@ export class GameListComponent {
           roundId: this.newRound.id
         };
 
-        if (this.newRound.id !== undefined) {
-          this.roundService.addGameToRound(this.newRound.id, newGame).subscribe({
-            next: (updatedRound) => {
-              this.games = updatedRound.games || [];
-              this.newRound = updatedRound;
-
-              if (updatedRound.games && updatedRound.games.length > 0) {
-                const lastElement = updatedRound.games[updatedRound.games.length - 1];
-                this.lastAddedGameId = lastElement?.id ?? 0;
-              }
-
-              this.newRound.lockedPlayers = true;
-              this.dataSource = new MatTableDataSource<Game>(this.games);
-              this.totalPoints = this.getTotalPoints();
-              this.cdr.detectChanges();
-            },
-            error: (error) => {
-              console.error('Error adding Ramsch game:', error);
-            }
+        if (this.newRound.id === undefined) {
+          // Erstes Spiel der Runde: Runde muss erst angelegt werden, bevor ein
+          // Spiel hinzugefügt werden kann (siehe addGame()/addGameToRound()).
+          this.roundService.createRound(this.newRound).subscribe((round) => {
+            this.newRound = round;
+            newGame.roundId = round.id;
+            this.saveRamschGame(newGame);
           });
+        } else {
+          this.saveRamschGame(newGame);
         }
+      }
+    });
+  }
+
+  private saveRamschGame(newGame: Game): void {
+    if (this.newRound.id === undefined) return;
+
+    this.roundService.addGameToRound(this.newRound.id, newGame).subscribe({
+      next: (updatedRound) => {
+        this.games = updatedRound.games || [];
+        this.newRound = updatedRound;
+
+        if (updatedRound.games && updatedRound.games.length > 0) {
+          const lastElement = updatedRound.games[updatedRound.games.length - 1];
+          this.lastAddedGameId = lastElement?.id ?? 0;
+        }
+
+        this.newRound.lockedPlayers = true;
+        this.dataSource = new MatTableDataSource<Game>(this.games);
+        this.totalPoints = this.getTotalPoints();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error adding Ramsch game:', error);
       }
     });
   }
@@ -179,7 +211,7 @@ export class GameListComponent {
 
 
   updatePlayers(playerNames: string[]): void {
-    // 1. Spieler aktualisieren
+    // 1. Spieler für Logik setzen
     this.players = playerNames.map((name, index) => ({
       id: index + 1,
       firstName: name,
@@ -187,14 +219,11 @@ export class GameListComponent {
       nickname: ''
     }));
 
-    // 2. Tabellenspalten anpassen
-    this.displayedColumns = ['game', ...this.players.map(player => player.firstName)];
-
-    // 3. Punkte-Objekt initialisieren
-    this.totalPoints = {};
-    for (const player of this.players) {
-      this.totalPoints[player.id] = 0;
-    }
+    // 2. Slots befüllen (leere Slots auffüllen mit undefined)
+    this.playerSlots = [
+      ...this.players,
+      ...Array(4 - this.players.length).fill(undefined)
+    ];
   }
 
   // Funktion zum Setzen der maximalen Anzahl der Gewinner
@@ -438,22 +467,28 @@ export class GameListComponent {
       width: '420px',
       data: { preselected: this.players, requiredCount: 4 },
       maxHeight: '80vh',      // sorgt dafür, dass der Inhalt nicht höher als der Viewport wird
-  autoFocus: false
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe((chosen: Player[] | undefined) => {
       if (!chosen || chosen.length !== 4) return;
 
-      // 1) Spieler in Component setzen
+      // 1) Spieler für Logik setzen
       this.players = chosen;
 
-      // 2) Spalten neu aufbauen
+      // 2) Slots für die Buttons aktualisieren
+      this.playerSlots = [
+        ...this.players,
+        ...Array(4 - this.players.length).fill(undefined)
+      ];
+
+      // 3) Spalten neu aufbauen
       this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
 
-      // 3) Runde vorbereiten
+      // 4) Runde vorbereiten
       this.newRound.players = this.players;
 
-      // 4) Tabelle zurücksetzen (neue Runde → keine Games)
+      // 5) Tabelle zurücksetzen (neue Runde → keine Games)
       this.games = [];
       this.totalPoints = this.getTotalPoints();
       this.dataSource.data = this.games;

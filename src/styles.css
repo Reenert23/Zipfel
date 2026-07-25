@@ -9,3 +9,126 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* ==========================================================================
+   Glass dialog theme
+   Dialog content is appended to <body> by the CDK overlay, outside any
+   component's view encapsulation, so it has to be styled globally rather
+   than with per-component ::ng-deep rules.
+   ========================================================================== */
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(8, 6, 24, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: linear-gradient(160deg, #17143a 0%, #241f4d 55%, #1b3a63 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title,
+.mat-mdc-dialog-container .mat-mdc-dialog-content,
+.mat-mdc-dialog-container .mat-mdc-dialog-content p {
+  color: #fff !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  color: rgba(255, 255, 255, 0.85) !important;
+
+  /* Thin, unobtrusive scrollbar, consistent with the games table */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+/* Form fields (both appearance="fill" and appearance="outline") */
+.mat-mdc-dialog-container .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px;
+}
+
+.mat-mdc-dialog-container .mdc-line-ripple::before,
+.mat-mdc-dialog-container .mdc-line-ripple::after {
+  border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.mat-mdc-dialog-container .mdc-notched-outline__leading,
+.mat-mdc-dialog-container .mdc-notched-outline__notch,
+.mat-mdc-dialog-container .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-form-field-label,
+.mat-mdc-dialog-container .mdc-floating-label,
+.mat-mdc-dialog-container .mat-mdc-select-value,
+.mat-mdc-dialog-container .mat-mdc-select-arrow {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.mat-mdc-dialog-container input.mat-mdc-input-element {
+  color: #fff !important;
+  caret-color: #fff;
+}
+
+/* Buttons */
+.mat-mdc-dialog-container .mat-mdc-dialog-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mat-mdc-dialog-container .mat-mdc-button:not(.mat-primary) {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-button.mat-primary {
+  color: #7dd3fc !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-outlined-button {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-raised-button.mat-primary,
+.mat-mdc-dialog-container .mat-mdc-unelevated-button.mat-primary {
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.75), rgba(168, 85, 247, 0.75)) !important;
+  color: #fff !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-raised-button.mat-primary:disabled,
+.mat-mdc-dialog-container .mat-mdc-unelevated-button.mat-primary:disabled {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Selection list (player picker) */
+.mat-mdc-dialog-container .mat-mdc-selection-list,
+.mat-mdc-dialog-container .mat-mdc-list-base {
+  --mdc-list-list-item-label-text-color: rgba(255, 255, 255, 0.85);
+  --mdc-list-list-item-hover-label-text-color: #fff;
+  --mdc-list-list-item-focus-label-text-color: #fff;
+  --mdc-list-list-item-hover-state-layer-color: #fff;
+  --mdc-list-list-item-focus-state-layer-color: #fff;
+  --mdc-list-list-item-hover-state-layer-opacity: 0.08;
+  --mdc-list-list-item-focus-state-layer-opacity: 0.12;
+}
+
+.mat-mdc-dialog-container .mat-mdc-list-option {
+  border-radius: 10px;
+}
+
+.mat-mdc-dialog-container .mat-mdc-list-option .mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}

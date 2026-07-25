@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9em;
+  margin: 0 0 16px;
+}
+
+.ramsch-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ramsch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.player-label {
+  font-weight: 600;
+  color: #fff;
+}
+
+.points-field {
+  width: 90px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 1.05em;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 6px;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.points-field:focus {
+  border-color: rgba(79, 172, 254, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.points-field::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Hide native number spinners for a cleaner look */
+.points-field::-webkit-outer-spin-button,
+.points-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
