@@ -360,11 +360,15 @@
 }
 
 /* Winner/loser color coding for point values, consistent with the rest of the app */
+/* Always a full-width block so the number centers identically in every row,
+   regardless of whether the geber badge or solo-caller dot is also present
+   (those used to add to the box's width and made the numbers drift off-center). */
 .points-cell {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 4px 0;
+  text-align: center;
 }
 
 .points-value {
@@ -379,10 +383,9 @@
   color: #f87171;
 }
 
-.geber {
+.points-cell.geber {
   background: rgba(250, 204, 21, 0.16);
   border: 1px solid rgba(250, 204, 21, 0.4);
-  padding: 3px 10px;
   border-radius: 999px;
 }
 
@@ -402,22 +405,26 @@
   background-color: rgba(248, 113, 113, 0.08);
 }
 
-.green-circle {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: #4ade80;
+/* Positioned absolutely (centered above the number) so it never shifts the
+   number itself off-center - it used to sit inline before the number and
+   push it sideways whenever a game had a solo caller. */
+.green-circle,
+.red-circle {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  flex-shrink: 0;
+}
+
+.green-circle {
+  background-color: #4ade80;
 }
 
 .red-circle {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
   background-color: #f87171;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 /* Erste Spalte Spiel */
