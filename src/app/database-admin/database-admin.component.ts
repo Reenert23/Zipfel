@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-database-admin',
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./database-admin.component.css']
 })
 export class DatabaseAdminComponent {
-  private apiUrl = '/api';
+  private apiUrl = environment.apiUrl + '/admin';
   isLoading = false;
   successMessage = '';
 
