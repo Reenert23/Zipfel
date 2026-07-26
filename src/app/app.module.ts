@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { GameListComponent } from './game-list/game-list.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { NameDialogComponent } from './name-dialog/name-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -33,6 +34,7 @@ import { SelectPlayersComponent } from './dialogs/select-players/select-players.
 @NgModule({
   declarations: [
     AppComponent,
+    DashboardComponent,
     GameListComponent,
     NameDialogComponent,
     RamschDialogComponent,

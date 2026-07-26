@@ -1,0 +1,65 @@
+<div class="container">
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button mat-raised-button color="primary" class="start-btn" (click)="startNewRound()">
+      <mat-icon>add</mat-icon>
+      Neue Runde starten
+    </button>
+    <button mat-raised-button color="accent" class="browse-btn" (click)="goToRounds()">
+      <mat-icon>history</mat-icon>
+      Alle Runden
+    </button>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-value">{{ totalRounds }}</div>
+      <div class="stat-label">Runden gespielt</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ playerStats.length }}</div>
+      <div class="stat-label">Aktive Spieler</div>
+    </div>
+  </div>
+
+  <!-- Player Rankings -->
+  <div *ngIf="playerStats.length > 0" class="section">
+    <h2 class="section-title">Top Spieler</h2>
+    <div class="player-rankings">
+      <div *ngFor="let player of playerStats; let i = index" class="rank-item">
+        <div class="rank-position">{{ i + 1 }}</div>
+        <div class="rank-info">
+          <div class="rank-name">{{ player.name }}</div>
+          <div class="rank-stats">
+            {{ player.wins }} Siege · {{ player.totalPoints > 0 ? '+' : '' }}{{ player.totalPoints }} Punkte
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Rounds -->
+  <div *ngIf="rounds.length > 0" class="section">
+    <h2 class="section-title">Letzte Runden</h2>
+    <div class="recent-rounds">
+      <div *ngFor="let round of rounds" class="round-card" (click)="openRound(round.id)">
+        <div class="round-date">{{ formatDate(round.date) }}</div>
+        <div class="round-players">
+          <span *ngFor="let player of round.players" class="player-badge">
+            {{ player.firstName }}
+          </span>
+        </div>
+        <div class="round-games">{{ round.games?.length || 0 }} Spiele</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="rounds.length === 0 && totalRounds === 0" class="empty-state">
+    <mat-icon>sports_esports</mat-icon>
+    <h3>Noch keine Runden</h3>
+    <p>Starten Sie eine neue Runde, um zu spielen und Statistiken zu sammeln.</p>
+    <button mat-raised-button color="primary" (click)="startNewRound()">Jetzt starten</button>
+  </div>
+</div>

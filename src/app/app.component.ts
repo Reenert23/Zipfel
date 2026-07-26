@@ -30,7 +30,7 @@ export class AppComponent {
   }
 
   private checkGameListRoute(url: string): boolean {
-    return url === '/' || /^\/rounds\/\d+\/games/.test(url);
+    return url === '/play' || /^\/rounds\/\d+\/games/.test(url);
   }
 
   openPlayerSelector(): void {

@@ -1,0 +1,251 @@
+:host {
+  display: block;
+}
+
+.container {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+
+  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+  font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+}
+
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container::before {
+  width: 340px;
+  height: 340px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, #4facfe 0%, transparent 70%);
+}
+
+.container::after {
+  width: 380px;
+  height: 380px;
+  bottom: -100px;
+  left: -80px;
+  background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+}
+
+.container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.start-btn, .browse-btn {
+  border-radius: 999px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  min-width: 160px !important;
+}
+
+::ng-deep .quick-actions .mat-mdc-raised-button {
+  border-radius: 999px;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Stats Overview */
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 30px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.stat-value {
+  font-size: 2em;
+  font-weight: 700;
+  color: #4ade80;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 0 0 16px;
+  text-align: left;
+  color: #fff;
+}
+
+/* Player Rankings */
+.player-rankings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: background 0.15s ease;
+}
+
+.rank-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rank-position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.6), rgba(168, 85, 247, 0.6));
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rank-info {
+  flex: 1;
+  text-align: left;
+}
+
+.rank-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rank-stats {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Recent Rounds */
+.recent-rounds {
+  display: grid;
+  gap: 12px;
+}
+
+.round-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.round-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.round-date {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 8px;
+}
+
+.round-players {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.player-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  font-size: 0.85em;
+}
+
+.round-games {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.3em;
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 20px;
+}
+
+@media (max-width: 600px) {
+  .quick-actions {
+    flex-direction: column;
+  }
+
+  .start-btn, .browse-btn {
+    width: 100% !important;
+  }
+
+  .stats-overview {
+    max-width: none;
+  }
+}
