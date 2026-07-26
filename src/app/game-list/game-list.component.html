@@ -13,9 +13,22 @@
     </div>
   </div>
   <div class="button-group">
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [class.selected]="maxWinners == 2">Ruf</button>
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [class.selected]="maxWinners == 1" [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [class.selected]="gameType === 'Ruf'">Ruf</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [class.selected]="gameType === 'Solo'" [ngClass]="{'red-button': gameType === 'Solo' && clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Geier')" [class.selected]="gameType === 'Geier'" [ngClass]="{'red-button': gameType === 'Geier' && clickCount % 2 === 0 && clickCount !== 0}">Geier</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Ramsch'); openRamschDialog()">Ramsch</button>
+  </div>
+
+  <!-- Modifier-Buttons -->
+  <div class="modifier-group" *ngIf="gameType !== ''">
+    <button class="modifier-btn" [class.active-tout]="isTout"
+      *ngIf="gameType === 'Solo' || gameType === 'Geier'"
+      (click)="isTout = !isTout">Tout</button>
+    <button class="modifier-btn" [class.active-schneider]="isSchneider && !isSchwarz"
+      (click)="toggleSchneider()">Schneider</button>
+    <button class="modifier-btn" [class.active-schwarz]="isSchwarz"
+      (click)="toggleSchwarz()">Schwarz</button>
+    <span class="multiplier-display" *ngIf="getMultiplier() > 1">×{{ getMultiplier() }}</span>
   </div>
 
 
@@ -80,7 +93,14 @@
           'ruf-row': row.gameType === 'Ruf',
           'geier-row': row.gameType === 'Geier',
           'ramsch-row': row.gameType === 'Ramsch'
-        }"> <span class="game-badge">{{ getGameNumber(row) }}</span> </td>
+        }">
+          <span class="game-badge">{{ getGameNumber(row) }}</span>
+          <div class="game-markers">
+            <span class="marker marker-tout" *ngIf="row.tout">T</span>
+            <span class="marker marker-schwarz" *ngIf="row.schwarz">Sz</span>
+            <span class="marker marker-schneider" *ngIf="row.schneider && !row.schwarz">Sn</span>
+          </div>
+        </td>
         <td mat-footer-cell *matFooterCellDef> <span class="game-badge sum-badge">&#8721;</span> </td>
       </ng-container>
 

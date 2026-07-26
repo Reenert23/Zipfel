@@ -62,6 +62,9 @@ export class GameListComponent implements OnInit, OnDestroy {
   geber: boolean = true;
   round?: Round;
   geberStartIndex = 0;
+  isTout = false;
+  isSchneider = false;
+  isSchwarz = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -251,8 +254,10 @@ export class GameListComponent implements OnInit, OnDestroy {
         this.maxWinners = 2;
         break;
       case 'Geier':
-        this.clickCount = 0;
-        this.maxWinners = 2;
+        this.gameType = 'Geier';
+        this.clickCount++;
+        this.maxWinners = 1;
+        this.isLooser = this.clickCount % 2 === 0;
         break;
       case 'Ramsch':
         this.gameType = winnerType;
@@ -357,30 +362,46 @@ export class GameListComponent implements OnInit, OnDestroy {
 
 
 
+  toggleSchneider(): void {
+    this.isSchneider = !this.isSchneider;
+    if (this.isSchneider) this.isSchwarz = false;
+  }
+
+  toggleSchwarz(): void {
+    this.isSchwarz = !this.isSchwarz;
+    if (this.isSchwarz) this.isSchneider = false;
+  }
+
+  getMultiplier(): number {
+    let m = this.isSchwarz ? 3 : this.isSchneider ? 2 : 1;
+    if (this.isTout) m *= 2;
+    return m;
+  }
+
   addGameToRound() {
     if (this.selectedWinners.length !== this.maxWinners || this.pointsInput <= 0) {
       alert(`Bitte genau ${this.maxWinners} Gewinner auswählen und Punkte eingeben.`);
       return;
     }
 
+    const base = this.pointsInput * this.getMultiplier();
+
     const scores: GameScore[] = this.players.map(player => {
       let points = 0;
       if (this.maxWinners === 1) {
-        this.gameType = "Solo";
         if (this.selectedWinners.includes(player.firstName)) {
           this.soloCaller = player.id;
-          points = this.pointsInput;
+          points = base;
         } else {
-          points = -Math.floor(this.pointsInput / (this.players.length - 1));
+          points = -Math.floor(base / (this.players.length - 1));
         }
         if (this.isLooser) {
           points *= -1;
         }
       } else {
-        this.gameType = "Ruf";
         points = this.selectedWinners.includes(player.firstName)
-          ? this.pointsInput
-          : -this.pointsInput;
+          ? base
+          : -base;
       }
       return { playerId: player.id, points };
     });
@@ -389,7 +410,10 @@ export class GameListComponent implements OnInit, OnDestroy {
       gameType: this.gameType,
       soloCaller: this.soloCaller,
       scores: scores,
-      roundId: this.newRound.id
+      roundId: this.newRound.id,
+      tout: this.isTout,
+      schneider: this.isSchneider,
+      schwarz: this.isSchwarz
     };
 
     if (this.newRound.id !== undefined) {
@@ -425,6 +449,9 @@ export class GameListComponent implements OnInit, OnDestroy {
     this.clickCount = 0;
     this.gameType = '';
     this.soloCaller = -1;
+    this.isTout = false;
+    this.isSchneider = false;
+    this.isSchwarz = false;
     this.clearInput();
   }
 

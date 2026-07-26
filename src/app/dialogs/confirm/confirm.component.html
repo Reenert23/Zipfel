@@ -1,0 +1,13 @@
+<div class="confirm-dialog">
+  <h2 class="confirm-title">{{ data.title }}</h2>
+  <p class="confirm-message">{{ data.message }}</p>
+
+  <div class="confirm-actions">
+    <button class="confirm-btn cancel" (click)="cancel()">
+      {{ data.cancelLabel || 'Abbrechen' }}
+    </button>
+    <button class="confirm-btn accept" [class.danger]="data.danger" (click)="confirm()">
+      {{ data.confirmLabel || 'Bestätigen' }}
+    </button>
+  </div>
+</div>

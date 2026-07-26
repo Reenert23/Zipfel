@@ -200,6 +200,58 @@
   color: #f87171;
 }
 
+.player-solo-stats {
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.solo-label {
+  font-size: 0.65em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+}
+
+.solo-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.solo-record {
+  display: flex;
+  gap: 4px;
+}
+
+.solo-item {
+  color: rgba(255, 255, 255, 0.75);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.solo-item.positive {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.15);
+}
+
+.solo-points {
+  color: #fff;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.solo-points.positive {
+  color: #4ade80;
+}
+
+.solo-points.negative {
+  color: #f87171;
+}
+
 .positive { color: #4ade80; }
 .negative { color: #f87171; }
 
@@ -252,3 +304,4 @@
   text-align: right;
   flex-shrink: 0;
 }
+

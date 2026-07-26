@@ -55,6 +55,22 @@
           <span class="best-game positive">↑ {{ p.bestGame }}</span>
           <span class="worst-game negative">↓ {{ p.worstGame }}</span>
         </div>
+
+        <!-- Solo/Geier Stats (optional) -->
+        <div class="player-solo-stats" *ngIf="p.solosPlayed && p.solosPlayed > 0">
+          <div class="solo-label">Solo/Geier</div>
+          <div class="solo-row">
+            <span class="solo-item">{{ p.solosPlayed }}x</span>
+            <span class="solo-record">
+              <span class="solo-item positive">{{ p.solosWon }}W</span>
+              <span class="solo-item negative">{{ p.solosPlayed! - p.solosWon! }}L</span>
+            </span>
+            <span class="solo-item">{{ p.soloWinRate }}%</span>
+            <span class="solo-points" [class.positive]="p.soloPoints! > 0" [class.negative]="p.soloPoints! < 0">
+              {{ p.soloPoints! > 0 ? '+' : '' }}{{ p.soloPoints }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 

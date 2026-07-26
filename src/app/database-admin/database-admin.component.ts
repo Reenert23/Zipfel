@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
+import { ConfirmComponent, ConfirmData } from '../dialogs/confirm/confirm.component';
 
 @Component({
   selector: 'app-database-admin',
@@ -12,43 +14,50 @@ export class DatabaseAdminComponent {
   isLoading = false;
   successMessage = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dialog: MatDialog) {}
 
   clearDatabase(): void {
-    if (!confirm('Wirklich alle Daten löschen? Das kann nicht rückgängig gemacht werden!')) {
-      return;
-    }
+    this.ask({
+      title: 'Datenbank leeren?',
+      message: 'Alle Runden, Spiele und Spieler werden gelöscht. Das kann nicht rückgängig gemacht werden.',
+      confirmLabel: 'Leeren',
+      danger: true
+    }, '/clear-database', 'Datenbank geleert ✓');
+  }
 
-    this.isLoading = true;
-    this.successMessage = '';
+  resetTestdata(): void {
+    this.ask({
+      title: 'Testdaten einspielen?',
+      message: 'Die Datenbank wird geleert und mit 2 Runden à 3 Spielen neu befüllt.',
+      confirmLabel: 'Einspielen'
+    }, '/reset-testdata', 'Testdaten eingespielt ✓');
+  }
 
-    this.http.post(`${this.apiUrl}/admin/clear-database`, {}).subscribe({
-      next: () => {
-        this.successMessage = 'Datenbank geleert ✓';
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.successMessage = `Fehler: ${err.message}`;
-        this.isLoading = false;
+  private ask(data: ConfirmData, endpoint: string, okMessage: string): void {
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: '340px',
+      data,
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.callAdmin(endpoint, okMessage);
       }
     });
   }
 
-  resetTestdata(): void {
-    if (!confirm('Testdaten einspielen? Bestehende Daten werden überschrieben.')) {
-      return;
-    }
-
+  private callAdmin(endpoint: string, okMessage: string): void {
     this.isLoading = true;
     this.successMessage = '';
 
-    this.http.post(`${this.apiUrl}/admin/reset-testdata`, {}).subscribe({
+    this.http.post(`${this.apiUrl}${endpoint}`, {}).subscribe({
       next: () => {
-        this.successMessage = 'Testdaten eingespielt ✓';
+        this.successMessage = okMessage;
         this.isLoading = false;
       },
       error: (err) => {
-        this.successMessage = `Fehler: ${err.message}`;
+        this.successMessage = `Fehler: ${err.status} ${err.statusText || err.message}`;
         this.isLoading = false;
       }
     });

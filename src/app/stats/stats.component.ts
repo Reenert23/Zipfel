@@ -4,12 +4,17 @@ import { Round } from '../models/Round';
 
 interface PlayerStat {
   name: string;
+  playerId: number;
   totalPoints: number;
   gamesPlayed: number;
   gamesWon: number;
   winRate: number;
   bestGame: number;
   worstGame: number;
+  solosPlayed?: number;
+  solosWon?: number;
+  soloWinRate?: number;
+  soloPoints?: number;
 }
 
 interface GameTypeCount {
@@ -51,12 +56,17 @@ export class StatsComponent implements OnInit {
         if (!map.has(player.id)) {
           map.set(player.id, {
             name: player.firstName,
+            playerId: player.id,
             totalPoints: 0,
             gamesPlayed: 0,
             gamesWon: 0,
             winRate: 0,
             bestGame: -Infinity,
-            worstGame: Infinity
+            worstGame: Infinity,
+            solosPlayed: 0,
+            solosWon: 0,
+            soloWinRate: 0,
+            soloPoints: 0
           });
         }
 
@@ -72,6 +82,13 @@ export class StatsComponent implements OnInit {
           if (score.points > stat.bestGame) stat.bestGame = score.points;
           if (score.points < stat.worstGame) stat.worstGame = score.points;
           if (score.points > 0) stat.gamesWon++;
+
+          // Solo/Geier tracking
+          if ((game.gameType === 'Solo' || game.gameType === 'Geier') && game.soloCaller === player.id) {
+            stat.solosPlayed!++;
+            stat.soloPoints! += score.points;
+            if (score.points > 0) stat.solosWon!++;
+          }
         });
       });
     });
@@ -81,7 +98,8 @@ export class StatsComponent implements OnInit {
         ...s,
         bestGame: s.bestGame === -Infinity ? 0 : s.bestGame,
         worstGame: s.worstGame === Infinity ? 0 : s.worstGame,
-        winRate: s.gamesPlayed > 0 ? Math.round((s.gamesWon / s.gamesPlayed) * 100) : 0
+        winRate: s.gamesPlayed > 0 ? Math.round((s.gamesWon / s.gamesPlayed) * 100) : 0,
+        soloWinRate: s.solosPlayed! > 0 ? Math.round((s.solosWon! / s.solosPlayed!) * 100) : 0
       }))
       .sort((a, b) => b.totalPoints - a.totalPoints);
   }

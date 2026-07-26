@@ -551,3 +551,86 @@ h3 {
   margin-top: 20px;
   color: #fff;
 }
+
+/* ---------- Modifier buttons (Tout / Schneider / Schwarz) ---------- */
+.modifier-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: -4px 0 14px;
+  flex-wrap: wrap;
+}
+
+.modifier-btn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.modifier-btn.active-tout {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.6), rgba(139, 92, 246, 0.6));
+  border-color: rgba(168, 85, 247, 0.8);
+  color: #fff;
+}
+
+.modifier-btn.active-schneider {
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.5), rgba(234, 179, 8, 0.5));
+  border-color: rgba(250, 204, 21, 0.8);
+  color: #fff;
+}
+
+.modifier-btn.active-schwarz {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.6), rgba(239, 68, 68, 0.6));
+  border-color: rgba(248, 113, 113, 0.8);
+  color: #fff;
+}
+
+.multiplier-display {
+  font-size: 1em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Game markers in table ---------- */
+.game-markers {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  margin-top: 3px;
+}
+
+.marker {
+  font-size: 0.6em;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+.marker-tout {
+  background: rgba(168, 85, 247, 0.5);
+  color: #e9d5ff;
+}
+
+.marker-schneider {
+  background: rgba(250, 204, 21, 0.4);
+  color: #fef08a;
+}
+
+.marker-schwarz {
+  background: rgba(248, 113, 113, 0.5);
+  color: #fecaca;
+}
