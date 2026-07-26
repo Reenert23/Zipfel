@@ -1,0 +1,28 @@
+<div class="database-admin">
+  <div class="admin-header">
+    <h1>Datenbank Admin</h1>
+    <p class="subtitle">Entwickler-Tools zum Verwalten der Testdatenbank</p>
+  </div>
+
+  <div class="admin-actions">
+    <button
+      class="admin-btn danger"
+      (click)="clearDatabase()"
+      [disabled]="isLoading">
+      <mat-icon>delete_sweep</mat-icon>
+      <span>Datenbank leeren</span>
+    </button>
+
+    <button
+      class="admin-btn primary"
+      (click)="resetTestdata()"
+      [disabled]="isLoading">
+      <mat-icon>restore</mat-icon>
+      <span>Testdaten einspielen</span>
+    </button>
+  </div>
+
+  <div class="message" *ngIf="successMessage" [class.error]="successMessage.includes('Fehler')">
+    {{ successMessage }}
+  </div>
+</div>

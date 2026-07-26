@@ -21,6 +21,10 @@
         <mat-icon matListItemIcon>mail</mat-icon>
         <span matListItemTitle>Contact</span>
       </a>
+      <a mat-list-item routerLink="/database-admin">
+        <mat-icon matListItemIcon>storage</mat-icon>
+        <span matListItemTitle>DB Admin</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -30,6 +34,7 @@
       </button>
       <span class="brand" *ngIf="!isDashboard">ZIPFEL</span>
       <span class="toolbar-spacer"></span>
+      <span class="version" style="font-size: 0.75em; opacity: 0.7; margin-right: 12px;">{{ version }}</span>
       <button *ngIf="isGameListRoute" mat-icon-button (click)="openPlayerSelector()" aria-label="Spieler ändern">
         <mat-icon>group</mat-icon>
       </button>
