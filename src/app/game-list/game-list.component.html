@@ -55,6 +55,18 @@
     </div>
   </div>
 
+  <!-- Zwischenstand -->
+  <div class="scoreboard" *ngIf="players.length > 0">
+    <div class="score-item" *ngFor="let player of players">
+      <span class="score-name">{{ player.firstName }}</span>
+      <span class="score-value"
+        [class.positive]="(totalPoints[player.id] || 0) > 0"
+        [class.negative]="(totalPoints[player.id] || 0) < 0">
+        {{ (totalPoints[player.id] || 0) > 0 ? '+' : '' }}{{ totalPoints[player.id] || 0 }}
+      </span>
+    </div>
+  </div>
+
   <!-- Tabelle der Spiele -->
   <div class="table-section">
     <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
@@ -63,7 +75,12 @@
       <!-- Spiel Column -->
       <ng-container matColumnDef="game">
         <th mat-header-cell *matHeaderCellDef class="mat-sticky">Spiel</th>
-        <td mat-cell *matCellDef="let row"> <span class="game-badge">{{ getGameNumber(row) }}</span> </td>
+        <td mat-cell *matCellDef="let row" [ngClass]="{
+          'solo-row': row.gameType === 'Solo',
+          'ruf-row': row.gameType === 'Ruf',
+          'geier-row': row.gameType === 'Geier',
+          'ramsch-row': row.gameType === 'Ramsch'
+        }"> <span class="game-badge">{{ getGameNumber(row) }}</span> </td>
         <td mat-footer-cell *matFooterCellDef> <span class="game-badge sum-badge">&#8721;</span> </td>
       </ng-container>
 

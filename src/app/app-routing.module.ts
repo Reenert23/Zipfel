@@ -5,12 +5,14 @@ import { GameListComponent } from './game-list/game-list.component';
 import { RoundListComponent } from './round-list/round-list.component';
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
+import { StatsComponent } from './stats/stats.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
   { path: 'play', component: GameListComponent },
   { path: 'rounds', component: RoundListComponent},
   { path: 'rounds/:id/games', component: GameListComponent },
+  { path: 'stats', component: StatsComponent },
   { path: 'database-admin', component: DatabaseAdminComponent },
   { path: 'contact', component: ContactComponent }
 ];

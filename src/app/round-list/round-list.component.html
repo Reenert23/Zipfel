@@ -10,20 +10,35 @@
   </div>
 
   <div class="rounds-grid" *ngIf="rounds.length; else emptyState">
-    <div class="round-card" *ngFor="let round of rounds; let i = index" (click)="goToRound(round)">
-      <div class="round-card-header">
-        <h3>Runde {{ i + 1 }}</h3>
-        <span class="round-date">{{ round.date | date:'dd.MM.yyyy, HH:mm' }}</span>
+    <div
+      class="round-item-wrapper"
+      *ngFor="let round of rounds; let i = index"
+      (touchstart)="onSwipeStart($event, i)"
+      (touchmove)="onSwipeMove($event, i)"
+      (touchend)="onSwipeEnd($event, i)"
+      [style.--swipe-distance]="swipeStates[i].distance + 'px'"
+      [class.swiped]="swipeStates[i].distance < -50"
+    >
+      <div class="delete-indicator" [class.visible]="swipeStates[i].distance < -50">
+        <span class="delete-icon">🗑</span>
       </div>
 
-      <div class="player-chips">
-        <div class="player-chip" *ngFor="let player of round.players">
-          <span class="player-name">{{ player.firstName }}</span>
-          <span
-            class="player-points"
-            [class.positive]="getTotalPointsForPlayer(round, player) > 0"
-            [class.negative]="getTotalPointsForPlayer(round, player) < 0"
-          >{{ getTotalPointsForPlayer(round, player) }}</span>
+      <div class="round-card" (click)="onCardClick(round, i)">
+
+        <div class="round-card-header">
+          <h3>Runde {{ i + 1 }}</h3>
+          <span class="round-date">{{ round.date | date:'dd.MM.yyyy, HH:mm' }}</span>
+        </div>
+
+        <div class="player-chips">
+          <div class="player-chip" *ngFor="let player of round.players">
+            <span class="player-name">{{ player.firstName }}</span>
+            <span
+              class="player-points"
+              [class.positive]="getTotalPointsForPlayer(round, player) > 0"
+              [class.negative]="getTotalPointsForPlayer(round, player) < 0"
+            >{{ getTotalPointsForPlayer(round, player) }}</span>
+          </div>
         </div>
       </div>
     </div>
