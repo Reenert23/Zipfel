@@ -22,16 +22,28 @@
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  height: 64px;
 
-  /* A high, mostly-opaque tint so the bar reads the same dark navy on every
-     page, regardless of what's scrolling underneath it (the transparent
-     version picked up light/colored page backgrounds and looked mismatched). */
-  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  /* Frosted glass effect */
+  background: linear-gradient(135deg, rgba(25, 18, 55, 0.55), rgba(30, 50, 100, 0.55));
+  backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
+  -webkit-backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
+
+  /* Frosted glass borders */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+  /* Subtle shadow for frosted effect */
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 0;
 }
 
 /* Add offset so content doesn't get hidden behind fixed toolbar */
@@ -39,21 +51,40 @@
   padding-top: calc(64px + env(safe-area-inset-top));
 }
 
-/* Thin accent line under the toolbar tying it to the app's accent gradient */
+/* Gradient accent under toolbar */
 ::ng-deep .glass-toolbar.mat-toolbar::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(79, 172, 254, 0.7), rgba(168, 85, 247, 0.7));
-  opacity: 0.6;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(79, 172, 254, 0) 0%,
+    rgba(79, 172, 254, 0.6) 50%,
+    rgba(168, 85, 247, 0) 100%);
+  opacity: 0.8;
 }
 
-::ng-deep .glass-toolbar .mat-icon,
+/* Toolbar icons and buttons */
+::ng-deep .glass-toolbar .mat-icon {
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
 ::ng-deep .glass-toolbar button {
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .glass-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #fff;
+  transform: translateY(-2px);
+}
+
+::ng-deep .glass-toolbar button:active {
+  transform: translateY(0);
 }
 
 .brand {

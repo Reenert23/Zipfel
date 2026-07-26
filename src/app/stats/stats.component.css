@@ -1,0 +1,254 @@
+:host {
+  display: block;
+}
+
+.stats-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 24px 20px 100px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+  font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-1 {
+  width: 340px;
+  height: 340px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, #4facfe 0%, transparent 70%);
+}
+
+.glow-2 {
+  width: 380px;
+  height: 380px;
+  bottom: -100px;
+  left: -80px;
+  background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 28px;
+}
+
+.page-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.6em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.section-title {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 24px 0 12px;
+}
+
+.loading {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 40px;
+}
+
+/* Summary Row */
+.summary-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 12px;
+}
+
+.summary-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.summary-value {
+  font-size: 2em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.summary-label {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.05em;
+}
+
+/* Player cards */
+.player-cards {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.player-stat-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.rank-badge {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+.player-stat-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.player-stat-total {
+  font-size: 2em;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.player-stat-details {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-label {
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #fff;
+}
+
+.winrate-bar-bg {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.winrate-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #4ade80, #22d3ee);
+  transition: width 0.5s ease;
+}
+
+.player-stat-minmax {
+  display: flex;
+  gap: 16px;
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.best-game {
+  color: #4ade80;
+}
+
+.worst-game {
+  color: #f87171;
+}
+
+.positive { color: #4ade80; }
+.negative { color: #f87171; }
+
+/* Game type bars */
+.gametype-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.gametype-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gametype-label {
+  width: 56px;
+  font-size: 0.88em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  flex-shrink: 0;
+}
+
+.gametype-bar-bg {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.gametype-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.gametype-count {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.55);
+  width: 70px;
+  text-align: right;
+  flex-shrink: 0;
+}
