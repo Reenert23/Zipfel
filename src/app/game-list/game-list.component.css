@@ -64,6 +64,50 @@
   margin-top: 20px;
 }
 
+/* ---------- Zwischenstand ---------- */
+.scoreboard {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding: 16px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.score-name {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.score-value {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.score-value.positive {
+  color: #4ade80;
+}
+
+.score-value.negative {
+  color: #f87171;
+}
+
 .table-section {
   position: relative;
   margin-top: 26px;
@@ -72,7 +116,7 @@
 .icon-action-btn {
   position: absolute;
   top: -16px;
-  right: 8px;
+  left: 8px;
   z-index: 3;
 
   width: 34px;
@@ -236,8 +280,15 @@
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
+::ng-deep .key-button.mat-mdc-raised-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px);
+}
+
 ::ng-deep .key-button.mat-mdc-raised-button:active {
+  background: rgba(255, 255, 255, 0.25) !important;
   transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 ::ng-deep .key-button.ok-button.mat-mdc-raised-button:first-child,
@@ -291,6 +342,22 @@
 ::ng-deep .tableContainer .mat-mdc-row {
   height: 56px;
   transition: background 0.15s ease;
+}
+
+::ng-deep .tableContainer .solo-row {
+  background-color: rgba(96, 165, 250, 0.18) !important;
+}
+
+::ng-deep .tableContainer .ruf-row {
+  background-color: rgba(74, 222, 128, 0.15) !important;
+}
+
+::ng-deep .tableContainer .geier-row {
+  background-color: rgba(250, 204, 21, 0.15) !important;
+}
+
+::ng-deep .tableContainer .ramsch-row {
+  background-color: rgba(248, 113, 113, 0.15) !important;
 }
 
 ::ng-deep .tableContainer .mat-mdc-header-cell,
@@ -399,19 +466,19 @@
 }
 
 .solo-row {
-  background-color: rgba(96, 165, 250, 0.1);
+  background-color: rgba(96, 165, 250, 0.18);
 }
 
 .ruf-row {
-  background-color: rgba(74, 222, 128, 0.08);
+  background-color: rgba(74, 222, 128, 0.15);
 }
 
 .geier-row {
-  background-color: rgba(250, 204, 21, 0.08);
+  background-color: rgba(250, 204, 21, 0.15);
 }
 
 .ramsch-row {
-  background-color: rgba(248, 113, 113, 0.08);
+  background-color: rgba(248, 113, 113, 0.15);
 }
 
 .green-circle,

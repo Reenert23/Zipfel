@@ -1,0 +1,74 @@
+<div class="stats-page">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <div class="header">
+    <h2 class="page-title">Statistiken</h2>
+  </div>
+
+  <div *ngIf="loading" class="loading">Lade Daten…</div>
+
+  <div *ngIf="!loading">
+
+    <!-- Übersicht -->
+    <div class="section-title">Übersicht</div>
+    <div class="summary-row">
+      <div class="summary-card">
+        <span class="summary-value">{{ totalRounds }}</span>
+        <span class="summary-label">Runden</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-value">{{ totalGames }}</span>
+        <span class="summary-label">Spiele</span>
+      </div>
+    </div>
+
+    <!-- Spieler Statistiken -->
+    <div class="section-title">Spieler</div>
+    <div class="player-cards">
+      <div class="player-stat-card" *ngFor="let p of playerStats; let i = index">
+        <div class="rank-badge">#{{ i + 1 }}</div>
+        <div class="player-stat-name">{{ p.name }}</div>
+        <div class="player-stat-total"
+          [class.positive]="p.totalPoints > 0"
+          [class.negative]="p.totalPoints < 0">
+          {{ p.totalPoints > 0 ? '+' : '' }}{{ p.totalPoints }}
+        </div>
+        <div class="player-stat-details">
+          <div class="detail-item">
+            <span class="detail-label">Spiele</span>
+            <span class="detail-value">{{ p.gamesPlayed }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Gewonnen</span>
+            <span class="detail-value positive">{{ p.gamesWon }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Quote</span>
+            <span class="detail-value">{{ p.winRate }}%</span>
+          </div>
+        </div>
+        <div class="winrate-bar-bg">
+          <div class="winrate-bar-fill" [style.width.%]="p.winRate"></div>
+        </div>
+        <div class="player-stat-minmax">
+          <span class="best-game positive">↑ {{ p.bestGame }}</span>
+          <span class="worst-game negative">↓ {{ p.worstGame }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spieltypen -->
+    <div class="section-title">Spieltypen</div>
+    <div class="gametype-list">
+      <div class="gametype-row" *ngFor="let g of gameTypeCounts">
+        <span class="gametype-label">{{ g.type }}</span>
+        <div class="gametype-bar-bg">
+          <div class="gametype-bar-fill" [style.width.%]="getPercentage(g.count)" [style.background]="g.color"></div>
+        </div>
+        <span class="gametype-count">{{ g.count }} ({{ getPercentage(g.count) }}%)</span>
+      </div>
+    </div>
+
+  </div>
+</div>

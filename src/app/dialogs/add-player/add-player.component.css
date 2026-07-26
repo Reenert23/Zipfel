@@ -1,0 +1,47 @@
+.dialog-content-wrapper {
+  overflow: visible !important;
+  padding-top: 8px !important;
+}
+
+.form-fields {
+  padding-top: 16px;
+  overflow: visible;
+}
+
+/* Prevent label clipping in dialog */
+::ng-deep .mat-mdc-dialog-container {
+  overflow: visible !important;
+}
+
+::ng-deep .mdc-dialog {
+  overflow: visible !important;
+}
+
+::ng-deep .mdc-dialog__surface {
+  overflow: visible !important;
+}
+
+/* Form field adjustments */
+::ng-deep .mat-mdc-form-field {
+  display: block !important;
+  width: 100%;
+  overflow: visible !important;
+}
+
+::ng-deep .mat-mdc-form-field-infix {
+  overflow: visible !important;
+}
+
+::ng-deep .mdc-text-field {
+  overflow: visible !important;
+}
+
+::ng-deep .mdc-floating-label {
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+.w-full {
+  width: 100%;
+  margin-bottom: 16px;
+}

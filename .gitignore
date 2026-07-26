@@ -41,3 +41,6 @@ testem.log
 .DS_Store
 Thumbs.db
 .claude/
+
+# Environment files (lokal nicht gepusht)
+src/environments/environment.local.ts
