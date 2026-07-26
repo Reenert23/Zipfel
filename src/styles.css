@@ -3,32 +3,14 @@
 html, body, app-root, mat-sidenav-container { height: 100%; }
 app-root { display: block; }
 
-html {
-  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
-  overscroll-behavior: none;
-  overflow: hidden;
-}
-
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 0;
   background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   overscroll-behavior: none;
   overflow: hidden;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: max(20px, env(safe-area-inset-top));
-  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
-  z-index: 999;
-  pointer-events: none;
 }
 
 /* ==========================================================================
