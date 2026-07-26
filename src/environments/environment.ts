@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://zipfel-backend.onrender.com/api' // Render Backend
+  apiUrl: '/api' // Wird local zu localhost:8080 proxied
 };
 
