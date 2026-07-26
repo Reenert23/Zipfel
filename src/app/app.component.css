@@ -43,6 +43,10 @@
   font-size: 1.15em;
 }
 
+.toolbar-spacer {
+  flex: 1;
+}
+
 /* ---------- Sidenav ---------- */
 ::ng-deep .glass-sidenav.mat-drawer {
   width: 250px;

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { ToolbarService } from './services/toolbar.service';
 
 @Component({
   selector: 'app-root',
@@ -11,20 +12,32 @@ import { filter } from 'rxjs';
 export class AppComponent {
   title = 'zipfel';
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  isGameListRoute = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toolbarService: ToolbarService) {}
 
   ngOnInit() {
+    this.isGameListRoute = this.checkGameListRoute(this.router.url);
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
+      .subscribe((event: any) => {
+        this.isGameListRoute = this.checkGameListRoute(event.urlAfterRedirects);
         if (this.sidenav.opened) {
           this.sidenav.close();
         }
       });
   }
 
+  private checkGameListRoute(url: string): boolean {
+    return url === '/' || /^\/rounds\/\d+\/games/.test(url);
+  }
+
+  openPlayerSelector(): void {
+    this.toolbarService.triggerPlayerSelector();
+  }
+
   goToRounds(): void {
-    this.router.navigateByUrl('/rounds'); // Navigiere zur Round-Seite
+    this.router.navigateByUrl('/rounds');
   }
 }

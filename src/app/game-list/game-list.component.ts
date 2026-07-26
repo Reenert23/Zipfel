@@ -1,6 +1,6 @@
 import { GameService } from './../services/game.service';
 import { Game, GameScore } from './../models/Game';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Player } from '../models/Player';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,8 @@ import { RoundService } from '../services/round.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
+import { Subject, takeUntil } from 'rxjs';
+import { ToolbarService } from '../services/toolbar.service';
 
 
 @Component({
@@ -17,7 +19,9 @@ import { SelectPlayersComponent } from '../dialogs/select-players/select-players
   templateUrl: './game-list.component.html',
   styleUrls: ['./game-list.component.css']
 })
-export class GameListComponent {
+export class GameListComponent implements OnInit, OnDestroy {
+
+  private readonly destroy$ = new Subject<void>();
 
   // Spieler für die Logik (immer gültig)
   players: Player[] = [];
@@ -63,12 +67,17 @@ export class GameListComponent {
     private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     private gameService: GameService,
-    private roundService: RoundService, // Service injizieren
-    private router: Router, // Router injizieren
-    private route: ActivatedRoute
+    private roundService: RoundService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toolbarService: ToolbarService
     ){}
 
     ngOnInit(): void {
+      this.toolbarService.openPlayerSelector$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => this.openPlayerSelector());
+
       const id = Number(this.route.snapshot.paramMap.get('id'));
 
 
@@ -438,9 +447,13 @@ export class GameListComponent {
     });
   }
 
-  // Zur Round-Liste navigieren
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   goToRounds(): void {
-    this.router.navigate(['/rounds']); // Navigiere zur Round-Seite
+    this.router.navigate(['/rounds']);
   }
 
 

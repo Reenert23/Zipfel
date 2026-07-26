@@ -25,6 +25,10 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span class="brand">ZIPFEL</span>
+      <span class="toolbar-spacer"></span>
+      <button *ngIf="isGameListRoute" mat-icon-button (click)="openPlayerSelector()" aria-label="Spieler ändern">
+        <mat-icon>group</mat-icon>
+      </button>
     </mat-toolbar>
     <div class="container">
       <router-outlet></router-outlet>

@@ -1,22 +1,17 @@
 <div class="container">
-  <div class="header">
-    <button mat-raised-button color="primary" class="left-button" (click)="deleteLastGame()" >&#9100;</button>
-
-    <h1 class="title">ZIPFEL</h1>
-    <button mat-raised-button color="primary" class="round-button" (click)="openPlayerSelector()">+</button>
-  </div>
-
   <!-- Gewinner auswählen -->
-<div class="winner-selection">
-  <button mat-raised-button color="primary"
-    *ngFor="let slot of playerSlots; let i = index"
-    [style.gridArea]="getGridArea(i)"
-    (click)="slot && toggleWinner(slot.firstName)"
-    [class.selected]="slot && selectedWinners.includes(slot.firstName)"
-    [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">
-    {{ slot?.firstName || '' }}
-  </button>
-</div>
+  <div class="winner-section">
+    <div class="winner-selection">
+      <button mat-raised-button color="primary"
+        *ngFor="let slot of playerSlots; let i = index"
+        [style.gridArea]="getGridArea(i)"
+        (click)="slot && toggleWinner(slot.firstName)"
+        [class.selected]="slot && selectedWinners.includes(slot.firstName)"
+        [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">
+        {{ slot?.firstName || '' }}
+      </button>
+    </div>
+  </div>
   <div class="button-group">
     <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [class.selected]="maxWinners == 2">Ruf</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [class.selected]="maxWinners == 1" [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
@@ -61,7 +56,9 @@
   </div>
 
   <!-- Tabelle der Spiele -->
-  <div class="tableContainer">
+  <div class="table-section">
+    <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
+    <div class="tableContainer">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
       <!-- Spiel Column -->
       <ng-container matColumnDef="game">
@@ -117,6 +114,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
-
+    </div>
   </div>
 </div>
