@@ -1,7 +1,18 @@
 ::ng-deep .mat-drawer-container {
   background-color: transparent;
   color: inherit;
-  padding-top: env(safe-area-inset-top);
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+::ng-deep .mat-drawer-container mat-sidenav-content {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }

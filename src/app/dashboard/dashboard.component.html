@@ -1,14 +1,30 @@
 <div class="container">
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <button mat-raised-button color="primary" class="start-btn" (click)="startNewRound()">
-      <mat-icon>add</mat-icon>
-      Neue Runde starten
-    </button>
-    <button mat-raised-button color="accent" class="browse-btn" (click)="goToRounds()">
-      <mat-icon>history</mat-icon>
-      Alle Runden
-    </button>
+  <!-- App Logo -->
+  <div class="logo-section">
+    <svg class="app-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Card 1 (tilted left) -->
+      <g transform="translate(25, 35) rotate(-15)">
+        <rect width="35" height="50" rx="4" fill="none" stroke="url(#gradient1)" stroke-width="2"/>
+        <text x="17.5" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="url(#gradient1)">Z</text>
+      </g>
+      <!-- Card 2 (tilted right) -->
+      <g transform="translate(60, 35) rotate(15)">
+        <rect width="35" height="50" rx="4" fill="none" stroke="url(#gradient2)" stroke-width="2"/>
+        <text x="17.5" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="url(#gradient2)">♠</text>
+      </g>
+      <!-- Gradient definitions -->
+      <defs>
+        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <h1 class="app-title">ZIPFEL</h1>
   </div>
 
   <!-- Stats Overview -->
@@ -21,6 +37,18 @@
       <div class="stat-value">{{ playerStats.length }}</div>
       <div class="stat-label">Aktive Spieler</div>
     </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button mat-raised-button color="primary" class="start-btn" (click)="startNewRound()">
+      <mat-icon>add</mat-icon>
+      Neue Runde starten
+    </button>
+    <button mat-raised-button color="accent" class="browse-btn" (click)="goToRounds()">
+      <mat-icon>history</mat-icon>
+      Alle Runden
+    </button>
   </div>
 
   <!-- Player Rankings -->
