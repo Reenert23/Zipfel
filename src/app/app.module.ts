@@ -29,6 +29,7 @@ import {MatListModule} from '@angular/material/list';
 import { AddPlayerComponent } from './dialogs/add-player/add-player.component';
 import { SelectPlayersComponent } from './dialogs/select-players/select-players.component';
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
+import { ContactComponent } from './contact/contact.component';
 
 
 
@@ -42,7 +43,8 @@ import { DatabaseAdminComponent } from './database-admin/database-admin.componen
     RoundListComponent,
     AddPlayerComponent,
     SelectPlayersComponent,
-    DatabaseAdminComponent
+    DatabaseAdminComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

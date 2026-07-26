@@ -1,0 +1,148 @@
+.contact-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.hero-section {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.hero-section h1 {
+  font-size: 3em;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(79, 172, 254, 1), rgba(168, 85, 247, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.08em;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1em;
+  margin: 0;
+  font-weight: 300;
+}
+
+.content-section {
+  margin-bottom: 40px;
+}
+
+.love-letter {
+  background: linear-gradient(160deg, rgba(23, 20, 58, 0.4), rgba(27, 58, 99, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.love-letter p {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.8;
+  font-size: 1.05em;
+  margin: 0 0 20px 0;
+}
+
+.opening {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 24px !important;
+}
+
+.heart {
+  display: inline-block;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.features {
+  background: rgba(79, 172, 254, 0.1);
+  border-left: 4px solid rgba(79, 172, 254, 0.6);
+  padding: 24px;
+  border-radius: 8px;
+  margin: 32px 0;
+}
+
+.features h2 {
+  color: #fff;
+  font-size: 1.2em;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features li {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 12px 0;
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.credits {
+  background: rgba(168, 85, 247, 0.1);
+  border-left: 4px solid rgba(168, 85, 247, 0.6);
+  padding: 24px;
+  border-radius: 8px;
+  margin: 32px 0;
+}
+
+.credits h2 {
+  color: #fff;
+  font-size: 1.2em;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.credits p {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 !important;
+}
+
+.closing {
+  margin-top: 32px !important;
+  text-align: center;
+  font-size: 1em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.closing em {
+  color: rgba(255, 255, 255, 0.6);
+  display: block;
+  margin-top: 16px;
+}
+
+.footer-hearts {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  font-size: 2em;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
