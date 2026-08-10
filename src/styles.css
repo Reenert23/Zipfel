@@ -1,5 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  /* The toolbar row itself, without the status bar area that
+     env(safe-area-inset-top) adds on top of it when running standalone.
+     Both the toolbar height and the .container offset derive from this, so
+     they cannot drift apart. 56px is the Material height for phones. */
+  --toolbar-row: 56px;
+}
+
+@media (min-width: 600px) {
+  :root { --toolbar-row: 64px; }
+}
+
 html, body, app-root, mat-sidenav-container { height: 100%; }
 app-root { display: block; }
 
@@ -9,6 +21,12 @@ html, body, app-root {
   margin: 0;
   padding: 0;
   background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
+  /* Must come after the shorthand, which resets background-color to
+     transparent. A gradient is only a background-image, so anything the
+     document itself does not cover - the area behind the iOS home indicator
+     when installed, overscroll - falls back to the canvas colour and showed
+     up as a white bar. */
+  background-color: #17143a;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overscroll-behavior: none;
 

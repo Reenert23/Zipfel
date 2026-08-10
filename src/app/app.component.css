@@ -7,6 +7,11 @@
 ::ng-deep .mat-drawer-container mat-sidenav-content {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Material sizes this to height: 100% of the container as content-box, so
+     the insets below were added on top of a full viewport and the element
+     hung the bottom inset past the page - the strip the background no longer
+     reached. border-box keeps the padding inside. */
+  box-sizing: border-box;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   padding-bottom: env(safe-area-inset-bottom);
@@ -23,9 +28,9 @@
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   /* The inset has to be added to the height, not eaten out of it: mat-toolbar
-     is border-box, so a flat 64px left only 64px - inset for the row itself
-     and pushed the menu button half under the status bar. */
-  height: calc(64px + env(safe-area-inset-top));
+     is border-box, so a flat height left only height - inset for the row
+     itself and pushed the menu button half under the status bar. */
+  height: calc(var(--toolbar-row) + env(safe-area-inset-top));
 
   /* Frosted glass effect */
   background: linear-gradient(135deg, rgba(25, 18, 55, 0.55), rgba(30, 50, 100, 0.55));
@@ -49,9 +54,11 @@
   padding-bottom: 0;
 }
 
-/* Add offset so content doesn't get hidden behind fixed toolbar */
+/* Add offset so content doesn't get hidden behind fixed toolbar. Same
+   expression as the toolbar height above - keep them derived from the
+   variable so a change to one cannot leave the other behind. */
 .container {
-  padding-top: calc(64px + env(safe-area-inset-top));
+  padding-top: calc(var(--toolbar-row) + env(safe-area-inset-top));
 }
 
 /* Gradient accent under toolbar */
