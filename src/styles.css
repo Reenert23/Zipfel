@@ -11,7 +11,15 @@ html, body, app-root {
   background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overscroll-behavior: none;
-  padding-top: env(safe-area-inset-top);
+
+  /* No padding-top: env(safe-area-inset-top) here. All three of these are
+     height: 100% with the default content-box sizing, so the padding was
+     added *on top of* a full viewport - once per element, three times over.
+     Installed as a PWA on a notched phone that made the document ~140px
+     taller than the screen, so the app opened already scrolled down and the
+     toolbar with the menu button sat off screen.
+     The top inset belongs to the fixed toolbar and .container in
+     app.component.css, which both account for it. */
 }
 
 app-root {

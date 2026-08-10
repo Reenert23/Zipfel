@@ -22,7 +22,10 @@
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-  height: 64px;
+  /* The inset has to be added to the height, not eaten out of it: mat-toolbar
+     is border-box, so a flat 64px left only 64px - inset for the row itself
+     and pushed the menu button half under the status bar. */
+  height: calc(64px + env(safe-area-inset-top));
 
   /* Frosted glass effect */
   background: linear-gradient(135deg, rgba(25, 18, 55, 0.55), rgba(30, 50, 100, 0.55));
@@ -117,7 +120,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 24px 20px 16px;
+  /* The drawer is not covered by the toolbar, so it carries the top inset
+     itself - it used to ride on the global padding that app-root applied. */
+  padding: calc(24px + env(safe-area-inset-top)) 20px 16px;
 }
 
 .brand-mark {
