@@ -1,24 +1,48 @@
 <!--
   Zipfel app icon - full-bleed variant.
-  Used for the maskable PWA icons and the iOS apple-touch-icon: both Android
-  launchers and iOS apply their own mask, so this one must not bring rounded
-  corners of its own or the corners get clipped twice. The Z stays well inside
-  the maskable safe zone (the centred 80% circle).
+
+  Used for the maskable PWA icons and the iOS apple-touch-icon: Android
+  launchers and iOS both apply their own mask, so this one must not bring
+  rounded corners of its own or the corners get clipped twice.
+
+  The cards are additionally scaled down and re-centred, because a maskable
+  icon may be cropped to the centred 80% circle - at the size icon.svg draws
+  them the Eichel card would lose its corner.
+
   PNGs are generated from this file, see tools/generate-icons.mjs.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0.05" y1="0" x2="0.95" y2="1">
-      <stop offset="0" stop-color="#38bdf8"/>
-      <stop offset="0.45" stop-color="#4f7ff5"/>
-      <stop offset="1" stop-color="#9333ea"/>
+    <linearGradient id="bg" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#241f4d"/>
+      <stop offset="1" stop-color="#141b3d"/>
     </linearGradient>
-    <linearGradient id="gloss" x1="0" y1="0" x2="0.3" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
-      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4facfe"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="eichel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6a552"/>
+      <stop offset="1" stop-color="#a9622a"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect width="512" height="512" fill="url(#gloss)"/>
-  <path d="M164 154 L348 154 L348 196 L219 314 L348 314 L348 356 L164 356 L164 314 L293 196 L164 196 Z" fill="#ffffff"/>
+  <!-- (266, 261) is the centre of the two cards' combined bounding box. -->
+  <g transform="translate(256 256) scale(0.82) translate(-266 -261)">
+    <g transform="translate(320 246) rotate(14)">
+      <rect x="-85" y="-119" width="170" height="238" rx="22" fill="#f8fafc"/>
+      <g transform="translate(36 -50) scale(0.95) translate(-50,-48)" fill="url(#eichel)">
+        <path d="M31 47 C31 70 37 85 50 93 C63 85 69 70 69 47 Z"/>
+        <path d="M20 49 C20 31 33 20 50 20 C67 20 80 31 80 49 Z"/>
+        <path d="M45.5 6 C45.5 3 54.5 3 54.5 6 L54.5 21 L45.5 21 Z"/>
+        <path d="M20 49 L80 49" stroke="#f8fafc" stroke-width="4.5"/>
+      </g>
+    </g>
+    <g transform="translate(212 276) rotate(-14)">
+      <rect x="-85" y="-119" width="170" height="238" rx="22" fill="#f8fafc"
+            stroke="#1b1740" stroke-width="16" paint-order="stroke"/>
+      <path transform="scale(0.52) translate(-256,-256)" fill="url(#brand)"
+            d="M150 140 L362 140 L362 188 L214 324 L362 324 L362 372 L150 372 L150 324 L298 188 L150 188 Z"/>
+    </g>
+  </g>
 </svg>

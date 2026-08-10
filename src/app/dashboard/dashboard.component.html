@@ -7,10 +7,16 @@
         <rect width="35" height="50" rx="4" fill="none" stroke="url(#gradient1)" stroke-width="2"/>
         <text x="17.5" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="url(#gradient1)">Z</text>
       </g>
-      <!-- Card 2 (tilted right) -->
+      <!-- Card 2 (tilted right). Eichel, the highest suit of the Bavarian deck
+           Schafkopf is played with - drawn as a path so it does not depend on
+           the font shipping a suit glyph. -->
       <g transform="translate(60, 35) rotate(15)">
         <rect width="35" height="50" rx="4" fill="none" stroke="url(#gradient2)" stroke-width="2"/>
-        <text x="17.5" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="url(#gradient2)">♠</text>
+        <g transform="translate(17.5, 25) scale(0.26) translate(-50, -48)" fill="url(#gradient2)">
+          <path d="M31 47 C31 70 37 85 50 93 C63 85 69 70 69 47 Z"/>
+          <path d="M20 49 C20 31 33 20 50 20 C67 20 80 31 80 49 Z"/>
+          <path d="M45.5 6 C45.5 3 54.5 3 54.5 6 L54.5 21 L45.5 21 Z"/>
+        </g>
       </g>
       <!-- Gradient definitions -->
       <defs>
