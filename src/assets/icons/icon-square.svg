@@ -1,0 +1,24 @@
+<!--
+  Zipfel app icon - full-bleed variant.
+  Used for the maskable PWA icons and the iOS apple-touch-icon: both Android
+  launchers and iOS apply their own mask, so this one must not bring rounded
+  corners of its own or the corners get clipped twice. The Z stays well inside
+  the maskable safe zone (the centred 80% circle).
+  PNGs are generated from this file, see tools/generate-icons.mjs.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0.05" y1="0" x2="0.95" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="0.45" stop-color="#4f7ff5"/>
+      <stop offset="1" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#gloss)"/>
+  <path d="M164 154 L348 154 L348 196 L219 314 L348 314 L348 356 L164 356 L164 314 L293 196 L164 196 Z" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,22 @@
+<!--
+  Zipfel app icon - rounded variant, used for the "any" purpose PWA icons.
+  Mirrors the .brand-mark in app.component.css (blue -> purple gradient, white Z)
+  so the home screen icon and the in-app logo read as the same thing.
+  PNGs are generated from this file, see tools/generate-icons.mjs.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0.05" y1="0" x2="0.95" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="0.45" stop-color="#4f7ff5"/>
+      <stop offset="1" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#gloss)"/>
+  <path d="M150 140 L362 140 L362 188 L214 324 L362 324 L362 372 L150 372 L150 324 L298 188 L150 188 Z" fill="#ffffff"/>
+</svg>

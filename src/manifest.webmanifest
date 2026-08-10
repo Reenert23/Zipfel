@@ -1,11 +1,37 @@
 {
-  "name": "ZipfelPWA",
+  "name": "Zipfel - Schafkopfrechner",
   "short_name": "Zipfel",
+  "description": "Schafkopf-Runden anlegen, Spiele abrechnen und Statistiken auswerten.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#b0c4de",
-  "theme_color": "#b0c4de",
+  "orientation": "portrait",
+  "background_color": "#17143a",
+  "theme_color": "#17143a",
   "icons": [
-
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
