@@ -11,7 +11,9 @@
 .container {
   position: relative;
   min-height: 100vh;
-  padding: 20px;
+  /* Bottom inset keeps content clear of the iOS home indicator while the
+     background below still reaches the screen edge. */
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
   max-width: none;
   margin: 0;
   text-align: center;

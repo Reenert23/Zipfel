@@ -8,13 +8,15 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   /* Material sizes this to height: 100% of the container as content-box, so
-     the insets below were added on top of a full viewport and the element
-     hung the bottom inset past the page - the strip the background no longer
-     reached. border-box keeps the padding inside. */
+     insets added here land on top of a full viewport. border-box keeps them
+     inside. */
   box-sizing: border-box;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
+  /* No padding-bottom for the home indicator here: this element sits *above*
+     each page's own background, so reserving the space here ended the page
+     gradient short of the screen edge and let the body show through as a
+     band. The inset belongs inside the page containers instead. */
 }
 
 /* ---------- Toolbar ---------- */

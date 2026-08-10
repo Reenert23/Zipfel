@@ -5,7 +5,9 @@
 .container {
   position: relative;
   min-height: 100vh;
-  padding: 20px;
+  /* Bottom inset keeps content clear of the iOS home indicator while the
+     background below still reaches the screen edge. */
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
   max-width: none;
   margin: 0;
   text-align: center;
@@ -55,12 +57,15 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 30px;
-  padding: 20px 0;
+  padding: 0 0 20px;
 }
 
+/* viewBox is cropped to the artwork, which only filled 66 of its 120 units -
+   the rest was empty box pushing the whole page down. 73x71 units at the
+   original 0.8333px per unit keeps the cards exactly the size they were. */
 .app-logo {
-  width: 100px;
-  height: 100px;
+  width: 61px;
+  height: 59px;
   filter: drop-shadow(0 4px 12px rgba(79, 172, 254, 0.3));
 }
 
