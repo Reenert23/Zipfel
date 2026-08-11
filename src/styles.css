@@ -22,13 +22,17 @@ html, body, app-root {
   width: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
-  /* Must come after the shorthand, which resets background-color to
-     transparent. A gradient is only a background-image, so anything the
-     document itself does not cover - the area behind the iOS home indicator
-     when installed, overscroll - falls back to the canvas colour and showed
-     up as a white bar. */
-  background-color: #1b3a63;
+  /* One flat colour, and it has to be the same one as theme-color in
+     index.html and the toolbar's top edge in app.component.css.
+     Standalone on iOS, the strip above the app is painted from the document's
+     canvas colour, which propagates from here - not from theme-color as
+     expected. Measured: theme-color and the manifest were both already on
+     #171432 and served with must-revalidate, yet the strip stayed #1b3a63,
+     which was the value sitting here.
+     The gradient that used to be on this rule is gone with it. Nothing showed
+     it anyway - every page container paints over the full viewport - and it
+     made the colour that reaches the canvas ambiguous. */
+  background: #171432;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overscroll-behavior: none;
 
