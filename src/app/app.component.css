@@ -34,15 +34,22 @@
      itself and pushed the menu button half under the status bar. */
   height: calc(var(--toolbar-row) + env(safe-area-inset-top));
 
-  /* One flat opaque colour, no gradient and no glass. iOS paints the strip
-     above the app in theme-color, and the only way that seam can disappear for
-     good is if the pixel it meets never moves: a translucent toolbar takes its
-     colour from whatever scrolls underneath, so it can be approximated but
-     never matched. Keep this in lockstep with theme-color in index.html and
-     theme_color in the manifest.
-     backdrop-filter is gone with it - nothing shows through an opaque layer, so
-     it only cost GPU time. */
-  background: #171432;
+  /* The glass is back, but the top edge is not part of it. iOS paints the strip
+     above the app in theme-color, and the seam between the two is a single
+     line - the toolbar's upper edge. Only that line has to match, so the first
+     layer below is opaque theme-color for 4px and then fades out over the next
+     16px, leaving the lower two thirds of the bar as glass over the page.
+     Fully opaque at the edge means the match holds no matter what scrolls
+     underneath, which a translucent bar could never do.
+     The fade ends on rgba(23,20,50,0) rather than transparent: that is the same
+     colour at zero alpha, so it does not drift through grey on the way out.
+     #171432 has to stay in lockstep with theme-color in index.html and
+     theme_color in the manifest. */
+  background:
+    linear-gradient(to bottom, #171432 0, #171432 4px, rgba(23, 20, 50, 0) 20px),
+    linear-gradient(135deg, rgba(25, 18, 55, 0.55), rgba(30, 50, 100, 0.55));
+  backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
+  -webkit-backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
 
   /* Frosted glass borders. No top border and no top inset highlight: both drew
      a light 1px line along the toolbar's upper edge. That edge used to sit
