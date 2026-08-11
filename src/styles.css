@@ -4,12 +4,14 @@
   /* The toolbar row itself, without the status bar area that
      env(safe-area-inset-top) adds on top of it when running standalone.
      Both the toolbar height and the .container offset derive from this, so
-     they cannot drift apart. 56px is the Material height for phones. */
-  --toolbar-row: 56px;
+     they cannot drift apart. Material's phone height is 56px; 48px is used
+     deliberately, because the status bar inset is stacked on top of this and
+     the combined bar was eating ~115px of a phone screen. */
+  --toolbar-row: 48px;
 }
 
 @media (min-width: 600px) {
-  :root { --toolbar-row: 64px; }
+  :root { --toolbar-row: 56px; }
 }
 
 html, body, app-root, mat-sidenav-container { height: 100%; }
