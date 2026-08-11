@@ -134,7 +134,11 @@
 
 .round-item-wrapper {
   position: relative;
-  overflow: hidden;
+  /* No overflow: hidden. The wrapper is exactly the size of the card, so
+     clipping to it cut the card off at its own left edge - it read as the card
+     being squeezed narrower rather than travelling. The card is left to move
+     freely and .round-list clips it at the screen edge instead, which is what
+     makes it look like it slides off the side. */
   border-radius: 20px;
 }
 
