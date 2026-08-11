@@ -20,9 +20,22 @@ export class RoundListComponent implements OnInit {
   playerHeaderColumns: string[] = ['round'];
   playerPointsColumns: string[] = ['round'];
 
-  swipeStates: { distance: number; startX: number; isSwiping: boolean }[] = [];
+  /* axis is decided once per gesture: 'none' until the finger has moved far
+     enough to tell, then 'x' for a delete swipe or 'y' for a scroll the browser
+     handles on its own. Without it every scroll dragged the cards sideways,
+     because a finger moving down is never perfectly vertical. */
+  swipeStates: {
+    distance: number;
+    startX: number;
+    startY: number;
+    isSwiping: boolean;
+    axis: 'none' | 'x' | 'y';
+  }[] = [];
   readonly SWIPE_THRESHOLD = -100;
   readonly SWIPE_MAX = -350;
+  /* How far the finger travels before the direction is called. Below this the
+     two axes are indistinguishable and committing early gets it wrong. */
+  private readonly AXIS_LOCK_PX = 8;
 
   constructor(private roundService: RoundService, private router: Router) {}
 
@@ -35,7 +48,7 @@ export class RoundListComponent implements OnInit {
   fetchRounds(): void {
     this.roundService.getAllRounds().subscribe((data: Round[]) => {
       this.rounds = data;
-      this.swipeStates = this.rounds.map(() => ({ distance: 0, startX: 0, isSwiping: false }));
+      this.swipeStates = this.rounds.map(() => this.emptySwipeState());
       this.displayedColumns = this.getDynamicColumns();
     });
   }
@@ -82,33 +95,66 @@ export class RoundListComponent implements OnInit {
 
   }
 
+  private emptySwipeState(): {
+    distance: number;
+    startX: number;
+    startY: number;
+    isSwiping: boolean;
+    axis: 'none' | 'x' | 'y';
+  } {
+    return { distance: 0, startX: 0, startY: 0, isSwiping: false, axis: 'none' };
+  }
+
   onSwipeStart(event: TouchEvent, index: number): void {
-    this.swipeStates[index].startX = event.touches[0].clientX;
-    this.swipeStates[index].isSwiping = true;
+    const state = this.swipeStates[index];
+    state.startX = event.touches[0].clientX;
+    state.startY = event.touches[0].clientY;
+    state.isSwiping = true;
+    state.axis = 'none';
   }
 
   onSwipeMove(event: TouchEvent, index: number): void {
-    if (!this.swipeStates[index].isSwiping) return;
+    const state = this.swipeStates[index];
+    if (!state.isSwiping) return;
 
-    const currentX = event.touches[0].clientX;
-    let distance = currentX - this.swipeStates[index].startX;
+    const dx = event.touches[0].clientX - state.startX;
+    const dy = event.touches[0].clientY - state.startY;
 
-    distance = Math.max(this.SWIPE_MAX - 50, Math.min(0, distance));
-    this.swipeStates[index].distance = distance;
+    if (state.axis === 'none') {
+      // Too early to tell - wait rather than guess.
+      if (Math.abs(dx) < this.AXIS_LOCK_PX && Math.abs(dy) < this.AXIS_LOCK_PX) return;
+      state.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    }
+
+    // A scroll: leave it to the browser and keep the card where it is.
+    if (state.axis === 'y') return;
+
+    state.distance = Math.max(this.SWIPE_MAX - 50, Math.min(0, dx));
   }
 
   onSwipeEnd(event: TouchEvent, index: number): void {
-    const distance = this.swipeStates[index].distance;
+    const state = this.swipeStates[index];
+
+    // A scroll, or a tap that never moved: nothing to settle, and deleting off
+    // the back of a scroll would be the worst possible outcome.
+    if (state.axis !== 'x') {
+      state.isSwiping = false;
+      state.axis = 'none';
+      return;
+    }
+
+    const distance = state.distance;
 
     if (distance < this.SWIPE_MAX) {
       this.deleteRound(this.rounds[index], index);
     } else if (distance < this.SWIPE_THRESHOLD) {
-      this.swipeStates[index].distance = this.SWIPE_THRESHOLD;
+      state.distance = this.SWIPE_THRESHOLD;
     } else {
-      this.swipeStates[index].distance = 0;
+      state.distance = 0;
     }
 
-    this.swipeStates[index].isSwiping = false;
+    state.isSwiping = false;
+    state.axis = 'none';
   }
 
   onCardClick(round: Round, index: number): void {

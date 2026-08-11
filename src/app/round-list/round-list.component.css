@@ -155,7 +155,12 @@
   transition: transform 0.1s linear;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  /* pan-y, not none. none took every native touch gesture away from the card,
+     including scrolling - and since the cards cover almost the whole page, a
+     finger landing on one could not scroll at all. pan-y hands vertical panning
+     back to the browser and leaves the horizontal swipe to the handlers, which
+     decide per gesture which of the two it is. */
+  touch-action: pan-y;
 }
 
 .round-item-wrapper.swiped .round-card {
