@@ -67,6 +67,16 @@
     </div>
   </div>
 
+  <!-- Sitzt direkt unter dem Zwischenstand, weil es die Frage beantwortet, die
+       man sich beim Blick darauf am Ende des Abends stellt. -->
+  <button
+    *ngIf="players.length > 0 && games.length > 0"
+    mat-raised-button
+    class="kassensturz-btn"
+    (click)="openKassensturz()">
+    Kassensturz
+  </button>
+
   <!-- Tabelle der Spiele -->
   <div class="table-section">
     <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>

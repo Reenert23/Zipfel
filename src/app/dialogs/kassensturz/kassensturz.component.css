@@ -1,0 +1,98 @@
+/* Der Glas-Look der Dialoge kommt global aus styles.css. Hier steht nur, was
+   dieser Dialog zusätzlich braucht. */
+
+.abschnitt-titel {
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 18px 0 8px;
+}
+
+.abschnitt-titel:first-child {
+  margin-top: 0;
+}
+
+.staende,
+.zahlungen {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stand,
+.zahlung {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.stand .name {
+  flex: 1;
+}
+
+.stand .betrag {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.betrag.positiv { color: #4ade80; }
+.betrag.negativ { color: #f87171; }
+
+/* Die Zahlungszeile ist die eigentliche Antwort auf "wer gibt wem was", also
+   trägt sie etwas mehr Gewicht als die Standzeile darüber. */
+.zahlung {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.zahlung .zahler,
+.zahlung .empfaenger {
+  font-weight: 600;
+}
+
+.zahlung .pfeil {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.zahlung .summe {
+  flex: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.ausgeglichen {
+  padding: 16px 4px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.warnung {
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 4px;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+}
+
+.warnung-titel {
+  font-weight: 700;
+  color: #f87171;
+  margin-bottom: 6px;
+}
+
+.warnung p {
+  margin: 0;
+  font-size: 0.9em;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.warnung-fussnote {
+  margin-top: 6px !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+}

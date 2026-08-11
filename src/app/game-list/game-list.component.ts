@@ -10,6 +10,7 @@ import { RoundService } from '../services/round.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
+import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 
@@ -273,6 +274,19 @@ export class GameListComponent implements OnInit, OnDestroy {
     } else if (this.selectedWinners.length < this.maxWinners) {
       this.selectedWinners.push(name);
     }
+  }
+
+  /**
+   * Zeigt, wer wem am Ende der Runde was schuldet. Rein lesend - der Dialog
+   * rechnet nur mit den Ständen, die hier ohnehin schon geführt werden, und
+   * ändert nichts an der Runde.
+   */
+  openKassensturz(): void {
+    this.dialog.open(KassensturzComponent, {
+      width: '400px',
+      maxHeight: '80vh',
+      data: { players: this.players, totalPoints: this.totalPoints }
+    });
   }
 
     // Gesamtpunkte für die letzte Zeile berechnen

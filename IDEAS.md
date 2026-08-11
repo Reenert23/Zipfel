@@ -13,26 +13,6 @@ außerhalb dieses Repositorys liegt.
 
 ---
 
-## Kassensturz am Rundenende
-
-Am Ende des Abends steht die Frage: Wer gibt wem wie viel? Die App kennt jeden
-Kontostand, aber niemand rechnet aus, wie das in möglichst wenigen Zahlungen
-ausgeglichen wird.
-
-Vorstellung: Eine Ansicht am Ende einer Runde, die aus den Endständen die
-**kleinstmögliche Zahl an Zahlungen** ableitet. Statt „jeder mit jedem" dann
-drei Zeilen der Art „Wolfi gibt Paul 4,20 €".
-
-Wichtig — und das ist die Korrektur an einer früheren Fassung dieser Idee: Es
-braucht **keinen Tarif und keine Betragsberechnung**. Die eingegebenen Werte
-*sind* bereits die Beträge in Cent, weil der Betrag laut README bewusst im Kopf
-gerechnet wird. Eine Tarifverwaltung würde dieser Entscheidung direkt
-widersprechen (siehe Wolfis Begründung im README: schneller im Kopf, flexibler
-bei verschiedenen Spielstilen, hält die App einfach). Der Kassensturz rechnet
-also nichts aus, was nicht schon dasteht — er verteilt nur.
-
-Offen: Rundet man auf glatte Beträge, oder bleibt es centgenau?
-
 ## Nullsummen-Prüfung je Spiel
 
 Steht schon als Wunsch im README und trifft den eigentlichen Zweck der App: Bei
@@ -45,7 +25,10 @@ relevant, sobald es eine freie Einzeleingabe für den Ramsch gibt, wo die
 Beträge je Spieler unterschiedlich sind und die Automatik nicht mehr greift.
 
 Am wertvollsten von allem hier, weil es keinen neuen Bildschirm braucht,
-sondern eine Zusicherung an bestehender Stelle ist.
+sondern eine Zusicherung an bestehender Stelle ist. Der Kassensturz warnt zwar
+inzwischen, wenn eine Runde nicht auf null aufgeht — aber erst am Ende des
+Abends, wenn niemand mehr weiß, welches Spiel es war. Beim Eintragen zu prüfen
+ist ungleich wertvoller.
 
 ## Punkteverlauf als Kurve
 

@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Kassensturz</h2>
+
+<div mat-dialog-content>
+
+  <!-- Geht die Runde nicht auf, ist jede Auszahlung darunter Makulatur. Deshalb
+       steht der Hinweis vor den Zahlungen und nicht als Fußnote. -->
+  <div class="warnung" *ngIf="imbalance !== 0">
+    <div class="warnung-titel">Die Runde geht nicht auf</div>
+    <p>
+      Die Kontostände ergeben zusammen {{ format(imbalance) }} statt 0,00 €.
+      Irgendwo ist ein Betrag falsch eingetragen — jedes Spiel verteilt nur um,
+      es kommt kein Geld dazu und es verschwindet keines.
+    </p>
+    <p class="warnung-fussnote">
+      Die Auszahlung unten deckt nur den Teil ab, der sich ausgleicht.
+    </p>
+  </div>
+
+  <div class="abschnitt-titel">Stand</div>
+  <div class="staende">
+    <div class="stand" *ngFor="let b of sortedBalances">
+      <span class="name">{{ b.player.firstName }}</span>
+      <span class="betrag"
+            [class.positiv]="b.amount > 0"
+            [class.negativ]="b.amount < 0">{{ format(b.amount) }}</span>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!everyoneEven">
+    <div class="abschnitt-titel">Auszahlung</div>
+    <div class="zahlungen">
+      <div class="zahlung" *ngFor="let z of payments">
+        <span class="zahler">{{ z.from.firstName }}</span>
+        <span class="pfeil">→</span>
+        <span class="empfaenger">{{ z.to.firstName }}</span>
+        <span class="summe">{{ format(z.amount) }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="ausgeglichen" *ngIf="everyoneEven">
+    Alle stehen auf null — niemand zahlt.
+  </div>
+
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="close()">Fertig</button>
+</div>
