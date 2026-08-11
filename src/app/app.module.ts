@@ -31,7 +31,6 @@ import { SelectPlayersComponent } from './dialogs/select-players/select-players.
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
 import { StatsComponent } from './stats/stats.component';
-import { LayoutDebugComponent } from './layout-debug/layout-debug.component';
 
 
 
@@ -47,8 +46,7 @@ import { LayoutDebugComponent } from './layout-debug/layout-debug.component';
     SelectPlayersComponent,
     DatabaseAdminComponent,
     ContactComponent,
-    StatsComponent,
-    LayoutDebugComponent
+    StatsComponent
   ],
   imports: [
     BrowserModule,

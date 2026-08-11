@@ -6,7 +6,6 @@ import { RoundListComponent } from './round-list/round-list.component';
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
 import { StatsComponent } from './stats/stats.component';
-import { LayoutDebugComponent } from './layout-debug/layout-debug.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -15,8 +14,7 @@ const routes: Routes = [
   { path: 'rounds/:id/games', component: GameListComponent },
   { path: 'stats', component: StatsComponent },
   { path: 'database-admin', component: DatabaseAdminComponent },
-  { path: 'contact', component: ContactComponent },
-  { path: 'layout-debug', component: LayoutDebugComponent }
+  { path: 'contact', component: ContactComponent }
 ];
 
 @NgModule({
