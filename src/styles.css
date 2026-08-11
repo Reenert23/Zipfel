@@ -28,7 +28,7 @@ html, body, app-root {
      document itself does not cover - the area behind the iOS home indicator
      when installed, overscroll - falls back to the canvas colour and showed
      up as a white bar. */
-  background-color: #17143a;
+  background-color: #1b3a63;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overscroll-behavior: none;
 
