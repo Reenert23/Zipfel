@@ -17,7 +17,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="manifest" href="manifest.webmanifest">
+  <!-- EXPERIMENT, revert if it does not help.
+       Measured on the device: window.innerHeight 793 against screen.height 852,
+       and 100vh/svh/lvh/dvh all report 793 too - the missing 59pt below the app
+       are outside the web view and unreachable from CSS. iOS paints the
+       manifest's background_color there, which is the band along the bottom
+       edge, and the toolbar reserves a top inset the window no longer needs.
+
+       It rendered edge to edge before the icons were added on 10.08: with an
+       empty "icons" array the manifest was unusable to iOS, so the home screen
+       entry was driven purely by the apple-mobile-web-app-* meta tags, and
+       black-translucent there is what asks for a full-bleed window. A valid
+       manifest makes iOS install it as a manifest-backed web app instead,
+       where those meta tags no longer decide the window.
+
+       Dropping the link costs nothing on iOS - the icon comes from
+       apple-touch-icon and the name from apple-mobile-web-app-title. It does
+       cost Android installability, so this needs a better answer than an empty
+       comment if it turns out to be the cause.
+  <link rel="manifest" href="manifest.webmanifest"> -->
 </head>
 <body class="mat-typography">
   <app-root></app-root>
