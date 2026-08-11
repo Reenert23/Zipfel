@@ -4,7 +4,12 @@
 
 .container {
   position: relative;
+  /* 100vh is the *large* viewport on iOS, so in a Safari tab it stays the full
+     height even while the bottom bar is showing and the page scrolls for no
+     reason. dvh tracks the bar; the vh line is the fallback for browsers
+     without dvh. */
   min-height: 100vh;
+  min-height: 100dvh;
   /* Bottom inset keeps content clear of the iOS home indicator while the
      background below still reaches the screen edge. */
   padding: 20px 20px calc(20px + env(safe-area-inset-bottom));

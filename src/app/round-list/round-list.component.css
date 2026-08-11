@@ -10,8 +10,13 @@
 
 .round-list {
   position: relative;
+  /* dvh shrinks with Safari's bottom bar, 100vh does not - see
+     dashboard.component.css. The vh line is the fallback. */
   min-height: 100vh;
-  padding: 24px 20px 100px;
+  min-height: 100dvh;
+  /* The 100px keep the last row clear of the fixed .fab; the inset moves both
+     up by however much the device reserves for the home indicator. */
+  padding: 24px 20px calc(100px + env(safe-area-inset-bottom));
   overflow: hidden;
   box-sizing: border-box;
 
@@ -98,7 +103,10 @@
 .fab {
   position: fixed;
   right: 24px;
-  bottom: 28px;
+  /* Fixed elements are positioned against the screen edge, not the padded
+     container, so this needs its own inset or the button sits on the home
+     indicator. */
+  bottom: calc(28px + env(safe-area-inset-bottom));
   width: 60px;
   height: 60px;
   border-radius: 50%;

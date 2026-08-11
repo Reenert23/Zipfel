@@ -4,8 +4,11 @@
 
 .stats-page {
   position: relative;
+  /* dvh shrinks with Safari's bottom bar, 100vh does not - see
+     dashboard.component.css. The vh line is the fallback. */
   min-height: 100vh;
-  padding: 24px 20px 100px;
+  min-height: 100dvh;
+  padding: 24px 20px calc(100px + env(safe-area-inset-bottom));
   overflow: hidden;
   box-sizing: border-box;
   background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);

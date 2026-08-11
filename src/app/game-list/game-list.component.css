@@ -10,7 +10,10 @@
 
 .container {
   position: relative;
+  /* dvh shrinks with Safari's bottom bar, 100vh does not - see
+     dashboard.component.css. The vh line is the fallback. */
   min-height: 100vh;
+  min-height: 100dvh;
   /* Bottom inset keeps content clear of the iOS home indicator while the
      background below still reaches the screen edge. */
   padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
