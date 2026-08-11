@@ -3,12 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <!-- iOS paints the strip below the standalone web view in this colour. It is
-       matched to the tone the page gradients end on, so the area iOS keeps for
-       itself stops reading as a foreign band. -->
+  <!-- iOS paints the status bar area above the standalone web view in this
+       colour, so it wants to sit close to the toolbar's top edge. -->
   <meta name="theme-color" content="#1b3a63">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- No apple-mobile-web-app-status-bar-style. Measured on the device against
+       an older home screen icon that still rendered edge to edge: iOS hands the
+       standalone app a 793pt window on an 852pt screen either way. It never
+       grows that window to the full screen - black-translucent only moves it up
+       under the status bar, and the 59pt it does not cover drop off the bottom,
+       where the scrolling page content made them impossible to hide. Left out,
+       the same window sits below the status bar and reaches the bottom edge.
+       iOS stores this at the time the icon is added to the home screen, so
+       changing it only takes effect for a newly added icon.
+       The layout follows on its own: toolbar height and content offset are
+       derived from env(safe-area-inset-top) in app.component.css, which is now
+       0 rather than 59. -->
   <!-- Label shown under the icon once iOS adds the app to the home screen. -->
   <meta name="apple-mobile-web-app-title" content="Zipfel">
   <title>Zipfel</title>
