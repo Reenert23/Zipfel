@@ -34,19 +34,26 @@
      itself and pushed the menu button half under the status bar. */
   height: calc(var(--toolbar-row) + env(safe-area-inset-top));
 
-  /* Frosted glass effect */
-  background: linear-gradient(135deg, rgba(25, 18, 55, 0.55), rgba(30, 50, 100, 0.55));
-  backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
-  -webkit-backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
+  /* One flat opaque colour, no gradient and no glass. iOS paints the strip
+     above the app in theme-color, and the only way that seam can disappear for
+     good is if the pixel it meets never moves: a translucent toolbar takes its
+     colour from whatever scrolls underneath, so it can be approximated but
+     never matched. Keep this in lockstep with theme-color in index.html and
+     theme_color in the manifest.
+     backdrop-filter is gone with it - nothing shows through an opaque layer, so
+     it only cost GPU time. */
+  background: #171432;
 
-  /* Frosted glass borders */
+  /* Frosted glass borders. No top border and no top inset highlight: both drew
+     a light 1px line along the toolbar's upper edge. That edge used to sit
+     under the translucent status bar where it went unnoticed; now that iOS
+     paints its own strip directly above the app, the line marked the seam
+     between the two and gave the strip away. */
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   /* Subtle shadow for frosted effect */
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 
   color: #fff;

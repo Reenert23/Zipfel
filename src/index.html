@@ -4,8 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <!-- iOS paints the status bar area above the standalone web view in this
-       colour, so it wants to sit close to the toolbar's top edge. -->
-  <meta name="theme-color" content="#1b3a63">
+       colour. It is the exact background of .glass-toolbar in
+       app.component.css, which is a flat opaque colour for this reason - the
+       two meet edge to edge and any difference shows up as a band. Change one,
+       change the other, and the manifest's theme_color with them. -->
+  <meta name="theme-color" content="#171432">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- No apple-mobile-web-app-status-bar-style. Measured on the device against
        an older home screen icon that still rendered edge to edge: iOS hands the
