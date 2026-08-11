@@ -21,7 +21,18 @@ import { Component, OnInit } from '@angular/core';
           <td>{{ row.v }}</td>
         </tr>
       </table>
+      <p class="hint">
+        Unten sollten zwei Balken kleben: GRÜN am Ende des Layout-Fensters,
+        MAGENTA am Ende des Geräte-Fensters. Schick ein Foto der unteren
+        Bildschirmkante und sag mir, welche der beiden du siehst.
+      </p>
     </div>
+
+    <!-- Probe 1: bottom of the layout viewport (what height:100% resolves to). -->
+    <div class="probe green">LAYOUT-FENSTER ENDE</div>
+    <!-- Probe 2: bottom of the large viewport. If iOS paints here, the band at
+         the bottom is reachable and lvh is the fix. -->
+    <div class="probe magenta">GERAETE-FENSTER ENDE</div>
   `,
   styles: [`
     .debug { padding: 16px; color: #fff; font-family: ui-monospace, Menlo, monospace; }
@@ -31,6 +42,19 @@ import { Component, OnInit } from '@angular/core';
     td:first-child { color: rgba(255,255,255,.6); }
     td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
     tr.flag td { color: #ff8a8a; font-weight: 700; }
+    .hint { font-size: 11px; line-height: 1.5; color: rgba(255,255,255,.75); margin: 14px 0 120px; }
+
+    .probe {
+      position: fixed; left: 0; right: 0; height: 22px; z-index: 9999;
+      font: 700 10px/22px ui-monospace, Menlo, monospace;
+      text-align: center; color: #000;
+    }
+    /* bottom: 0 pins to the layout viewport - the same box height:100% uses. */
+    .probe.green { bottom: 0; background: #22ff88; }
+    /* lvh is the viewport with all retractable UI expanded, i.e. the device
+       window. If this lands below the green bar, there is paintable area the
+       app is currently not using. */
+    .probe.magenta { top: calc(100lvh - 22px); background: #ff44dd; }
   `]
 })
 export class LayoutDebugComponent implements OnInit {
@@ -68,6 +92,23 @@ export class LayoutDebugComponent implements OnInit {
       .getPropertyValue('--toolbar-row').trim());
     add('window.innerHeight', window.innerHeight);
     add('screen.height', window.screen.height);
+
+    // The viewport unit families can disagree on iOS. If any of them exceeds
+    // innerHeight, that difference is paintable area the app is not using.
+    const unit = (u: string) => {
+      const el = document.createElement('div');
+      el.style.cssText = `position:fixed;top:0;left:0;width:0;visibility:hidden;height:100${u};`;
+      document.body.appendChild(el);
+      const h = Math.round(el.getBoundingClientRect().height);
+      el.remove();
+      return h;
+    };
+    const vh = unit('vh'), svh = unit('svh'), lvh = unit('lvh'), dvh = unit('dvh');
+    add('100vh / svh', `${vh} / ${svh}`);
+    add('100lvh / dvh', `${lvh} / ${dvh}`,
+        Math.max(vh, svh, lvh, dvh) > window.innerHeight);
+    add('malbar unter innerHeight', Math.max(vh, svh, lvh, dvh) - window.innerHeight,
+        Math.max(vh, svh, lvh, dvh) > window.innerHeight);
     add('visualViewport.height', Math.round((window as any).visualViewport?.height ?? -1));
     add('documentElement.clientH', document.documentElement.clientHeight);
 
