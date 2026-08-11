@@ -22,17 +22,7 @@ html, body, app-root {
   width: 100%;
   margin: 0;
   padding: 0;
-  /* The page gradient lives here, not on the page containers. Those grow to
-     their content height - a long round list measured 1942px - so the #1b3a63
-     end stop landed far below the screen and the bottom edge of the window sat
-     at whatever colour the gradient happened to pass through, around #241f4d.
-     iOS paints the strip below the standalone web view in theme-color, so that
-     mismatch is what made the strip read as a separate bar.
-     These three elements are exactly viewport-sized and never scroll (the
-     scrolling happens inside mat-sidenav-content), so anchoring the gradient
-     here ends it on #1b3a63 at the bottom edge at every scroll position and the
-     seam disappears. Pages must stay transparent for this to show through. */
-  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+  background: linear-gradient(120deg, rgba(23, 20, 58, 0.92), rgba(27, 58, 99, 0.92));
   /* Must come after the shorthand, which resets background-color to
      transparent. A gradient is only a background-image, so anything the
      document itself does not cover - the area behind the iOS home indicator

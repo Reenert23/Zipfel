@@ -64,12 +64,11 @@
   min-height: 100%;
   padding-top: calc(var(--toolbar-row) + env(safe-area-inset-top));
 
-  /* No background here. This element grows to its content height, so a gradient
-     on it ends far below the screen and leaves the window's bottom edge on the
-     wrong colour - which is what made the strip iOS paints below the web view
-     stand out. The gradient sits on html/body/app-root instead, where it is
-     viewport-sized; see styles.css. Everything from here down stays
-     transparent so it shows through. */
+  /* Base layer so no page can leak the body colour. Pages that bring their own
+     background (dashboard, rounds, stats, play) paint over this; Contact and
+     DB Admin do not, and used to end wherever their content ended - below that
+     the body's #17143a showed through as a dark blue band at the screen edge. */
+  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
 }
 
 /* Gradient accent under toolbar */
