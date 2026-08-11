@@ -20,7 +20,8 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+  /* Transparent on purpose - the gradient is anchored to the viewport on
+     html/body/app-root, see styles.css. */
   font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
