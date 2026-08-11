@@ -7,14 +7,7 @@
        matched to the tone the page gradients end on, so the area iOS keeps for
        itself stops reading as a foreign band. -->
   <meta name="theme-color" content="#1b3a63">
-  <!-- EXPERIMENT, revert if it does not help.
-       Standalone, iOS hands the app a 793pt web view on an 852pt screen and
-       keeps the bottom 59pt for itself. Removing the manifest from the install
-       did not change that, so this is the opposite test: drop the legacy
-       apple-mobile-web-app-capable flag and let the manifest's
-       display: standalone drive the install on its own (iOS 16.4+). If the two
-       paths size the window differently, this is where it shows.
-  <meta name="apple-mobile-web-app-capable" content="yes"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <!-- Label shown under the icon once iOS adds the app to the home screen. -->
   <meta name="apple-mobile-web-app-title" content="Zipfel">
