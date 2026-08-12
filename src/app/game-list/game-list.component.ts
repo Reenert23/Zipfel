@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
 import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
+import { VerlaufComponent } from '../dialogs/verlauf/verlauf.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 
@@ -286,6 +287,19 @@ export class GameListComponent implements OnInit, OnDestroy {
       width: '400px',
       maxHeight: '80vh',
       data: { players: this.players, totalPoints: this.totalPoints }
+    });
+  }
+
+  /**
+   * Breiter als der Kassensturz: eine Kurve über einen ganzen Abend braucht
+   * Platz in der Breite, eine Liste von Zahlungen nicht.
+   */
+  openVerlauf(): void {
+    this.dialog.open(VerlaufComponent, {
+      width: '92vw',
+      maxWidth: '560px',
+      maxHeight: '80vh',
+      data: { players: this.players, games: this.games }
     });
   }
 

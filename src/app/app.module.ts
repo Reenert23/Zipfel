@@ -32,6 +32,9 @@ import { KassensturzComponent } from './dialogs/kassensturz/kassensturz.componen
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
 import { StatsComponent } from './stats/stats.component';
+import { NgChartsModule } from 'ng2-charts';
+import { PointsChartComponent } from './components/points-chart/points-chart.component';
+import { VerlaufComponent } from './dialogs/verlauf/verlauf.component';
 
 
 
@@ -48,7 +51,9 @@ import { StatsComponent } from './stats/stats.component';
     DatabaseAdminComponent,
     ContactComponent,
     StatsComponent,
-    KassensturzComponent
+    KassensturzComponent,
+    PointsChartComponent,
+    VerlaufComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { StatsComponent } from './stats/stats.component';
     MatCardModule,
     MatGridListModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

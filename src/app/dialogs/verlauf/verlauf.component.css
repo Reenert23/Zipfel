@@ -1,0 +1,20 @@
+/* Der Glas-Look der Dialoge kommt global aus styles.css. Hier steht nur, was
+   dieser Dialog zusätzlich braucht. */
+
+/* Im Dialog trägt der Rahmen des Diagramms nichts bei - der Dialog ist schon
+   ein abgesetzter Kasten. Ein Kasten im Kasten sieht nach Versehen aus.
+   Das app-points-chart im Selektor ist nötig: ohne das Element hat die Regel
+   dieselbe Spezifität wie die der Komponente selbst, und dann gewinnt die,
+   die später eingehängt wird. */
+:host ::ng-deep app-points-chart .chart-container {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.hinweis {
+  padding: 24px 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}

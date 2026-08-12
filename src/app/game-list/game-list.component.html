@@ -53,6 +53,26 @@
         <button mat-raised-button class="key-button ok-button" (click)="addGame()">OK</button>
       </div>
     </div>
+
+    <!-- Am rechten Rand neben dem Tastenfeld: beides sind Blicke auf den Abend,
+         keine Eingabe, deshalb stehen sie neben der Tastatur statt darunter. -->
+    <div class="side-actions" *ngIf="players.length > 0 && games.length > 0">
+      <button
+        class="side-action"
+        (click)="openKassensturz()"
+        title="Kassensturz"
+        aria-label="Kassensturz">
+        <mat-icon>payments</mat-icon>
+      </button>
+
+      <button
+        class="side-action"
+        (click)="openVerlauf()"
+        title="Verlauf"
+        aria-label="Verlauf">
+        <mat-icon>show_chart</mat-icon>
+      </button>
+    </div>
   </div>
 
   <!-- Zwischenstand -->
@@ -66,16 +86,6 @@
       </span>
     </div>
   </div>
-
-  <!-- Sitzt direkt unter dem Zwischenstand, weil es die Frage beantwortet, die
-       man sich beim Blick darauf am Ende des Abends stellt. -->
-  <button
-    *ngIf="players.length > 0 && games.length > 0"
-    mat-raised-button
-    class="kassensturz-btn"
-    (click)="openKassensturz()">
-    Kassensturz
-  </button>
 
   <!-- Tabelle der Spiele -->
   <div class="table-section">

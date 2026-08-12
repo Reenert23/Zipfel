@@ -1,0 +1,30 @@
+<div class="chart-container" *ngIf="lineChartData.datasets.length > 0">
+  <!-- Die linke Spalte gehoert der Achse und scrollt nicht mit. -->
+  <div class="chart-body">
+    <div class="chart-axis">
+      <span class="axis-tick" *ngFor="let tick of yTicks" [style.top.px]="tick.top">
+        {{ tick.label }}
+      </span>
+    </div>
+
+    <div class="chart-scroll">
+      <div class="chart-inner" [style.width]="chartWidth">
+        <canvas
+          baseChart
+          type="line"
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [plugins]="[stickyAxis]">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steht bewusst neben dem Scrollbereich, nicht darin. -->
+  <div class="chart-legend">
+    <span class="legend-item" *ngFor="let item of legendItems">
+      <span class="legend-swatch" [style.background]="item.color"></span>
+      {{ item.label }}
+    </span>
+  </div>
+</div>

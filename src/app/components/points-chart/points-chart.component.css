@@ -1,0 +1,85 @@
+/* border-box, sonst addiert sich das Padding auf die 100% und das Diagramm
+   steht rechts über den Rand hinaus, den der Seiten-Container vorgibt. */
+.chart-container {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 16px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Hält die abgerundeten Ecken über dem scrollenden Inhalt. */
+  overflow: hidden;
+}
+
+/* Achse links fest, Fläche rechts scrollend. */
+.chart-body {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Schmal genug, dass kaum Platz verlorengeht, breit genug für "-100". Die
+   Zahlen stehen rechtsbündig, also direkt an der Fläche. */
+.chart-axis {
+  position: relative;
+  flex: 0 0 40px;
+  height: 280px;
+}
+
+.axis-tick {
+  position: absolute;
+  right: 6px;
+  /* top ist die Mitte der Gitterlinie, der Text muss sich darauf zentrieren. */
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: #e0e0e0;
+}
+
+/* Gescrollt wird innen: der Kasten bleibt stehen, die Kurve wandert. */
+.chart-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chart-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.chart-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Feste Höhe, weil maintainAspectRatio aus ist - sonst hat der Canvas beim
+   Wachsen in der Breite keine Grenze nach unten. */
+.chart-inner {
+  height: 280px;
+}
+
+/* Bleibt mittig stehen, während die Kurve daneben wandert. */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}

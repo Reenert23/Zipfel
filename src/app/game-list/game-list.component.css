@@ -256,6 +256,7 @@
 
 /* ---------- Keypad (layout unchanged) ---------- */
 .grid-container {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -557,17 +558,36 @@ h3 {
   color: #fff;
 }
 
-/* ---------- Kassensturz ---------- */
-.kassensturz-btn {
-  display: block;
-  margin: 16px auto 0;
-  min-width: 200px;
-  border-radius: 999px !important;
-  padding: 10px 24px !important;
-  font-weight: 600 !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+/* ---------- Kassensturz und Verlauf ---------- */
+
+/* Absolut, damit das Tastenfeld mittig bleibt: als Flex-Geschwister würde es
+   die Tastatur nach links aus der Mitte drücken. */
+.side-actions {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.side-action:active {
+  background: rgba(255, 255, 255, 0.2);
 }
