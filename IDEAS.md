@@ -13,33 +13,6 @@ außerhalb dieses Repositorys liegt.
 
 ---
 
-## Nullsummen-Prüfung je Spiel
-
-Steht schon als Wunsch im README und trifft den eigentlichen Zweck der App: Bei
-jeder Abrechnung prüfen, ob die Summe über alle vier Spieler **0** ergibt, und
-sonst die Eingabe nicht annehmen.
-
-Der Fehler, den das abfängt, ist genau der beschriebene — drei Spielern etwas
-gutschreiben, einem abziehen, und der Abend stimmt nicht mehr. Besonders
-relevant, sobald es eine freie Einzeleingabe für den Ramsch gibt, wo die
-Beträge je Spieler unterschiedlich sind und die Automatik nicht mehr greift.
-
-Am wertvollsten von allem hier, weil es keinen neuen Bildschirm braucht,
-sondern eine Zusicherung an bestehender Stelle ist. Der Kassensturz warnt zwar
-inzwischen, wenn eine Runde nicht auf null aufgeht — aber erst am Ende des
-Abends, wenn niemand mehr weiß, welches Spiel es war. Beim Eintragen zu prüfen
-ist ungleich wertvoller.
-
-## Punkteverlauf als Kurve
-
-Pro Runde ein Diagramm mit einer Linie je Spieler über die Spiele hinweg. Man
-sieht auf einen Blick, wo jemand eingebrochen ist oder wann ein Solo alles
-gedreht hat.
-
-Einordnung: Statistik ist laut README ausdrücklich zweitrangig — erst muss das
-Abrechnen sitzen. Das hier ist also Kür, kein Pflichtprogramm. Passt aber gut
-zum bestehenden dunklen Look und baut nur auf Daten auf, die schon da sind.
-
 ## Offline-Fähigkeit
 
 `angular.json` setzt `"serviceWorker": true`, es wird also ein `ngsw-worker.js`

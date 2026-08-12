@@ -13,6 +13,7 @@ import { SelectPlayersComponent } from '../dialogs/select-players/select-players
 import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
+import { distribute, imbalance } from '../services/balance';
 
 
 @Component({
@@ -179,8 +180,33 @@ export class GameListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Nimmt ein Spiel nicht an, das nicht auf 0 aufgeht, und sagt warum.
+   *
+   * Beim Eintragen ist so ein Fehler noch einem Spiel zuzuordnen. Faellt er
+   * erst beim Kassensturz am Ende des Abends auf, weiss niemand mehr, welches
+   * Spiel gemeint war - deshalb steht die Pruefung hier und nicht nur dort.
+   *
+   * Ruf und Solo gehen nach ihrer Rechnung immer auf und der Ramsch wird
+   * schon in seinem Dialog geprueft; das hier ist die Zusicherung, dass keine
+   * kuenftige Spielart daran vorbei in die Runde kommt.
+   */
+  private refuseUnbalanced(scores: GameScore[]): boolean {
+    const fehlbetrag = imbalance(scores);
+    if (fehlbetrag === 0) {
+      return false;
+    }
+
+    alert(
+      `Das Spiel geht nicht auf: die Beträge ergeben zusammen ${fehlbetrag} statt 0. ` +
+      `Ein Spiel verteilt nur um - es kommt kein Geld dazu und es verschwindet keines.`
+    );
+    return true;
+  }
+
   private saveRamschGame(newGame: Game): void {
     if (this.newRound.id === undefined) return;
+    if (this.refuseUnbalanced(newGame.scores)) return;
 
     this.roundService.addGameToRound(this.newRound.id, newGame).subscribe({
       next: (updatedRound) => {
@@ -397,27 +423,45 @@ export class GameListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const scores: GameScore[] = this.players.map(player => {
-      let points = 0;
-      if (this.maxWinners === 1) {
-        this.gameType = "Solo";
-        if (this.selectedWinners.includes(player.firstName)) {
-          this.soloCaller = player.id;
-          points = this.pointsInput;
-        } else {
-          points = -Math.floor(this.pointsInput / (this.players.length - 1));
+    let scores: GameScore[];
+
+    if (this.maxWinners === 1) {
+      this.gameType = "Solo";
+
+      const soloPlayer = this.players.find(p => this.selectedWinners.includes(p.firstName));
+      this.soloCaller = soloPlayer?.id ?? -1;
+
+      const soloAmount = this.isLooser ? -this.pointsInput : this.pointsInput;
+      const opponents = this.players.filter(p => p.id !== this.soloCaller);
+
+      /* Der Gegenbetrag wird auf die Gegenspieler aufgeteilt, statt ihn je
+         Spieler abzurunden: bei 80 Cent zahlten drei Gegenspieler vorher je
+         26, zusammen 78 - zwei Cent verschwanden aus der Runde und tauchten
+         erst am Ende im Kassensturz wieder auf. */
+      const shares = distribute(-soloAmount, opponents.length);
+
+      scores = this.players.map(player => {
+        if (player.id === this.soloCaller) {
+          return { playerId: player.id, points: soloAmount };
         }
-        if (this.isLooser) {
-          points *= -1;
-        }
-      } else {
-        this.gameType = "Ruf";
-        points = this.selectedWinners.includes(player.firstName)
+        return {
+          playerId: player.id,
+          points: shares[opponents.findIndex(o => o.id === player.id)]
+        };
+      });
+    } else {
+      this.gameType = "Ruf";
+      scores = this.players.map(player => ({
+        playerId: player.id,
+        points: this.selectedWinners.includes(player.firstName)
           ? this.pointsInput
-          : -this.pointsInput;
-      }
-      return { playerId: player.id, points };
-    });
+          : -this.pointsInput
+      }));
+    }
+
+    if (this.refuseUnbalanced(scores)) {
+      return;
+    }
 
     const newGame: Game = {
       gameType: this.gameType,
