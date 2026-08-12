@@ -32,6 +32,12 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
+    <!-- Die Glasebene der Toolbar, bewusst als eigenes Element daneben und
+         nicht als Hintergrund der Toolbar selbst: iOS rastert fuer einen
+         backdrop-filter den ganzen Stacking-Context und nimmt den Text darin
+         mit, der dadurch sichtbar weich wird. Als Geschwister liegt der
+         Filter ausserhalb des Elternbaums der Schrift. -->
+    <div class="toolbar-glass" aria-hidden="true"></div>
     <mat-toolbar class="glass-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>

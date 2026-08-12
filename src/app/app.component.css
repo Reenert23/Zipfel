@@ -34,18 +34,8 @@
      itself and pushed the menu button half under the status bar. */
   height: calc(var(--toolbar-row) + env(safe-area-inset-top));
 
-  /* The glass is back, but the top edge is not part of it. iOS paints the strip
-     above the app in theme-color, and the seam between the two is a single
-     line - the toolbar's upper edge. Only that line has to match, so the first
-     layer below is opaque theme-color for 4px and then fades out over the next
-     16px, leaving the lower two thirds of the bar as glass over the page.
-     Fully opaque at the edge means the match holds no matter what scrolls
-     underneath, which a translucent bar could never do.
-     The fade ends on rgba(23,20,50,0) rather than transparent: that is the same
-     colour at zero alpha, so it does not drift through grey on the way out.
-     #171432 has to stay in lockstep with theme-color in index.html and
-     theme_color in the manifest. */
-  /* Glas und Verlauf liegen in ::before, nicht hier - siehe dort. */
+  /* Kein Hintergrund und kein Filter: beides liegt in .toolbar-glass daneben,
+     damit die Schrift hier in einer ungefilterten Ebene bleibt. */
   background: transparent;
 
   /* Frosted glass borders. No top border and no top inset highlight: both drew
@@ -82,20 +72,37 @@
   background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
 }
 
-/* Das Glas als eigene Ebene *hinter* dem Inhalt, nicht auf der Toolbar selbst.
-   iOS zeichnet den Text eines Elements mit backdrop-filter in dieselbe
-   gefilterte Ebene und rastert ihn dabei gröber - auf dem Handy war die
-   Schrift oben sichtbar weich, während der Rest der Seite scharf blieb. Liegt
-   der Filter in einem eigenen Layer darunter, bleibt der Text im normalen.
+/* Die Glasebene der Toolbar - ein eigenes Element neben der Toolbar, kein
+   Hintergrund und kein Pseudoelement von ihr.
 
-   inset: 0 deckt die volle Toolbar ab, auch den safe-area-Streifen oben: ein
-   absolut positioniertes Kind bezieht sich auf die Padding-Box, und die
-   schließt das padding-top mit ein. */
-::ng-deep .glass-toolbar.mat-toolbar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+   Der Grund ist iOS: fuer einen backdrop-filter rastert WebKit den
+   umgebenden Stacking-Context als Ganzes, und der Text des Elements liegt
+   mit darin. Die Schrift wird dadurch sichtbar weich, waehrend der Rest der
+   Seite scharf bleibt. Ein ::before mit z-index -1 reicht dagegen nicht - es
+   sitzt im selben Stacking-Context wie der Text. Erst als Geschwister ist der
+   Filter aus dem Elternbaum der Schrift heraus.
+
+   Geometrie und Verlauf sind unveraendert von der Toolbar uebernommen. Die
+   Hoehe muss dieselbe Formel benutzen: sonst laeuft das Glas nicht mit der
+   Toolbar mit, wenn sich die safe-area aendert.
+
+   Zum Verlauf: iOS malt den Streifen ueber der App in theme-color, und die
+   Naht zwischen beiden ist die Oberkante der Toolbar. Nur diese Linie muss
+   passen, deshalb ist die erste Schicht 4px opakes theme-color und blendet
+   ueber die naechsten 16px aus; die unteren zwei Drittel bleiben Glas ueber
+   der Seite. Opak an der Kante heisst, die Naht haelt unabhaengig davon, was
+   darunter durchscrollt. Das Ende auf rgba(23,20,50,0) statt transparent ist
+   dieselbe Farbe bei Alpha 0, damit es nicht ueber Grau ausblendet.
+   #171432 muss im Gleichschritt mit theme-color in index.html und
+   theme_color im Manifest bleiben. */
+.toolbar-glass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--toolbar-row) + env(safe-area-inset-top));
+  /* Unter der Toolbar (z-index 3), ueber der Seite. */
+  z-index: 2;
   pointer-events: none;
   background:
     linear-gradient(to bottom, #171432 0, #171432 4px, rgba(23, 20, 50, 0) 20px),
