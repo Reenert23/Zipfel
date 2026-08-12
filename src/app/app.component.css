@@ -26,13 +26,13 @@
   left: 0;
   right: 0;
   z-index: 3;
-  padding-top: env(safe-area-inset-top);
+  padding-top: 0;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   /* The inset has to be added to the height, not eaten out of it: mat-toolbar
      is border-box, so a flat height left only height - inset for the row
      itself and pushed the menu button half under the status bar. */
-  height: calc(var(--toolbar-row) + env(safe-area-inset-top));
+  height: var(--toolbar-row);
 
   /* Kein Hintergrund und kein Filter: beides liegt in .toolbar-glass daneben,
      damit die Schrift hier in einer ungefilterten Ebene bleibt. */
@@ -100,7 +100,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: calc(var(--toolbar-row) + env(safe-area-inset-top));
+  height: var(--toolbar-row);
   /* Unter der Toolbar (z-index 3), ueber der Seite. */
   z-index: 2;
   pointer-events: none;
@@ -110,6 +110,36 @@
   backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
   -webkit-backdrop-filter: blur(30px) saturate(180%) contrast(1.1);
 }
+
+/* Vom Home-Bildschirm aus legt iOS ueber den oberen Bildschirmrand einen
+   eigenen, weichzeichnenden Streifen - denselben, ueber dem es die Uhrzeit
+   und die Symbole zeichnet. Alles, was darunter liegt, sieht weich aus, und
+   das ist Systemsache: es passiert auch ohne jeden Filter und sogar mit einer
+   Leiste, die gar nicht fixiert ist. Zu sehen daran, dass die Schrift beim
+   Herunterziehen der Seite unter dem Streifen hervorkommt und scharf wird.
+   In Safari gibt es den Streifen nicht, dort ist die Leiste immer scharf.
+   Der einzige Hebel ist deshalb Abstand: die Zeile muss unter dem Streifen
+   anfangen. Das kostet Hoehe, aber lesbare Schrift ist es wert.
+
+   Die Klasse kommt aus AppComponent.markStandalone(). Eine Media-Query auf
+   display-mode: standalone waere der naheliegende Weg, aber iOS wertet die in
+   Home-Screen-Apps nicht verlaesslich aus.
+
+   Alle drei Werte muessen zusammen wachsen, sonst klafft eine Luecke unter
+   der Leiste oder der Seiteninhalt verschwindet darunter. */
+::ng-deep .ios-standalone ::ng-deep .glass-toolbar.mat-toolbar {
+  padding-top: 0;
+  height: var(--toolbar-row);
+}
+
+::ng-deep .ios-standalone .toolbar-glass {
+  height: var(--toolbar-row);
+}
+
+::ng-deep .ios-standalone .container {
+  padding-top: var(--toolbar-row);
+}
+
 
 /* Gradient accent under toolbar */
 ::ng-deep .glass-toolbar.mat-toolbar::after {

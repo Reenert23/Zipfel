@@ -8,6 +8,12 @@
      deliberately, because the status bar inset is stacked on top of this and
      the combined bar was eating ~115px of a phone screen. */
   --toolbar-row: 48px;
+
+  /* Wie weit der weichzeichnende Systemstreifen vom Home-Bildschirm aus in
+     die App hineinreicht. Nur dort wird der Wert benutzt (siehe
+     .ios-standalone in app.component.css); in Safari gibt es den Streifen
+     nicht. Notfalls hier nachjustieren - eine Stelle, kein Suchen. */
+  --standalone-scrim: 22px;
 }
 
 @media (min-width: 600px) {
