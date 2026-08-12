@@ -181,6 +181,38 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Hinweis beim Eintippen eines Solos, wenn der Betrag nicht glatt auf die
+   * Gegenspieler aufgeht.
+   *
+   * Beim Schafkopf rechnet der Alleinspieler mit jedem Gegner einzeln ab, ein
+   * Solo ist also das Dreifache eines Tarifs und damit von Haus aus durch drei
+   * teilbar. Steht hier ein krummer Betrag, ist das meist ein Vertipper oder
+   * jemand hat den Tarif statt der Summe eingegeben.
+   *
+   * Es wird nur hingewiesen, nicht abgelehnt: die Runde geht dank der
+   * Restverteilung trotzdem auf, und wer den Betrag so will, soll ihn
+   * eintragen koennen. Der Hinweis zeigt deshalb gleich, was herauskommt.
+   */
+  get soloRestHinweis(): string | null {
+    if (this.maxWinners !== 1) {
+      return null;
+    }
+
+    const betrag = Math.abs(Number(this.pointsInput));
+    if (!Number.isFinite(betrag) || betrag <= 0) {
+      return null;
+    }
+
+    const gegenspieler = this.players.length - 1;
+    if (gegenspieler < 1 || betrag % gegenspieler === 0) {
+      return null;
+    }
+
+    const anteile = distribute(betrag, gegenspieler);
+    return `${betrag} geht nicht glatt durch ${gegenspieler}. Die Gegenspieler zahlen ${anteile.join(', ')}.`;
+  }
+
+  /**
    * Nimmt ein Spiel nicht an, das nicht auf 0 aufgeht, und sagt warum.
    *
    * Beim Eintragen ist so ein Fehler noch einem Spiel zuzuordnen. Faellt er

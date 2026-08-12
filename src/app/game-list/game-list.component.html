@@ -20,9 +20,23 @@
 
 
   <!-- Punkte-Eingabe -->
-  <mat-form-field appearance="outline" class="points-input">
-    <input matInput id="points" type="number" inputmode="numeric" [(ngModel)]="pointsInput" />
-  </mat-form-field>
+  <div class="points-row">
+    <!-- Unsichtbares Gegenstück zum Warnplatz rechts, damit das Feld mittig
+         bleibt, ob gewarnt wird oder nicht. -->
+    <span class="warn-slot" aria-hidden="true"></span>
+
+    <mat-form-field appearance="outline" class="points-input">
+      <input matInput id="points" type="number" inputmode="numeric" [(ngModel)]="pointsInput" />
+    </mat-form-field>
+
+    <span class="warn-slot">
+      <!-- Weist nur hin, hindert nicht: die Runde geht auch mit krummem
+           Betrag auf, aber meist ist er ein Vertipper. Der Wortlaut steht im
+           title, damit hier nur das Ausrufezeichen Platz braucht. -->
+      <span class="solo-warnung" *ngIf="soloRestHinweis" [title]="soloRestHinweis"
+            role="img" [attr.aria-label]="soloRestHinweis">!</span>
+    </span>
+  </div>
 
 
   <div class="grid-container">

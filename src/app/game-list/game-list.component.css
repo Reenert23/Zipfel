@@ -558,6 +558,45 @@ h3 {
   color: #fff;
 }
 
+.points-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Das auto der Feld-Margin wuerde im Flex-Layout den freien Platz aufsaugen
+   und die Warnung an den Bildschirmrand schieben, statt sie neben das Feld
+   zu stellen. */
+.points-row .points-input {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Beide Seiten gleich breit, damit das Zahlenfeld nicht springt, sobald die
+   Warnung auftaucht - dasselbe Verfahren wie bei der Solo-Markierung in der
+   Tabelle. */
+.warn-slot {
+  flex: 0 0 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.solo-warnung {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.55);
+}
+
 /* ---------- Kassensturz und Verlauf ---------- */
 
 /* Absolut, damit das Tastenfeld mittig bleibt: als Flex-Geschwister würde es
