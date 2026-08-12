@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private toolbarService: ToolbarService, private http: HttpClient) {}
 
   ngOnInit() {
+    this.markStandalone();
+
     this.http.get<any>('/assets/version.json').subscribe(data => {
       this.version = `v${data.version}`;
     });
@@ -34,6 +36,25 @@ export class AppComponent implements OnInit {
           this.sidenav.close();
         }
       });
+  }
+
+  /**
+   * Merkt am body, ob die App vom Home-Bildschirm aus laeuft.
+   *
+   * Noetig, weil die Kopfleiste dort ohne Glas auskommen muss: in der eigenen
+   * Webview zieht WebKit die Glasebene mit der Toolbar in eine Ebene und die
+   * Schrift wird weich. Die Media-Query display-mode: standalone reicht dafuer
+   * nicht - iOS wertet sie in Home-Screen-Apps nicht verlaesslich aus und
+   * kennt stattdessen navigator.standalone. Beide Wege werden geprueft, damit
+   * es auf iOS und ueberall sonst greift.
+   */
+  private markStandalone(): void {
+    const iOS = (window.navigator as any).standalone === true;
+    const standard = window.matchMedia?.('(display-mode: standalone)').matches === true;
+
+    if (iOS || standard) {
+      document.body.classList.add('ios-standalone');
+    }
   }
 
   private updateRouteFlags(url: string): void {
