@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://zipfel-backend.onrender.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
