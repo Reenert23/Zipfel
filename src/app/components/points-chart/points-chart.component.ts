@@ -1,10 +1,17 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Chart, ChartConfiguration, ChartOptions, Plugin } from 'chart.js';
+import { NgChartsModule } from 'ng2-charts';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 
+/* standalone, damit chart.js nicht im Initial-Bundle landet: die Komponente
+   haengt an keinem NgModule und wird erst geladen, wenn der Verlauf-Dialog
+   das erste Mal aufgeht. */
 @Component({
   selector: 'app-points-chart',
+  standalone: true,
+  imports: [CommonModule, NgChartsModule],
   templateUrl: './points-chart.component.html',
   styleUrls: ['./points-chart.component.css']
 })

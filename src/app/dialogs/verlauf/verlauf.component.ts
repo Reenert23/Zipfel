@@ -1,5 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { PointsChartComponent } from '../../components/points-chart/points-chart.component';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 
@@ -15,6 +18,8 @@ export interface VerlaufData {
  */
 @Component({
   selector: 'app-verlauf',
+  standalone: true,
+  imports: [CommonModule, MatDialogModule, MatButtonModule, PointsChartComponent],
   templateUrl: './verlauf.component.html',
   styleUrls: ['./verlauf.component.css']
 })

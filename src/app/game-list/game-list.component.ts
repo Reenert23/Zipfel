@@ -11,7 +11,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
 import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
-import { VerlaufComponent } from '../dialogs/verlauf/verlauf.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 
@@ -293,8 +292,15 @@ export class GameListComponent implements OnInit, OnDestroy {
   /**
    * Breiter als der Kassensturz: eine Kurve über einen ganzen Abend braucht
    * Platz in der Breite, eine Liste von Zahlungen nicht.
+   *
+   * Der Dialog wird erst hier geladen, nicht beim Start der App. chart.js
+   * wiegt rund 200 kB und wuerde das Initial-Bundle sonst ueber die Grenze
+   * schieben, ab der der Produktionsbuild abbricht - fuer eine Ansicht, die
+   * an den meisten Abenden niemand aufmacht.
    */
-  openVerlauf(): void {
+  async openVerlauf(): Promise<void> {
+    const { VerlaufComponent } = await import('../dialogs/verlauf/verlauf.component');
+
     this.dialog.open(VerlaufComponent, {
       width: '92vw',
       maxWidth: '560px',

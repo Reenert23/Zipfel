@@ -32,9 +32,9 @@ import { KassensturzComponent } from './dialogs/kassensturz/kassensturz.componen
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
 import { StatsComponent } from './stats/stats.component';
-import { NgChartsModule } from 'ng2-charts';
-import { PointsChartComponent } from './components/points-chart/points-chart.component';
-import { VerlaufComponent } from './dialogs/verlauf/verlauf.component';
+/* PointsChartComponent und VerlaufComponent stehen bewusst nicht hier: sie
+   sind standalone und werden erst beim Oeffnen des Verlaufs nachgeladen,
+   damit chart.js aus dem Initial-Bundle bleibt. */
 
 
 
@@ -51,9 +51,7 @@ import { VerlaufComponent } from './dialogs/verlauf/verlauf.component';
     DatabaseAdminComponent,
     ContactComponent,
     StatsComponent,
-    KassensturzComponent,
-    PointsChartComponent,
-    VerlaufComponent
+    KassensturzComponent
   ],
   imports: [
     BrowserModule,
@@ -76,8 +74,7 @@ import { VerlaufComponent } from './dialogs/verlauf/verlauf.component';
     MatCardModule,
     MatGridListModule,
     MatIconModule,
-    MatDialogModule,
-    NgChartsModule
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
