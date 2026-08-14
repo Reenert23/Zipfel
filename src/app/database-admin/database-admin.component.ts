@@ -22,7 +22,7 @@ export class DatabaseAdminComponent {
     this.isLoading = true;
     this.successMessage = '';
 
-    this.http.post(`${this.apiUrl}/admin/clear-database`, {}).subscribe({
+    this.http.post(`${this.apiUrl}/clear-database`, {}).subscribe({
       next: () => {
         this.successMessage = 'Datenbank geleert ✓';
         this.isLoading = false;
@@ -42,7 +42,7 @@ export class DatabaseAdminComponent {
     this.isLoading = true;
     this.successMessage = '';
 
-    this.http.post(`${this.apiUrl}/admin/reset-testdata`, {}).subscribe({
+    this.http.post(`${this.apiUrl}/reset-testdata`, {}).subscribe({
       next: () => {
         this.successMessage = 'Testdaten eingespielt ✓';
         this.isLoading = false;
