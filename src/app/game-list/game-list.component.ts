@@ -152,6 +152,11 @@ export class GameListComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
+      /* Vor der Auswertung, und bewusst auch beim Abbrechen: schon der Tipp auf
+         "Ramsch" hat maxWinners auf 3 gestellt, dieser Zustand ist mit dem
+         Schliessen des Dialogs hinfaellig. */
+      this.resetEingabe();
+
       if (result && result.length === this.players.length) {
         const scores: GameScore[] = this.players.map((player, index) => ({
           playerId: player.id,
@@ -380,7 +385,17 @@ export class GameListComponent implements OnInit, OnDestroy {
       return totals;
     }
 
+  /* Betraege sind Cent, fuenf Stellen sind also knapp 1.000 Euro fuer ein
+     einzelnes Spiel - reichlich Luft nach oben. Ohne Grenze haengte addToInput
+     jede Ziffer an, und ein verrutschter Daumen erzeugte neunstellige Summen:
+     am 15.08.2026 landete so ein Spiel ueber 111112222 in Runde 22. */
+  private static readonly MAX_EINGABE_STELLEN = 5;
+
   addToInput(value: number) {
+    if (this.inputString.length >= GameListComponent.MAX_EINGABE_STELLEN) {
+      return;
+    }
+
     if (this.inputString === "") {
       this.inputString = value.toString(); // Erste Eingabe
     } else {
@@ -529,7 +544,20 @@ export class GameListComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Reset Auswahl
+    this.resetEingabe();
+  }
+
+  /**
+   * Setzt die Eingabemaske auf den Ausgangszustand zurueck.
+   *
+   * Lag frueher nur am Ende von addGameToRound(), der Ramsch-Weg hatte kein
+   * Gegenstueck. "Ramsch" setzt aber ueber setMaxWinners() maxWinners auf 3,
+   * und das blieb danach stehen - zusammen mit den getippten Ziffern und den
+   * ausgewaehlten Gewinnern. Der naechste Druck auf OK machte daraus ein Spiel,
+   * das niemand eintragen wollte; am 15.08.2026 sind so vier Fremdspiele in
+   * Runde 22 gelandet (ids 93, 94, 97, 98).
+   */
+  private resetEingabe(): void {
     this.selectedWinners = [];
     this.maxWinners = 2;
     this.clickCount = 0;

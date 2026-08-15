@@ -30,6 +30,45 @@
   color: #fff;
 }
 
+.points-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 44px, weil darunter auf dem Handy zu oft danebengetippt wird. */
+.sign-toggle {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  font-size: 1.35em;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  /* Sonst zoomt iOS beim Doppeltippen in die Seite. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.sign-toggle:active {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Negativ wird eingefaerbt, damit ein falsches Vorzeichen auffaellt, ohne dass
+   man die Zahl daneben lesen muss. Dasselbe Rot wie die negativen Staende im
+   Zwischenstand der Spielansicht. */
+.sign-toggle.is-negative {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.14);
+  border-color: rgba(255, 107, 107, 0.45);
+}
+
 .points-field {
   width: 90px;
   box-sizing: border-box;

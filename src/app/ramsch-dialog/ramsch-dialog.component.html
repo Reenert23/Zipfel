@@ -4,13 +4,26 @@
   <div class="ramsch-rows">
     <div class="ramsch-row" *ngFor="let player of players; let i = index">
       <span class="player-label">{{ player.firstName }}</span>
-      <input
-        class="points-field"
-        type="number"
-        inputmode="numeric"
-        placeholder="0"
-        [(ngModel)]="numbers[i]"
-      />
+      <div class="points-group">
+        <!-- iOS zeigt zu inputmode="numeric" einen reinen Ziffernblock ohne
+             Minus, und es gibt keinen inputmode, der beides haette. Statt auf
+             die langsame Volltastatur auszuweichen, sitzt das Vorzeichen hier
+             als eigener Knopf - der Ziffernblock bleibt damit erhalten. -->
+        <button
+          type="button"
+          class="sign-toggle"
+          [class.is-negative]="isNegative(i)"
+          (click)="toggleSign(i)"
+          [attr.aria-label]="'Vorzeichen für ' + player.firstName + ' umschalten'"
+          [attr.aria-pressed]="isNegative(i)">{{ isNegative(i) ? '−' : '+' }}</button>
+        <input
+          class="points-field"
+          type="text"
+          inputmode="numeric"
+          placeholder="0"
+          [(ngModel)]="numbers[i]"
+        />
+      </div>
     </div>
   </div>
 </div>
