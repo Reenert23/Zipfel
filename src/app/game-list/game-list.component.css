@@ -408,6 +408,16 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sort-indicator {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 /* Circular badge for the game number / sum symbol */
 .game-badge {
   display: inline-flex;

@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
 import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 import { distribute, imbalance } from '../services/balance';
@@ -39,6 +40,12 @@ export class GameListComponent implements OnInit, OnDestroy {
 
   // Liste der Spiele
   games: Game[] = [];
+
+  /* Anzeigereihenfolge der Tabelle, unabhaengig von games: games bleibt immer
+     aufsteigend nach id (das braucht deleteLastGame() fuer "letztes Spiel"
+     und getGameNumber()/isGeber() fuer stabile Nummern), nur die Tabelle
+     dreht sich beim Tippen auf den Spiel-Header um. */
+  sortNewestFirst = false;
 
   newRound: Round = {
     players: this.players, // Da players ein Pflichtfeld ist, muss es initialisiert werden.
@@ -105,7 +112,7 @@ export class GameListComponent implements OnInit, OnDestroy {
           this.totalPoints = this.getTotalPoints();
 
           // Tabelle aktualisieren
-          this.dataSource.data = this.games;
+          this.dataSource.data = this.orderedGames();
           this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
         });
       } else {
@@ -123,7 +130,7 @@ export class GameListComponent implements OnInit, OnDestroy {
         ];
 
         this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
-        this.dataSource.data = this.games;
+        this.dataSource.data = this.orderedGames();
       }
     }
 
@@ -256,7 +263,7 @@ export class GameListComponent implements OnInit, OnDestroy {
         }
 
         this.newRound.lockedPlayers = true;
-        this.dataSource = new MatTableDataSource<Game>(this.games);
+        this.dataSource = new MatTableDataSource<Game>(this.orderedGames());
         this.totalPoints = this.getTotalPoints();
         this.cdr.detectChanges();
       },
@@ -264,6 +271,15 @@ export class GameListComponent implements OnInit, OnDestroy {
         console.error('Error adding Ramsch game:', error);
       }
     });
+  }
+
+  private orderedGames(): Game[] {
+    return this.sortNewestFirst ? [...this.games].reverse() : this.games;
+  }
+
+  toggleSort(): void {
+    this.sortNewestFirst = !this.sortNewestFirst;
+    this.dataSource.data = this.orderedGames();
   }
 
   getGameNumber(game: Game): number {
@@ -423,17 +439,30 @@ export class GameListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.gameService.deleteGame(lastGame.id).subscribe({
-      next: () => {
-        // Lokal synchron halten
-        this.games.pop();
-        this.dataSource = new MatTableDataSource<Game>(this.games);
-        this.totalPoints = this.getTotalPoints();
-        console.log(`Spiel mit ID ${lastGame.id} gelöscht`);
-      },
-      error: (err) => {
-        console.error("Fehler beim Löschen des Spiels:", err);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '340px',
+      data: {
+        title: 'Spiel löschen',
+        message: `Spiel ${this.games.length} wirklich löschen?`,
+        confirmText: 'Löschen'
       }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) return;
+
+      this.gameService.deleteGame(lastGame.id!).subscribe({
+        next: () => {
+          // Lokal synchron halten
+          this.games.pop();
+          this.dataSource = new MatTableDataSource<Game>(this.orderedGames());
+          this.totalPoints = this.getTotalPoints();
+          console.log(`Spiel mit ID ${lastGame.id} gelöscht`);
+        },
+        error: (err) => {
+          console.error("Fehler beim Löschen des Spiels:", err);
+        }
+      });
     });
   }
 
@@ -534,7 +563,7 @@ export class GameListComponent implements OnInit, OnDestroy {
 
           // Tabelle refresh
           this.newRound.lockedPlayers = true;
-          this.dataSource = new MatTableDataSource<Game>(this.games);
+          this.dataSource = new MatTableDataSource<Game>(this.orderedGames());
           this.totalPoints = this.getTotalPoints();
           this.cdr.detectChanges();
         },
@@ -642,7 +671,7 @@ export class GameListComponent implements OnInit, OnDestroy {
       // 5) Tabelle zurücksetzen (neue Runde → keine Games)
       this.games = [];
       this.totalPoints = this.getTotalPoints();
-      this.dataSource.data = this.games;
+      this.dataSource.data = this.orderedGames();
 
       this.isSetupComplete = true;
     });

@@ -108,7 +108,13 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
       <!-- Spiel Column -->
       <ng-container matColumnDef="game">
-        <th mat-header-cell *matHeaderCellDef class="mat-sticky">Spiel</th>
+        <th mat-header-cell *matHeaderCellDef class="mat-sticky sortable-header"
+            (click)="toggleSort()"
+            role="button" tabindex="0" (keydown.enter)="toggleSort()"
+            [attr.aria-sort]="sortNewestFirst ? 'descending' : 'ascending'"
+            [attr.aria-label]="sortNewestFirst ? 'Neuestes Spiel oben, tippen für älteste zuerst' : 'Ältestes Spiel oben, tippen für neuestes zuerst'">
+          Spiel <span class="sort-indicator">{{ sortNewestFirst ? '▼' : '▲' }}</span>
+        </th>
         <td mat-cell *matCellDef="let row" [ngClass]="{
           'solo-row': row.gameType === 'Solo',
           'ruf-row': row.gameType === 'Ruf',
