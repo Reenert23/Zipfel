@@ -27,11 +27,16 @@
 
         <div class="round-card-header">
           <h3>Runde {{ i + 1 }}</h3>
-          <span class="round-date">{{ round.date | date:'dd.MM.yyyy, HH:mm' }}</span>
+          <span class="games-count">{{ round.games.length }} Spiele</span>
         </div>
+        <span class="round-date">{{ round.date | date:'dd.MM.yyyy, HH:mm' }}</span>
 
+        <!-- Reihenfolge der Chips bewusst wie round.players, nicht nach Rang:
+             das ist die Sitzreihenfolge am Tisch, nicht die Bestenliste. Die
+             Medaille zeigt den Rang trotzdem an, ohne dafür umzusortieren. -->
         <div class="player-chips">
           <div class="player-chip" *ngFor="let player of round.players">
+            <span class="chip-medal" *ngIf="getMedalForPlayer(round, player) as medal">{{ medal }}</span>
             <span class="player-name">{{ player.firstName }}</span>
             <span
               class="player-points"
@@ -39,6 +44,11 @@
               [class.negative]="getTotalPointsForPlayer(round, player) < 0"
             >{{ getTotalPointsForPlayer(round, player) }}</span>
           </div>
+        </div>
+
+        <div class="biggest-hit" *ngIf="getBiggestSchlag(round) as schlag">
+          <span>Größter Schlag</span>
+          <b>{{ schlag.playerName }} +{{ schlag.points }} ({{ schlag.gameType }})</b>
         </div>
       </div>
     </div>

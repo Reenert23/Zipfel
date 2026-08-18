@@ -79,6 +79,43 @@ export class RoundListComponent implements OnInit {
     }, 0);
   }
 
+  private readonly RANK_MEDALS = ['🥇', '🥈', '🥉'];
+
+  /**
+   * Medaille fuer die Top 3 Punktestaende der Runde - nach Rang, nicht nach
+   * Sitzplatz. Gleichstand teilt sich eine Medaille (Standard-Ranking:
+   * 660, 660, 240 -> Gold, Gold, Bronze), damit niemand durch einen Gleichstand
+   * eine bessere Medaille bekommt als tatsaechlich verdient.
+   */
+  getMedalForPlayer(round: Round, player: Player): string | null {
+    if (!round.games.length) return null;
+
+    const distinctTotals = Array.from(
+      new Set(round.players.map(p => this.getTotalPointsForPlayer(round, p)))
+    ).sort((a, b) => b - a);
+
+    const rank = distinctTotals.indexOf(this.getTotalPointsForPlayer(round, player));
+    return rank >= 0 && rank < this.RANK_MEDALS.length ? this.RANK_MEDALS[rank] : null;
+  }
+
+  /**
+   * Der groesste Einzelgewinn eines Spiels in der Runde - der Betrag, den
+   * jemand an diesem Abend auf einen Schlag kassiert hat.
+   */
+  getBiggestSchlag(round: Round): { playerName: string; points: number; gameType: string } | null {
+    let best: { playerName: string; points: number; gameType: string } | null = null;
+
+    round.games.forEach(game => {
+      game.scores.forEach(score => {
+        if (score.points <= 0 || (best && score.points <= best.points)) return;
+        const player = round.players.find(p => p.id === score.playerId);
+        best = { playerName: player?.firstName ?? '?', points: score.points, gameType: game.gameType };
+      });
+    });
+
+    return best;
+  }
+
   neueRundeStarten(): void {
     const neueRunde = createEmptyRound(); // erstmal ohne Spieler
     this.roundService.createRound(neueRunde).subscribe({
