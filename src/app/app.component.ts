@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { ToolbarService } from './services/toolbar.service';
 import { HttpClient } from '@angular/common/http';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,15 @@ export class AppComponent implements OnInit {
   isDashboard = false;
   version = 'v?.?';
 
-  constructor(private router: Router, private toolbarService: ToolbarService, private http: HttpClient) {}
+  /** Ein neuer Stand liegt fertig im Hintergrund und wartet auf einen Neustart. */
+  updateBereit = false;
+
+  constructor(
+    private router: Router,
+    private toolbarService: ToolbarService,
+    private http: HttpClient,
+    private swUpdate: SwUpdate
+  ) {}
 
   ngOnInit() {
     this.markStandalone();
@@ -25,6 +34,8 @@ export class AppComponent implements OnInit {
     this.http.get<any>('/assets/version.json').subscribe(data => {
       this.version = `v${data.version}`;
     });
+
+    this.watchForUpdates();
 
     this.updateRouteFlags(this.router.url);
 
@@ -36,6 +47,32 @@ export class AppComponent implements OnInit {
           this.sidenav.close();
         }
       });
+  }
+
+  /**
+   * Der Service Worker cacht die App auf dem Geraet - ohne Gegenmittel faehrt
+   * sie beliebig lange einen alten Stand weiter, obwohl der Server laengst
+   * einen neuen ausliefert. Genau das hat hier schon einmal einen Nachmittag
+   * gekostet.
+   *
+   * Bewusst kein automatischer Reload: mitten in einer Runde reisst das den
+   * Tippenden aus dem Ablauf. Stattdessen ein Hinweis, der wartet, bis es
+   * gerade passt.
+   */
+  private watchForUpdates(): void {
+    if (!this.swUpdate.isEnabled) {
+      return;
+    }
+
+    this.swUpdate.versionUpdates
+      .pipe(filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY'))
+      .subscribe(() => (this.updateBereit = true));
+  }
+
+  jetztAktualisieren(): void {
+    // activateUpdate allein genuegt nicht: der neue Worker uebernimmt zwar,
+    // die laufende Seite haelt aber weiter den alten Code im Speicher.
+    this.swUpdate.activateUpdate().then(() => document.location.reload());
   }
 
   /**

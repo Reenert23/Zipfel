@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -78,7 +80,19 @@ import { StatsComponent } from './stats/stats.component';
     MatCardModule,
     MatGridListModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+
+    /* Der Worker wird laengst gebaut (angular.json: serviceWorker true), war
+       aber nirgends registriert - die PWA hatte damit weder Offline-Cache
+       noch die Voraussetzung fuer Pushmeldungen.
+
+       registerWhenStable wartet, bis die App fertig geladen ist, damit die
+       Registrierung nicht mit dem ersten Rendern konkurriert; die 30s sind
+       die Notbremse, falls die App nie "stable" meldet. */
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.serviceWorker,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -17,6 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 import { WriterTokenService } from '../services/writer-token.service';
 import { SpectatorChoiceService } from '../services/spectator-choice.service';
+import { PushService, PushHindernis } from '../services/push.service';
 import { formatCents } from '../services/settlement';
 import { distribute, imbalance } from '../services/balance';
 
@@ -89,7 +90,8 @@ export class GameListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toolbarService: ToolbarService,
     private writerTokenService: WriterTokenService,
-    private spectatorChoice: SpectatorChoiceService
+    private spectatorChoice: SpectatorChoiceService,
+    private pushService: PushService
     ){}
 
   /** Gewaehlter Spieler des Mitlesers; null, solange er noch nicht gewaehlt hat. */
@@ -326,6 +328,43 @@ export class GameListComponent implements OnInit, OnDestroy {
     this.spectatorPlayerId = playerId;
     if (this.newRound.id !== undefined) {
       this.spectatorChoice.setPlayer(this.newRound.id, playerId);
+      // Laufen schon Benachrichtigungen, gelten sie ab jetzt dem neuen Spieler.
+      if (this.pushAn) {
+        this.pushService.spielerWechseln(this.newRound.id, playerId);
+      }
+    }
+  }
+
+  /** Benachrichtigungen sind auf diesem Geraet bereits erlaubt. */
+  get pushAn(): boolean {
+    return this.pushService.bereitsAngemeldet;
+  }
+
+  /** Nur anbieten, wo es auch gehen kann - sonst steht da ein toter Knopf. */
+  get pushMoeglich(): boolean {
+    return this.isSpectator && this.pushService.moeglich && !this.pushAn;
+  }
+
+  pushHinweis: string | null = null;
+
+  async pushEinschalten(): Promise<void> {
+    if (this.newRound.id === undefined || this.spectatorPlayerId === null) return;
+
+    const hindernis = await this.pushService.anmelden(this.newRound.id, this.spectatorPlayerId);
+    this.pushHinweis = hindernis === null ? null : this.hinweisZu(hindernis);
+    this.cdr.detectChanges();
+  }
+
+  private hinweisZu(hindernis: PushHindernis): string {
+    switch (hindernis) {
+      case 'kein-service-worker':
+        return 'Benachrichtigungen gehen in diesem Browser nicht. Auf dem iPhone muss die App dafür über "Zum Home-Bildschirm" installiert sein.';
+      case 'nicht-konfiguriert':
+        return 'Benachrichtigungen sind auf dem Server noch nicht eingerichtet.';
+      case 'abgelehnt':
+        return 'Du hast Benachrichtigungen für diese Seite abgelehnt. Das lässt sich nur in den Browser-Einstellungen wieder ändern.';
+      default:
+        return 'Das hat nicht geklappt. Später nochmal versuchen.';
     }
   }
 

@@ -56,6 +56,20 @@
       </div>
     </div>
 
+    <!-- Muss ein echter Tipp sein: fragt der Browser die Berechtigung ohne
+         Zutun ab, lehnt er sie dauerhaft ab. -->
+    <button type="button" class="push-btn" *ngIf="pushMoeglich" (click)="pushEinschalten()">
+      <mat-icon>notifications</mat-icon>
+      Benachrichtigungen einschalten
+    </button>
+
+    <div class="push-an" *ngIf="pushAn && isSpectator">
+      <mat-icon>notifications_active</mat-icon>
+      Du wirst benachrichtigt, sobald ein Spiel eingetragen wird.
+    </div>
+
+    <p class="push-hinweis" *ngIf="pushHinweis">{{ pushHinweis }}</p>
+
     <button type="button" class="spectator-switch" (click)="resetSpectatorChoice()">
       Für jemand anderen mitlesen
     </button>

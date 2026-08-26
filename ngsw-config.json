@@ -21,8 +21,22 @@
       "resources": {
         "files": [
           "/assets/**",
-          "/*.(png|jpg|jpeg|svg|gif)"
+          "/*.(png|jpg|jpeg|svg|gif)",
+          "!/assets/version.json"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "comment": "Die Versionsanzeige in der Toolbar ist der Anker, an dem sich ablesen laesst, welcher Stand auf einem Geraet tatsaechlich laeuft - schon einmal hat genau diese Frage einen Nachmittag gekostet. Ueber /assets/** waere version.json in einer lazy-Gruppe mit updateMode lazy gelandet: eine gecachte Kopie wird beim Aktivieren einer neuen Version nicht erneuert, die Anzeige haette also den alten Stand gemeldet. Als dataGroup mit freshness wird immer zuerst das Netz gefragt und der Cache nur benutzt, wenn keins da ist.",
+      "name": "version",
+      "urls": ["/assets/version.json"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 1,
+        "maxAge": "1d",
+        "timeout": "3s"
       }
     }
   ]

@@ -310,6 +310,54 @@
 .standing-amt.pos { color: #4ade80; }
 .standing-amt.neg { color: #f87171; }
 
+.push-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.86em;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.85), rgba(168, 85, 247, 0.85));
+  border: none;
+}
+
+.push-btn mat-icon {
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
+}
+
+.push-an {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 0.78em;
+  line-height: 1.4;
+  color: rgba(134, 239, 172, 0.9);
+}
+
+.push-an mat-icon {
+  flex-shrink: 0;
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+}
+
+.push-hinweis {
+  margin: 10px 0 0;
+  font-size: 0.76em;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .spectator-switch {
   display: block;
   margin: 14px 0 0;

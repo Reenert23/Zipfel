@@ -267,3 +267,24 @@
 ::ng-deep .glass-sidenav .mat-mdc-list-item .mat-icon {
   color: rgba(255, 255, 255, 0.65);
 }
+
+/* Hinweis auf einen bereitliegenden neuen Stand. Sitzt neben der
+   Versionsanzeige, weil beide dieselbe Frage beantworten: welcher Stand
+   laeuft hier gerade. */
+.update-hinweis {
+  margin-right: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #86efac;
+  background: rgba(74, 222, 128, 0.16);
+  border: 1px solid rgba(74, 222, 128, 0.45);
+}
+
+.update-hinweis:hover {
+  background: rgba(74, 222, 128, 0.26);
+}
