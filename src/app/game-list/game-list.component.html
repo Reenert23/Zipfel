@@ -1,4 +1,14 @@
 <div class="container">
+  <!-- Läuft die Runde noch? Steuert zugleich, ob unten überhaupt etwas
+       eingetippt werden kann. -->
+  <div class="round-status-row" *ngIf="newRound.id">
+    <span class="round-status-badge" [class.finished]="isFinished">
+      {{ isFinished ? 'Runde beendet' : 'Runde läuft' }}
+    </span>
+    <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
+    <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
+  </div>
+
   <!-- Gewinner auswählen -->
   <div class="winner-section">
     <div class="winner-selection">
@@ -6,6 +16,7 @@
         *ngFor="let slot of playerSlots; let i = index"
         [style.gridArea]="getGridArea(i)"
         (click)="slot && toggleWinner(slot.firstName)"
+        [disabled]="isFinished"
         [class.selected]="slot && selectedWinners.includes(slot.firstName)"
         [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">
         {{ slot?.firstName || '' }}
@@ -13,9 +24,9 @@
     </div>
   </div>
   <div class="button-group">
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [class.selected]="maxWinners == 2">Ruf</button>
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [class.selected]="maxWinners == 1" [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
-    <button mat-raised-button color="accent" (click)="setMaxWinners('Ramsch'); openRamschDialog()">Ramsch</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [disabled]="isFinished" [class.selected]="maxWinners == 2">Ruf</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [disabled]="isFinished" [class.selected]="maxWinners == 1" [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
+    <button mat-raised-button color="accent" (click)="setMaxWinners('Ramsch'); openRamschDialog()" [disabled]="isFinished">Ramsch</button>
   </div>
 
 
@@ -47,24 +58,24 @@
     </div> -->
     <div class="keypad">
       <div class="key-row">
-        <button mat-raised-button class="key-button" (click)="addToInput(1)">1</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(2)">2</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(3)">3</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(1)" [disabled]="isFinished">1</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(2)" [disabled]="isFinished">2</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(3)" [disabled]="isFinished">3</button>
       </div>
       <div class="key-row">
-        <button mat-raised-button class="key-button" (click)="addToInput(4)">4</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(5)">5</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(6)">6</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(4)" [disabled]="isFinished">4</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(5)" [disabled]="isFinished">5</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(6)" [disabled]="isFinished">6</button>
       </div>
       <div class="key-row">
-        <button mat-raised-button class="key-button" (click)="addToInput(7)">7</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(8)">8</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(9)">9</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(7)" [disabled]="isFinished">7</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(8)" [disabled]="isFinished">8</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(9)" [disabled]="isFinished">9</button>
       </div>
       <div class="key-row">
-        <button mat-raised-button class="key-button ok-button" (click)="clearInput()">C</button>
-        <button mat-raised-button class="key-button" (click)="addToInput(0)">0</button>
-        <button mat-raised-button class="key-button ok-button" (click)="addGame()">OK</button>
+        <button mat-raised-button class="key-button ok-button" (click)="clearInput()" [disabled]="isFinished">C</button>
+        <button mat-raised-button class="key-button" (click)="addToInput(0)" [disabled]="isFinished">0</button>
+        <button mat-raised-button class="key-button ok-button" (click)="addGame()" [disabled]="isSaving || isFinished">OK</button>
       </div>
     </div>
 
@@ -103,7 +114,7 @@
 
   <!-- Tabelle der Spiele -->
   <div class="table-section">
-    <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
+    <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" [disabled]="isFinished" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
     <div class="tableContainer">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
       <!-- Spiel Column -->

@@ -58,6 +58,10 @@ export class GameListComponent implements OnInit, OnDestroy {
   selectedWinners: string[] = [];
   inputString: string = "";
   lastAddedGameId: number = 0;
+  /* Sperrt den OK-Button zwischen Tap und Serverantwort. Ohne das schickte ein
+     ungeduldiger zweiter Tap - z.B. waehrend der Render-Server nach einer
+     Ruhephase erst noch hochfaehrt - dasselbe Spiel doppelt los. */
+  isSaving = false;
   pointsInput: number = 0;
   maxWinners: number = 2; // Standardmäßig 2 Gewinner
   dataSource: MatTableDataSource<Game> = new MatTableDataSource()
@@ -153,6 +157,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   openRamschDialog(): void {
+    if (this.isFinished) return;
     const dialogRef = this.dialog.open(RamschDialogComponent, {
       width: '400px',
       data: { players: this.players }
@@ -180,9 +185,9 @@ export class GameListComponent implements OnInit, OnDestroy {
         if (this.newRound.id === undefined) {
           // Erstes Spiel der Runde: Runde muss erst angelegt werden, bevor ein
           // Spiel hinzugefügt werden kann (siehe addGame()/addGameToRound()).
-          this.roundService.createRound(this.newRound).subscribe((round) => {
-            this.newRound = round;
-            newGame.roundId = round.id;
+          this.roundService.createRound(this.newRound).subscribe((response) => {
+            this.newRound = response.round;
+            newGame.roundId = response.round.id;
             this.saveRamschGame(newGame);
           });
         } else {
@@ -268,9 +273,48 @@ export class GameListComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error adding Ramsch game:', error);
+        this.handleWriteError(error, 'Error adding Ramsch game:');
       }
     });
+  }
+
+  get isFinished(): boolean {
+    return this.newRound.status === 'FINISHED';
+  }
+
+  finishRound(): void {
+    if (this.newRound.id === undefined) return;
+    this.roundService.finishRound(this.newRound.id).subscribe({
+      next: (updated) => {
+        this.newRound = { ...this.newRound, status: updated.status };
+      },
+      error: (err) => this.handleWriteError(err, 'Fehler beim Beenden der Runde:')
+    });
+  }
+
+  reopenRound(): void {
+    if (this.newRound.id === undefined) return;
+    this.roundService.reopenRound(this.newRound.id).subscribe({
+      next: (updated) => {
+        this.newRound = { ...this.newRound, status: updated.status };
+      },
+      error: (err) => this.handleWriteError(err, 'Fehler beim Wiederöffnen der Runde:')
+    });
+  }
+
+  /**
+   * Schreibfehler sichtbar machen statt sie nur in die Konsole zu legen: 403
+   * und 409 sind keine Programmfehler, sondern etwas, das der Tippende wissen
+   * und beheben kann.
+   */
+  private handleWriteError(err: any, logPrefix: string): void {
+    console.error(logPrefix, err);
+
+    if (err?.status === 403) {
+      alert('Dieses Gerät hat kein Schreibrecht für diese Runde. Eintragen kann nur, wer die Runde gestartet hat.');
+    } else if (err?.status === 409) {
+      alert('Diese Runde ist beendet. Zum Nachtragen bitte zuerst auf "Runde wieder öffnen".');
+    }
   }
 
   private orderedGames(): Game[] {
@@ -428,6 +472,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   deleteLastGame() {
+    if (this.isFinished) return;
     if (this.games.length === 0) {
       alert("Keine Spiele zum Löschen vorhanden!");
       return;
@@ -451,7 +496,7 @@ export class GameListComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((confirmed: boolean | undefined) => {
       if (!confirmed) return;
 
-      this.gameService.deleteGame(lastGame.id!).subscribe({
+      this.gameService.deleteGame(lastGame.id!, this.newRound.id!).subscribe({
         next: () => {
           // Lokal synchron halten
           this.games.pop();
@@ -460,7 +505,7 @@ export class GameListComponent implements OnInit, OnDestroy {
           console.log(`Spiel mit ID ${lastGame.id} gelöscht`);
         },
         error: (err) => {
-          console.error("Fehler beim Löschen des Spiels:", err);
+          this.handleWriteError(err, 'Fehler beim Löschen des Spiels:');
         }
       });
     });
@@ -468,14 +513,23 @@ export class GameListComponent implements OnInit, OnDestroy {
 
 
   addGame() {
+    if (this.isSaving || this.isFinished) return;
+    this.isSaving = true;
+
     if (this.games.length === 0) {
       // Erstelle die Runde und warte auf das Ergebnis
-      this.roundService.createRound(this.newRound).subscribe((result) => {
-        console.log("Runde gestartet: ", result);
-        this.newRound = result; // Setze das Ergebnis auf newRound, sodass die ID jetzt verfügbar ist
+      this.roundService.createRound(this.newRound).subscribe({
+        next: (response) => {
+          console.log("Runde gestartet: ", response.round);
+          this.newRound = response.round; // Setze das Ergebnis auf newRound, sodass die ID jetzt verfügbar ist
 
-        // Nachdem die Runde erfolgreich erstellt wurde, füge das neue Spiel hinzu
-        this.addGameToRound(); // Eine Funktion, die den Spielhinzufügungsprozess behandelt
+          // Nachdem die Runde erfolgreich erstellt wurde, füge das neue Spiel hinzu
+          this.addGameToRound(); // Eine Funktion, die den Spielhinzufügungsprozess behandelt
+        },
+        error: (error) => {
+          this.handleWriteError(error, 'Error creating round:');
+          this.isSaving = false;
+        }
       });
     } else {
       // Wenn die Runde bereits existiert (d.h., Spiele sind schon vorhanden)
@@ -496,6 +550,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   addGameToRound() {
     if (this.selectedWinners.length !== this.maxWinners || this.pointsInput <= 0) {
       alert(`Bitte genau ${this.maxWinners} Gewinner auswählen und Punkte eingeben.`);
+      this.isSaving = false;
       return;
     }
 
@@ -536,6 +591,7 @@ export class GameListComponent implements OnInit, OnDestroy {
     }
 
     if (this.refuseUnbalanced(scores)) {
+      this.isSaving = false;
       return;
     }
 
@@ -565,12 +621,16 @@ export class GameListComponent implements OnInit, OnDestroy {
           this.newRound.lockedPlayers = true;
           this.dataSource = new MatTableDataSource<Game>(this.orderedGames());
           this.totalPoints = this.getTotalPoints();
+          this.isSaving = false;
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Error adding game to round:', error);
+          this.handleWriteError(error, 'Error adding game to round:');
+          this.isSaving = false;
         }
       });
+    } else {
+      this.isSaving = false;
     }
 
     this.resetEingabe();

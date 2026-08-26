@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { Round } from '../models/Round';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, Observable, tap } from 'rxjs';
+import { Round, RoundCreationResponse } from '../models/Round';
 import { Game } from '../models/Game';
 import { environment } from 'src/environments/environment';
+import { WriterTokenService } from './writer-token.service';
 
 /**
  * Spiele nach id, also nach Anlagereihenfolge: die id ist im Backend eine
@@ -46,7 +47,13 @@ export class RoundService {
   private currentRoundId: number = 0;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private writerTokenService: WriterTokenService) {}
+
+  /** Schreibzugriffe tragen das Token der jeweiligen Runde. */
+  private writeOptions(roundId: number): { headers?: HttpHeaders } {
+    const token = this.writerTokenService.getToken(roundId);
+    return token ? { headers: new HttpHeaders({ 'X-Writer-Token': token }) } : {};
+  }
 
   // Alle Runden laden
   getAllRounds(): Observable<Round[]> {
@@ -60,16 +67,31 @@ export class RoundService {
     return this.http.get<Round>(`${this.baseUrl}/${id}`).pipe(map(withSortedGames));
   }
 
-  // Neue Runde anlegen
-  createRound(round: Round): Observable<Round> {
-    return this.http.post<Round>(this.baseUrl, round);
+  // Neue Runde anlegen. Das Token kommt nur bei dieser einen Antwort mit und
+  // wird gleich hier abgelegt, damit es keine Aufrufstelle vergessen kann.
+  createRound(round: Round): Observable<RoundCreationResponse> {
+    return this.http.post<RoundCreationResponse>(this.baseUrl, round).pipe(
+      tap(response => {
+        if (response.round.id != null) {
+          this.writerTokenService.setToken(response.round.id, response.writerToken);
+        }
+      })
+    );
   }
 
   // Spiel zu einer Runde hinzufügen
   addGameToRound(roundId: number, game: Game): Observable<Round> {
-    return this.http.post<Round>(`${this.baseUrl}/${roundId}/games`, game).pipe(
+    return this.http.post<Round>(`${this.baseUrl}/${roundId}/games`, game, this.writeOptions(roundId)).pipe(
       map(withSortedGames)
     );
+  }
+
+  finishRound(roundId: number): Observable<Round> {
+    return this.http.post<Round>(`${this.baseUrl}/${roundId}/finish`, {}, this.writeOptions(roundId));
+  }
+
+  reopenRound(roundId: number): Observable<Round> {
+    return this.http.post<Round>(`${this.baseUrl}/${roundId}/reopen`, {}, this.writeOptions(roundId));
   }
 
   // Spiele einer Runde abrufen

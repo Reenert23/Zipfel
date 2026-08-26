@@ -60,6 +60,39 @@
   z-index: 1;
 }
 
+/* ---------- Rundenstatus ---------- */
+.round-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.round-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  color: #86efac;
+}
+
+.round-status-badge.finished {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.round-status-row .mat-mdc-outlined-button {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
 /* ---------- Section action buttons ----------
    The page's own "ZIPFEL" heading and its two buttons were removed - the
    app toolbar already shows the brand name, so that whole header row was
@@ -306,6 +339,25 @@
 ::ng-deep .key-row .key-button.ok-button.mat-mdc-raised-button:last-child {
   background: rgba(74, 222, 128, 0.2) !important;
   border-color: rgba(74, 222, 128, 0.4);
+}
+
+/* Beendete Runde: die Tasten sind gesperrt, also duerfen sie auch nicht mehr
+   nach Tasten aussehen. Materials eigene Disabled-Optik greift hier nicht,
+   weil die Regeln oben Hintergrund und Farbe mit !important setzen. */
+::ng-deep .key-button.mat-mdc-raised-button:disabled,
+::ng-deep .key-row .key-button.ok-button.mat-mdc-raised-button:disabled,
+::ng-deep .button-group button.mat-mdc-raised-button:disabled,
+::ng-deep .winner-selection button.mat-mdc-raised-button:disabled {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: none;
+  transform: none;
+}
+
+.undo-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 /* ---------- Games table ---------- */

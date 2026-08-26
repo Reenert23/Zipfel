@@ -119,11 +119,11 @@ export class RoundListComponent implements OnInit {
   neueRundeStarten(): void {
     const neueRunde = createEmptyRound(); // erstmal ohne Spieler
     this.roundService.createRound(neueRunde).subscribe({
-      next: (runde) => {
-        console.log('Neue Runde erstellt:', runde);
-        this.rounds.push(runde);
+      next: (response) => {
+        console.log('Neue Runde erstellt:', response.round);
+        this.rounds.push(response.round);
         this.displayedColumns = this.getDynamicColumns();
-        this.goToRound(runde);
+        this.goToRound(response.round);
       },
       error: (err) => {
         console.error('Fehler beim Erstellen der Runde:', err);
