@@ -15,6 +15,8 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
 import { WriterTokenService } from '../services/writer-token.service';
+import { SpectatorChoiceService } from '../services/spectator-choice.service';
+import { formatCents } from '../services/settlement';
 import { distribute, imbalance } from '../services/balance';
 
 
@@ -85,8 +87,14 @@ export class GameListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private toolbarService: ToolbarService,
-    private writerTokenService: WriterTokenService
+    private writerTokenService: WriterTokenService,
+    private spectatorChoice: SpectatorChoiceService
     ){}
+
+  /** Gewaehlter Spieler des Mitlesers; null, solange er noch nicht gewaehlt hat. */
+  spectatorPlayerId: number | null = null;
+
+  readonly formatCents = formatCents;
 
     ngOnInit(): void {
       this.toolbarService.openPlayerSelector$
@@ -116,6 +124,14 @@ export class GameListComponent implements OnInit, OnDestroy {
 
           this.games = runde.games || [];
           this.totalPoints = this.getTotalPoints();
+
+          /* Nur fuer Mitleser relevant, und erst hier auswertbar: ob jemand
+             Zuschauer ist, steht erst fest, wenn die Runde geladen ist. Eine
+             Wahl auf einen Spieler, der gar nicht mehr mitspielt, wird
+             verworfen - die Besetzung wechselt von Runde zu Runde. */
+          const gewaehlt = this.spectatorChoice.getPlayer(id);
+          this.spectatorPlayerId =
+            gewaehlt !== null && this.players.some(p => p.id === gewaehlt) ? gewaehlt : null;
 
           // Tabelle aktualisieren
           this.dataSource.data = this.orderedGames();
@@ -298,6 +314,42 @@ export class GameListComponent implements OnInit, OnDestroy {
       return false;
     }
     return this.writerTokenService.getToken(this.newRound.id) === null;
+  }
+
+  /** Erst die Frage "wer bist du?", danach der Zwischenstand. */
+  get needsSpectatorChoice(): boolean {
+    return this.isSpectator && this.spectatorPlayerId === null && this.players.length > 0;
+  }
+
+  chooseSpectatorPlayer(playerId: number): void {
+    this.spectatorPlayerId = playerId;
+    if (this.newRound.id !== undefined) {
+      this.spectatorChoice.setPlayer(this.newRound.id, playerId);
+    }
+  }
+
+  /** Zurueck zur Auswahl, falls das Handy weitergereicht wurde. */
+  resetSpectatorChoice(): void {
+    this.spectatorPlayerId = null;
+    if (this.newRound.id !== undefined) {
+      this.spectatorChoice.clearPlayer(this.newRound.id);
+    }
+  }
+
+  /** Die Runde hat keinen Namen, nur ein Datum - das ist hier die Ueberschrift. */
+  get roundTitle(): string {
+    if (!this.newRound.date) {
+      return 'Runde';
+    }
+    return new Date(this.newRound.date).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long'
+    });
+  }
+
+  initials(player: Player): string {
+    return (player.firstName || '?').charAt(0).toUpperCase();
   }
 
   finishRound(): void {

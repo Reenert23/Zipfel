@@ -1,21 +1,60 @@
 <div class="container">
   <!-- Läuft die Runde noch? Steuert zugleich, ob unten überhaupt etwas
        eingetippt werden kann. -->
-  <div class="round-status-row" *ngIf="newRound.id">
+  <!-- Mitleser waehlen zuerst, fuer wen sie die Runde verfolgen. Danach wird
+       ihre eigene Zeile im Zwischenstand hervorgehoben. -->
+  <div class="spectator-picker" *ngIf="needsSpectatorChoice">
+    <h2 class="spectator-picker-title">Für wen willst du mitlesen?</h2>
+    <p class="spectator-picker-sub">Du schaust bei dieser Runde zu. Wähl deinen Namen aus.</p>
+
+    <div class="picker-list">
+      <button type="button" class="picker-item"
+        *ngFor="let player of players"
+        (click)="chooseSpectatorPlayer(player.id)">
+        <span class="picker-avatar">{{ initials(player) }}</span>
+        <span class="picker-name">{{ player.firstName }}</span>
+        <span class="picker-check"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Ab hier die Mitlesen-Ansicht: Zwischenstand gross, Tabelle darunter. -->
+  <ng-container *ngIf="!needsSpectatorChoice">
+
+  <div class="round-status-row" *ngIf="newRound.id && !isSpectator">
     <span class="round-status-badge" [class.finished]="isFinished">
       {{ isFinished ? 'Runde beendet' : 'Runde läuft' }}
     </span>
-    <ng-container *ngIf="!isSpectator">
-      <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
-      <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
-    </ng-container>
+    <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
+    <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
   </div>
 
-  <!-- Zuschauer: sagt einmal, warum hier nichts zum Tippen ist, statt die
-       Eingabemaske anzubieten und den Tipp danach abzulehnen. -->
-  <div class="spectator-note" *ngIf="isSpectator">
-    <mat-icon>visibility</mat-icon>
-    <span>Du schaust zu. Eintragen kann nur, wer die Runde gestartet hat.</span>
+  <div class="spectator-header" *ngIf="isSpectator">
+    <span class="live-badge" [class.finished]="isFinished">
+      <span class="live-dot" *ngIf="!isFinished"></span>{{ isFinished ? 'BEENDET' : 'LIVE' }}
+    </span>
+    <h2 class="spectator-title">{{ roundTitle }}</h2>
+    <p class="spectator-sub">
+      Aktueller Rundenstand<ng-container *ngIf="games.length">, Spiel {{ games.length }}</ng-container>
+    </p>
+
+    <div class="standing-list">
+      <div class="standing-item" *ngFor="let player of players"
+        [class.you]="player.id === spectatorPlayerId">
+        <span class="standing-name">
+          {{ player.firstName }}<span class="you-tag" *ngIf="player.id === spectatorPlayerId">DU</span>
+        </span>
+        <span class="standing-amt"
+          [class.pos]="(totalPoints[player.id] || 0) > 0"
+          [class.neg]="(totalPoints[player.id] || 0) < 0">
+          {{ (totalPoints[player.id] || 0) > 0 ? '+' : '' }}{{ formatCents(totalPoints[player.id] || 0) }}
+        </span>
+      </div>
+    </div>
+
+    <button type="button" class="spectator-switch" (click)="resetSpectatorChoice()">
+      Für jemand anderen mitlesen
+    </button>
   </div>
 
   <!-- Gewinner auswählen -->
@@ -112,8 +151,8 @@
     </div>
   </div>
 
-  <!-- Zwischenstand -->
-  <div class="scoreboard" *ngIf="players.length > 0">
+  <!-- Zwischenstand (Mitleser haben ihn schon oben in der Standings-Liste) -->
+  <div class="scoreboard" *ngIf="players.length > 0 && !isSpectator">
     <div class="score-item" *ngFor="let player of players">
       <span class="score-name">{{ player.firstName }}</span>
       <span class="score-value"
@@ -196,4 +235,6 @@
     </table>
     </div>
   </div>
+
+  </ng-container>
 </div>
