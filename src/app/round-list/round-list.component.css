@@ -20,13 +20,33 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
   font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Decorative blurred glow blobs for glassmorphism depth */
+/* The gradient sits on a fixed layer instead of .round-list's own background:
+   .round-list scrolls with the page (it's just a tall flow box, not the
+   scroll container - see the padding-bottom comment above), so a background
+   painted directly on it scrolled in lockstep with the cards. Both moved by
+   the exact same amount, so the blur behind a .round-card always sampled the
+   same patch of gradient - it read as a translucent sticker glued to the
+   card, not glass floating over a scene. Pinning the gradient to the
+   viewport lets the cards travel over it, so the blur actually reveals a
+   different slice of it as you scroll. overflow: hidden on .round-list does
+   not clip this - fixed positioning escapes an ancestor's overflow unless
+   that ancestor also has a transform/filter, which .round-list doesn't. */
+.round-list::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(160deg, #12102b 0%, #241f4d 45%, #1b3a63 100%);
+}
+
+/* Decorative blurred glow blobs for glassmorphism depth - fixed for the same
+   reason as the gradient above, so they read as part of the backdrop rather
+   than scrolling with the cards in front of them. */
 .glow {
-  position: absolute;
+  position: fixed;
   border-radius: 50%;
   filter: blur(90px);
   opacity: 0.55;
