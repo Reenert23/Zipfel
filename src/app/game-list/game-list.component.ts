@@ -14,6 +14,7 @@ import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.compone
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
+import { WriterTokenService } from '../services/writer-token.service';
 import { distribute, imbalance } from '../services/balance';
 
 
@@ -83,7 +84,8 @@ export class GameListComponent implements OnInit, OnDestroy {
     private roundService: RoundService,
     private router: Router,
     private route: ActivatedRoute,
-    private toolbarService: ToolbarService
+    private toolbarService: ToolbarService,
+    private writerTokenService: WriterTokenService
     ){}
 
     ngOnInit(): void {
@@ -157,7 +159,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   openRamschDialog(): void {
-    if (this.isFinished) return;
+    if (this.isFinished || this.isSpectator) return;
     const dialogRef = this.dialog.open(RamschDialogComponent, {
       width: '400px',
       data: { players: this.players }
@@ -280,6 +282,22 @@ export class GameListComponent implements OnInit, OnDestroy {
 
   get isFinished(): boolean {
     return this.newRound.status === 'FINISHED';
+  }
+
+  /**
+   * Zuschauer ist, wer eine geschuetzte Runde offen hat, fuer die auf diesem
+   * Geraet kein Token liegt - egal ob ueber einen geteilten Link oder ganz
+   * normal aus der Rundenliste heraus. Beides ist derselbe Fall.
+   *
+   * writerProtected muss mitgeprueft werden: Runden von vor der
+   * Token-Einfuehrung haben keinen Schreiber, dort darf laut Server jeder
+   * eintragen - die duerfen nicht faelschlich als Zuschauer-Ansicht landen.
+   */
+  get isSpectator(): boolean {
+    if (this.newRound.id === undefined || !this.newRound.writerProtected) {
+      return false;
+    }
+    return this.writerTokenService.getToken(this.newRound.id) === null;
   }
 
   finishRound(): void {
@@ -472,7 +490,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   deleteLastGame() {
-    if (this.isFinished) return;
+    if (this.isFinished || this.isSpectator) return;
     if (this.games.length === 0) {
       alert("Keine Spiele zum Löschen vorhanden!");
       return;
@@ -513,7 +531,7 @@ export class GameListComponent implements OnInit, OnDestroy {
 
 
   addGame() {
-    if (this.isSaving || this.isFinished) return;
+    if (this.isSaving || this.isFinished || this.isSpectator) return;
     this.isSaving = true;
 
     if (this.games.length === 0) {
@@ -698,6 +716,10 @@ export class GameListComponent implements OnInit, OnDestroy {
 
   openPlayerSelector(): void {
     console.log(this.newRound.lockedPlayers);
+    if (this.isSpectator) {
+      alert("Du schaust bei dieser Runde nur zu und kannst die Spieler nicht ändern.");
+      return;
+    }
     if (this.newRound.lockedPlayers) {
       alert("Spieler können nach Beginn der Runde nicht mehr geändert werden.");
       return;

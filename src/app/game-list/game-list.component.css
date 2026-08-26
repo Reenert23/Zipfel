@@ -93,6 +93,46 @@
   color: #fff;
 }
 
+/* ---------- Zuschauer ---------- */
+.spectator-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px auto 0;
+  max-width: 340px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.85em;
+  line-height: 1.4;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.spectator-note mat-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ohne Tastenfeld hat die absolute Seitenspalte keinen Bezugspunkt mehr. */
+.grid-container.spectator {
+  margin-top: 22px;
+}
+
+.grid-container.spectator .side-actions {
+  position: static;
+  transform: none;
+  flex-direction: row;
+  justify-content: center;
+}
+
 /* ---------- Section action buttons ----------
    The page's own "ZIPFEL" heading and its two buttons were removed - the
    app toolbar already shows the brand name, so that whole header row was

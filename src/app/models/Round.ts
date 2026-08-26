@@ -11,6 +11,12 @@ export interface Round {
   date: string;
   /** Fehlt, solange die Runde nur lokal gebaut und noch nicht gespeichert ist. */
   status?: RoundStatus;
+  /**
+   * Ob die Runde ueberhaupt einen Schreiber hat. Runden von vor der
+   * Token-Einfuehrung haben keinen, und die darf niemand als Zuschauer
+   * angezeigt bekommen - der Server laesst dort jeden schreiben.
+   */
+  writerProtected?: boolean;
 }
 
 /**

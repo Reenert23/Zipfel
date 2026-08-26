@@ -5,12 +5,21 @@
     <span class="round-status-badge" [class.finished]="isFinished">
       {{ isFinished ? 'Runde beendet' : 'Runde läuft' }}
     </span>
-    <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
-    <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
+    <ng-container *ngIf="!isSpectator">
+      <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
+      <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
+    </ng-container>
+  </div>
+
+  <!-- Zuschauer: sagt einmal, warum hier nichts zum Tippen ist, statt die
+       Eingabemaske anzubieten und den Tipp danach abzulehnen. -->
+  <div class="spectator-note" *ngIf="isSpectator">
+    <mat-icon>visibility</mat-icon>
+    <span>Du schaust zu. Eintragen kann nur, wer die Runde gestartet hat.</span>
   </div>
 
   <!-- Gewinner auswählen -->
-  <div class="winner-section">
+  <div class="winner-section" *ngIf="!isSpectator">
     <div class="winner-selection">
       <button mat-raised-button color="primary"
         *ngFor="let slot of playerSlots; let i = index"
@@ -23,7 +32,7 @@
       </button>
     </div>
   </div>
-  <div class="button-group">
+  <div class="button-group" *ngIf="!isSpectator">
     <button mat-raised-button color="accent" (click)="setMaxWinners('Ruf')" [disabled]="isFinished" [class.selected]="maxWinners == 2">Ruf</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Solo')" [disabled]="isFinished" [class.selected]="maxWinners == 1" [ngClass]="{'red-button': clickCount % 2 === 0 && clickCount !== 0}">Solo</button>
     <button mat-raised-button color="accent" (click)="setMaxWinners('Ramsch'); openRamschDialog()" [disabled]="isFinished">Ramsch</button>
@@ -31,7 +40,7 @@
 
 
   <!-- Punkte-Eingabe -->
-  <div class="points-row">
+  <div class="points-row" *ngIf="!isSpectator">
     <!-- Unsichtbares Gegenstück zum Warnplatz rechts, damit das Feld mittig
          bleibt, ob gewarnt wird oder nicht. -->
     <span class="warn-slot" aria-hidden="true"></span>
@@ -50,13 +59,16 @@
   </div>
 
 
-  <div class="grid-container">
+  <!-- Ohne Tastenfeld (Zuschauer) ruecken Kassensturz und Verlauf aus der
+       Seitenspalte in eine mittige Reihe - sonst schwebten sie am Rand eines
+       leeren Kastens. -->
+  <div class="grid-container" [class.spectator]="isSpectator">
     <!-- <div class="image-placeholder">
       <mat-card class="image-card">
         <img src="assets/images/wurst.jpeg" alt="Image" />
       </mat-card>
     </div> -->
-    <div class="keypad">
+    <div class="keypad" *ngIf="!isSpectator">
       <div class="key-row">
         <button mat-raised-button class="key-button" (click)="addToInput(1)" [disabled]="isFinished">1</button>
         <button mat-raised-button class="key-button" (click)="addToInput(2)" [disabled]="isFinished">2</button>
@@ -114,7 +126,7 @@
 
   <!-- Tabelle der Spiele -->
   <div class="table-section">
-    <button class="icon-action-btn undo-btn" (click)="deleteLastGame()" [disabled]="isFinished" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
+    <button class="icon-action-btn undo-btn" *ngIf="!isSpectator" (click)="deleteLastGame()" [disabled]="isFinished" aria-label="Letztes Spiel rückgängig machen">&#9100;</button>
     <div class="tableContainer">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table">
       <!-- Spiel Column -->
