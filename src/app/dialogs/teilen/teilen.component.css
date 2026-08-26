@@ -1,0 +1,92 @@
+:host {
+  display: block;
+}
+
+.hinweis {
+  font-size: 0.86em;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+/* Heller Grund unter dem Code: Scanner erwarten dunkle Module auf hell, und
+   der Dialog selbst ist dunkel. */
+.qr-karte {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #fdfcff;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+}
+
+.qr-karte img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.qr-platzhalter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: rgba(18, 16, 43, 0.4);
+}
+
+.link-zeile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.link-feld {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 11px;
+  border-radius: 10px;
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 0.76em;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  /* Die Adresse ist laenger als der Dialog breit; sie soll nicht umbrechen
+     und die Zeile aufziehen. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-feld.ausgeklappt {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-all;
+  user-select: all;
+}
+
+.kopier-fehler {
+  margin: 10px 0 0;
+  font-size: 0.76em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.kopier-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: background 0.15s ease;
+}
+
+.kopier-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}

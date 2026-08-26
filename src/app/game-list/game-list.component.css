@@ -93,6 +93,33 @@
   color: #fff;
 }
 
+.teilen-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: background 0.15s ease;
+}
+
+.teilen-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.teilen-btn mat-icon {
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
+}
+
 /* ---------- Mitlesen: Spielerauswahl ---------- */
 .spectator-picker {
   max-width: 340px;

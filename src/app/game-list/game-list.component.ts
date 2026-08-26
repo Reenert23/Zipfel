@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Round } from '../models/Round';
 import { SelectPlayersComponent } from '../dialogs/select-players/select-players.component';
 import { KassensturzComponent } from '../dialogs/kassensturz/kassensturz.component';
+import { TeilenComponent } from '../dialogs/teilen/teilen.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ToolbarService } from '../services/toolbar.service';
@@ -479,6 +480,19 @@ export class GameListComponent implements OnInit, OnDestroy {
       width: '400px',
       maxHeight: '80vh',
       data: { players: this.players, totalPoints: this.totalPoints }
+    });
+  }
+
+  /**
+   * Der Link zeigt auf genau diese Runde, nicht auf "die neueste": bei bis zu
+   * zehn Leuten in wechselnden Konstellationen koennen zwei Tische parallel
+   * laufen, und dann fuehrt ein Automatismus die Mitleser an den falschen.
+   */
+  openTeilen(): void {
+    if (this.newRound.id === undefined) return;
+    this.dialog.open(TeilenComponent, {
+      width: '360px',
+      data: { url: `${window.location.origin}/rounds/${this.newRound.id}/games` }
     });
   }
 

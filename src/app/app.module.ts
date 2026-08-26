@@ -29,6 +29,7 @@ import {MatListModule} from '@angular/material/list';
 import { AddPlayerComponent } from './dialogs/add-player/add-player.component';
 import { SelectPlayersComponent } from './dialogs/select-players/select-players.component';
 import { KassensturzComponent } from './dialogs/kassensturz/kassensturz.component';
+import { TeilenComponent } from './dialogs/teilen/teilen.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatabaseAdminComponent } from './database-admin/database-admin.component';
 import { ContactComponent } from './contact/contact.component';
@@ -53,6 +54,7 @@ import { StatsComponent } from './stats/stats.component';
     ContactComponent,
     StatsComponent,
     KassensturzComponent,
+    TeilenComponent,
     ConfirmDialogComponent
   ],
   imports: [

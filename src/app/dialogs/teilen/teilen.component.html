@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Runde teilen</h2>
+
+<div mat-dialog-content>
+  <p class="hinweis">
+    Mitspieler scannen den Code oder öffnen den Link und sehen den Zwischenstand
+    live mit. Eintragen kann weiterhin nur dieses Gerät.
+  </p>
+
+  <div class="qr-karte">
+    <img *ngIf="qrDataUrl" [src]="qrDataUrl" alt="QR-Code zur Runde" />
+    <div class="qr-platzhalter" *ngIf="!qrDataUrl">…</div>
+  </div>
+
+  <div class="link-zeile">
+    <!-- Bei fehlgeschlagenem Kopieren umbricht die Adresse, damit sie wenigstens
+         vollstaendig dasteht und von Hand markiert werden kann. -->
+    <span class="link-feld" [class.ausgeklappt]="kopierFehler" [title]="url">{{ url }}</span>
+    <button type="button" class="kopier-btn" (click)="kopieren()"
+            [attr.aria-label]="kopiert ? 'Link kopiert' : 'Link kopieren'">
+      {{ kopiert ? '✓' : '⧉' }}
+    </button>
+  </div>
+
+  <p class="kopier-fehler" *ngIf="kopierFehler">
+    Kopieren hat nicht geklappt — den Link oben von Hand markieren.
+  </p>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="schliessen()">Schließen</button>
+  <button mat-raised-button color="primary" *ngIf="kannTeilen" (click)="teilen()">Teilen</button>
+</div>

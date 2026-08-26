@@ -27,6 +27,10 @@
     </span>
     <button mat-stroked-button *ngIf="!isFinished" (click)="finishRound()">Runde beenden</button>
     <button mat-stroked-button *ngIf="isFinished" (click)="reopenRound()">Runde wieder öffnen</button>
+    <button type="button" class="teilen-btn" (click)="openTeilen()"
+            title="Runde teilen" aria-label="Runde teilen">
+      <mat-icon>share</mat-icon>
+    </button>
   </div>
 
   <div class="spectator-header" *ngIf="isSpectator">
