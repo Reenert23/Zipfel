@@ -236,6 +236,56 @@
   font-weight: 600;
 }
 
+.round-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Derselbe Punkt wie das Live-Abzeichen der Mitlesen-Ansicht. Bewusst
+   kopiert statt geteilt: Komponenten-CSS ist gekapselt, und die eine
+   Regel nach styles.css zu heben, waere mehr Kopplung als Ersparnis. */
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #4ade80;
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+}
+
+.round-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mitlesen-chip {
+  font-size: 0.66em;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: rgba(79, 172, 254, 0.14);
+  border: 1px solid rgba(79, 172, 254, 0.5);
+  color: #9bd0ff;
+}
+
+.mitlesen-chip.aus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .games-count {
   font-size: 0.7em;
   font-weight: 700;

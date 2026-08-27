@@ -79,6 +79,25 @@ export class RoundListComponent implements OnInit {
     }, 0);
   }
 
+  /**
+   * Laeuft die Runde noch? Der Server liefert fuer Altdaten ohne Status
+   * ACTIVE nach, geprueft wird trotzdem auf FINISHED - ein fehlender Status
+   * soll eine laufende Runde nicht stillegen.
+   */
+  istLive(round: Round): boolean {
+    return round.status !== 'FINISHED';
+  }
+
+  /**
+   * writerProtected beantwortet das schon vollstaendig: es ist nur wahr, wenn
+   * die Runde einen Schreiber hat *und* das Mitlesen nicht abgeschaltet wurde.
+   * Alte Runden ohne Schreiber zaehlen damit als "aus" - dort darf ohnehin
+   * jeder eintragen, also verhaelt sich die Runde genau so.
+   */
+  istMitlesenAktiv(round: Round): boolean {
+    return round.writerProtected === true;
+  }
+
   private readonly RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
   /**
