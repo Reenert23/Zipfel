@@ -320,9 +320,9 @@ export class GameListComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Benachrichtigungen sind auf diesem Geraet bereits erlaubt. */
+  /** Laufen fuer diese Runde bereits Benachrichtigungen auf diesem Geraet? */
   get pushAn(): boolean {
-    return this.pushService.bereitsAngemeldet;
+    return this.newRound.id !== undefined && this.pushService.istAngemeldet(this.newRound.id);
   }
 
   /** Nur anbieten, wo es auch gehen kann - sonst steht da ein toter Knopf. */
@@ -337,6 +337,14 @@ export class GameListComponent implements OnInit, OnDestroy {
 
     const hindernis = await this.pushService.anmelden(this.newRound.id, this.spectatorPlayerId);
     this.pushHinweis = hindernis === null ? null : this.hinweisZu(hindernis);
+    this.cdr.detectChanges();
+  }
+
+  async pushAusschalten(): Promise<void> {
+    if (this.newRound.id === undefined) return;
+
+    await this.pushService.abmelden(this.newRound.id);
+    this.pushHinweis = null;
     this.cdr.detectChanges();
   }
 

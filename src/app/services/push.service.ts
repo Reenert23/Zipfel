@@ -11,6 +11,12 @@ export type PushHindernis =
   | 'abgelehnt'
   | 'fehlgeschlagen';
 
+/**
+ * Pro Runde vermerkt, wie die Spielerwahl auch: ein Abo gilt immer nur fuer
+ * eine Runde, die Berechtigung dagegen fuer den ganzen Browser.
+ */
+const STORAGE_KEY_PREFIX = 'zipfel.pushAbo.';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,8 +35,44 @@ export class PushService {
     return this.swPush.isEnabled;
   }
 
-  get bereitsAngemeldet(): boolean {
-    return typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  /**
+   * Laeuft fuer *diese* Runde ein Abo?
+   *
+   * Die Browser-Berechtigung allein reicht als Antwort nicht: sie gilt fuer die
+   * ganze Seite. Wer sie bei Runde 12 erteilt hat und naechste Woche Runde 13
+   * aufmacht, bekaeme sonst "Du wirst benachrichtigt" zu sehen, ohne dass fuer
+   * Runde 13 je ein Abo angelegt wurde - es kaeme nie etwas an, und nirgends
+   * stuende ein Fehler.
+   *
+   * Beides muss stimmen: der Vermerk hier *und* die Berechtigung. Wurde sie im
+   * Browser wieder entzogen, ist der Vermerk wertlos.
+   */
+  istAngemeldet(roundId: number): boolean {
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+      return false;
+    }
+    try {
+      return localStorage.getItem(STORAGE_KEY_PREFIX + roundId) !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  private merken(roundId: number): void {
+    try {
+      localStorage.setItem(STORAGE_KEY_PREFIX + roundId, '1');
+    } catch {
+      // Ohne Speicher bietet die App das Einschalten beim naechsten Besuch
+      // erneut an - das Abo auf dem Server ist idempotent, das schadet nicht.
+    }
+  }
+
+  private vergessen(roundId: number): void {
+    try {
+      localStorage.removeItem(STORAGE_KEY_PREFIX + roundId);
+    } catch {
+      // s.o.
+    }
   }
 
   /**
@@ -81,12 +123,49 @@ export class PushService {
           auth: keys.auth
         })
       );
+      this.merken(roundId);
       return null;
     } catch (err) {
       console.error('Anmeldung für Benachrichtigungen fehlgeschlagen:', err);
       return typeof Notification !== 'undefined' && Notification.permission === 'denied'
         ? 'abgelehnt'
         : 'fehlgeschlagen';
+    }
+  }
+
+  /**
+   * Meldet dieses Geraet von *dieser* Runde ab. Die Browser-Berechtigung
+   * bleibt bestehen und andere Runden laufen weiter - abgemeldet wird nur der
+   * eine Eintrag auf dem Server.
+   */
+  async abmelden(roundId: number): Promise<void> {
+    /* Zuerst der Vermerk: geht der Aufruf schief, soll der Knopf trotzdem
+       wieder "einschalten" sagen und nicht faelschlich Ruhe versprechen. */
+    this.vergessen(roundId);
+
+    try {
+      /* Ohne installierten Worker emittiert swPush.subscription nie - ein
+         await darauf kaeme nicht mehr zurueck. Erst fragen, dann warten. */
+      const registrierung = await navigator.serviceWorker?.getRegistration();
+      if (!registrierung) {
+        return;
+      }
+
+      const subscription = await firstValueFrom(this.swPush.subscription);
+      if (!subscription) {
+        /* Ohne Endpunkt laesst sich der Eintrag nicht benennen. Er raeumt sich
+           selbst ab: ein Abo ohne Browser-Gegenstueck beantwortet der
+           Push-Dienst mit 410, und PushNotifier loescht es dann. */
+        return;
+      }
+
+      await firstValueFrom(
+        this.http.delete(`${this.baseUrl}/subscribe`, {
+          body: { roundId, endpoint: subscription.endpoint }
+        })
+      );
+    } catch (err) {
+      console.error('Abmelden von Benachrichtigungen fehlgeschlagen:', err);
     }
   }
 
