@@ -242,14 +242,22 @@
   gap: 8px;
 }
 
-/* Derselbe Punkt wie das Live-Abzeichen der Mitlesen-Ansicht. Bewusst
-   kopiert statt geteilt: Komponenten-CSS ist gekapselt, und die eine
-   Regel nach styles.css zu heben, waere mehr Kopplung als Ersparnis. */
-.live-dot {
+/* Rot ist der Ruhezustand, Gruen das Ausrufezeichen - deshalb pulsiert nur
+   die laufende Runde. Ein pulsendes Rot laese sich als Warnung, und beendet
+   ist nichts Schlimmes.
+
+   Der gruene Punkt ist der aus der Mitlesen-Ansicht, bewusst kopiert statt
+   geteilt: Komponenten-CSS ist gekapselt, und die eine Regel nach styles.css
+   zu heben, waere mehr Kopplung als Ersparnis. */
+.status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
+  background: #f87171;
+}
+
+.status-dot.live {
   background: #4ade80;
   animation: live-pulse 1.6s ease-in-out infinite;
 }
@@ -260,7 +268,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .live-dot { animation: none; }
+  .status-dot.live { animation: none; }
 }
 
 .round-badges {

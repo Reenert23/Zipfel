@@ -27,8 +27,11 @@
 
         <div class="round-card-header">
           <div class="round-title">
-            <!-- Derselbe pulsierende Punkt wie in der Mitlesen-Ansicht. -->
-            <span class="live-dot" *ngIf="istLive(round)" role="img" aria-label="läuft gerade"></span>
+            <!-- Gruen und pulsierend wie in der Mitlesen-Ansicht, solange die
+                 Runde laeuft; danach ruhiges Rot. Der Punkt steht auf jeder
+                 Karte, damit die Titel auf einer Linie bleiben. -->
+            <span class="status-dot" [class.live]="istLive(round)"
+              role="img" [attr.aria-label]="istLive(round) ? 'läuft gerade' : 'beendet'"></span>
             <h3>Runde {{ i + 1 }}</h3>
           </div>
           <div class="round-badges">
