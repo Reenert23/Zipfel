@@ -304,6 +304,51 @@ export class GameListComponent implements OnInit, OnDestroy {
     return this.writerTokenService.getToken(this.newRound.id) === null;
   }
 
+  /**
+   * Nur das Geraet, das die Runde angelegt hat, haelt ihr Token - und nur dort
+   * gehoert der Mitlesen-Schalter hin.
+   *
+   * Bewusst nicht ueber isSpectator gebaut: bei abgeschaltetem Mitlesen ist
+   * writerProtected false, damit waere isSpectator fuer alle false und der
+   * Schalter liesse sich nicht mehr zurueckdrehen.
+   */
+  get istSchreiber(): boolean {
+    return this.newRound.id !== undefined
+      && this.writerTokenService.getToken(this.newRound.id) !== null;
+  }
+
+  get mitlesenAus(): boolean {
+    return this.newRound.mitlesenAus === true;
+  }
+
+  mitlesenWirdUmgeschaltet = false;
+
+  mitlesenUmschalten(): void {
+    const id = this.newRound.id;
+    if (id === undefined || this.mitlesenWirdUmgeschaltet) return;
+
+    this.mitlesenWirdUmgeschaltet = true;
+    this.roundService.setMitlesen(id, !this.mitlesenAus).subscribe({
+      next: runde => {
+        /* Nur die beiden Schalterfelder uebernehmen: die Antwort enthaelt zwar
+           die ganze Runde, aber lockedPlayers wird hier lokal gefuehrt und
+           ginge beim Durchreichen verloren. */
+        this.newRound = {
+          ...this.newRound,
+          mitlesenAus: runde.mitlesenAus,
+          writerProtected: runde.writerProtected
+        };
+        this.mitlesenWirdUmgeschaltet = false;
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.error('Mitlesen umschalten fehlgeschlagen:', err);
+        this.mitlesenWirdUmgeschaltet = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   /** Erst die Frage "wer bist du?", danach der Zwischenstand. */
   get needsSpectatorChoice(): boolean {
     return this.isSpectator && this.spectatorPlayerId === null && this.players.length > 0;

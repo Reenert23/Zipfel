@@ -351,7 +351,8 @@
   height: 17px;
 }
 
-.push-hinweis {
+.push-hinweis,
+.mitlesen-hinweis {
   margin: 10px 0 0;
   font-size: 0.76em;
   line-height: 1.45;
@@ -373,6 +374,17 @@
 
 .spectator-switch:hover {
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Mitlesen-Schalter (nur beim Schreiber) ---------- */
+.mitlesen-schalter {
+  max-width: 340px;
+  margin: 28px auto 0;
+}
+
+.mitlesen-schalter .spectator-switch:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* Ohne Tastenfeld hat die absolute Seitenspalte keinen Bezugspunkt mehr. */

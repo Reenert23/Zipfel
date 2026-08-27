@@ -17,6 +17,13 @@ export interface Round {
    * angezeigt bekommen - der Server laesst dort jeden schreiben.
    */
   writerProtected?: boolean;
+  /**
+   * Der Schreiber hat diese Runde aus dem Mitlesen-System herausgenommen: sie
+   * verhaelt sich dann wie vor dem Feature. Steht zusaetzlich zu
+   * writerProtected, weil sich die beiden Faelle "nie ein Schreiber" und
+   * "Mitlesen abgeschaltet" dort sonst nicht unterscheiden liessen.
+   */
+  mitlesenAus?: boolean;
 }
 
 /**

@@ -94,6 +94,19 @@ export class RoundService {
     return this.http.post<Round>(`${this.baseUrl}/${roundId}/reopen`, {}, this.writeOptions(roundId));
   }
 
+  /**
+   * Nimmt eine Runde aus dem Mitlesen-System heraus oder wieder hinein.
+   *
+   * Braucht das Token auch zum Wiedereinschalten: bei abgeschaltetem Mitlesen
+   * laesst der Server sonst jeden schreiben, und dann koennte ein Mitleser dem
+   * Schreiber den Schalter umlegen.
+   */
+  setMitlesen(roundId: number, aus: boolean): Observable<Round> {
+    return this.http.post<Round>(
+      `${this.baseUrl}/${roundId}/mitlesen?aus=${aus}`, {}, this.writeOptions(roundId)
+    ).pipe(map(withSortedGames));
+  }
+
   // Spiele einer Runde abrufen
   getGamesByRound(roundId: number): Observable<Game[]> {
     return this.http.get<Game[]>(`${this.baseUrl}/${roundId}/games`).pipe(
