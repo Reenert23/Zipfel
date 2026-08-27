@@ -104,12 +104,13 @@ export class GameListComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => this.openPlayerSelector());
 
-      const id = Number(this.route.snapshot.paramMap.get('id'));
+      this.route.paramMap
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(params => {
+          const id = Number(params.get('id'));
+          if (!id) return;
 
-
-
-      if (id) {
-        this.roundService.getRoundById(id).subscribe((runde) => {
+          this.roundService.getRoundById(id).subscribe((runde) => {
           this.newRound = {
             ...runde,
             lockedPlayers: (runde.games && runde.games.length > 0)
@@ -136,27 +137,11 @@ export class GameListComponent implements OnInit, OnDestroy {
           this.spectatorPlayerId =
             gewaehlt !== null && this.players.some(p => p.id === gewaehlt) ? gewaehlt : null;
 
-          // Tabelle aktualisieren
-          this.dataSource.data = this.orderedGames();
-          this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
+            // Tabelle aktualisieren
+            this.dataSource.data = this.orderedGames();
+            this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
+          });
         });
-      } else {
-        this.newRound = {
-          players: this.players,
-          games: [],
-          lockedPlayers: false,
-          date: new Date().toISOString()
-        };
-
-        // ✅ Auch hier playerSlots initialisieren
-        this.playerSlots = [
-          ...this.players,
-          ...Array(4 - this.players.length).fill(undefined)
-        ];
-
-        this.displayedColumns = ['game', ...this.players.map(p => p.firstName)];
-        this.dataSource.data = this.orderedGames();
-      }
     }
 
   openNameDialog(): void {
